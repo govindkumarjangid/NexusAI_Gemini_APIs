@@ -24,12 +24,12 @@ app.use(cors({
 }))
 
 // Routes
-app.use('/', (req, res) => {
+app.get('/', (req, res) => {
     res.send('Welcome to NexusAI API');
 });
-app.use('/api/users', userRoutes);
-app.use('/api/chats', chatRoutes);
-app.use('/api/messages', messageRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/chats', chatRoutes);
+app.use('/api/v1/messages', messageRoutes);
 
 
 // Error handling middleware

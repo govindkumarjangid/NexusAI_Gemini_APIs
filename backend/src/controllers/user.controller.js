@@ -8,9 +8,9 @@ dotenv.config();
 
 export const registerUser = wrapAsync(async (req, res) => {
 
-    const { username, email, password } = req.body;
+    const { name, email, password } = req.body;
 
-    if (!username || !email || !password)
+    if (!name || !email || !password)
         return res.status(400).json({ message: 'All fields are required' });
 
     if (password.length < 6)
@@ -29,7 +29,7 @@ export const registerUser = wrapAsync(async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = new User({
-        username,
+        name,
         email,
         password: hashedPassword
     });
@@ -64,7 +64,7 @@ export const loginUser = wrapAsync(async (req, res) => {
         success: true,
         message: 'Login successful', token, user: {
             id: user._id,
-            username: user.username,
+            name: user.name,
             email: user.email
         }
     });

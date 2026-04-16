@@ -7,6 +7,8 @@ import {
   SquareChevronRight
 } from 'lucide-react';
 import logo from '/nexusai-logo.svg';
+import useAuthStore from '../store/useAuthStore';
+import { useNavigate } from 'react-router-dom';
 
 export default function Sidebar({ setOnLogout, sidebarOpen, setSidebarOpen, onSearchClick, isMobile }) {
 
@@ -19,6 +21,14 @@ export default function Sidebar({ setOnLogout, sidebarOpen, setSidebarOpen, onSe
     { id: 2, title: 'Tailwind CSS Tips', date: 'Yesterday' },
     { id: 3, title: 'Framer Motion Guide', date: 'Previous 7 Days' },
   ];
+
+  const { logout } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  }
 
   return (
     <motion.div
@@ -167,11 +177,11 @@ export default function Sidebar({ setOnLogout, sidebarOpen, setSidebarOpen, onSe
           {sidebarOpen && <span className="whitespace-nowrap truncate pr-3">Preferences</span>}
         </button>
         <button
-          onClick={setOnLogout}
-          className="w-full flex items-center rounded-full hover:bg-red-500/10 cursor-pointer hover:text-red-400 transition-colors text-sm text-gray-300 h-[46px] overflow-hidden"
+          onClick={handleLogout}
+          className="w-full flex items-center rounded-full hover:bg-red-500/10 cursor-pointer hover:text-red-400 transition-colors text-sm text-gray-300 h-11.5 overflow-hidden"
           title={!sidebarOpen ? "Log out" : ""}
         >
-          <div className="w-[46px] shrink-0 flex items-center justify-center">
+          <div className="w-11.5 shrink-0 flex items-center justify-center">
             <LogOut size={20} />
           </div>
           {sidebarOpen && <span className="whitespace-nowrap truncate pr-3">Log out</span>}

@@ -1,42 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Auth from './pages/Auth';
 import Sidebar from './components/Sidebar';
 import ChatArea from './components/ChatArea';
 import SearchPage from './pages/SearchPage';
-import { Toaster, toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const App = () => {
-  const [user, setUser] = useState({
-    name: 'User',
-    email: 'user@gmail.com'
-  });
+
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  toast.error('Welcome to NexusAI!');
+  const user = localStorage.getItem('user');
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (!user && window.location.pathname !== '/') navigate('/');
+    if (user && window.location.pathname === '/') navigate('/chat');
     const handleResize = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
       if (!mobile) setSidebarOpen(true);
       else setSidebarOpen(false);
     };
-
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [user, navigate]);
 
-  if (!user) {
-    return <Auth onAuthSuccess={setUser} />;
-  }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#131314] text-gray-100 relative">
-
+    <>
       <Toaster
         position="top-right"
         reverseOrder={false}
@@ -70,43 +67,51 @@ const App = () => {
           },
         }}
       />
-
-      <Sidebar
-        setOnLogout={() => setUser(null)}
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
-        onSearchClick={() => setIsSearchOpen(true)}
-        isMobile={isMobile}
-      />
-
-      {/* Mobile Backdrop for Sidebar overlay */}
-      {isMobile && sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30"
-          onClick={() => setSidebarOpen(false)}
+      <Routes>
+        <Route path="/" element={
+          user
+            ? (
+              <Navigate to="/chat" />
+            )
+            : <Auth />
+        }
         />
-      )}
-
-      <ChatArea
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
-        isMobile={isMobile}
-      />
-
-      {/* Search Drawer Overlay */}
-      <AnimatePresence>
-        {isSearchOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-md z-60"
-            onClick={() => setIsSearchOpen(false)}
-          />
-        )}
-      </AnimatePresence>
-      <SearchPage isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-    </div>
+        <Route path="/chat" element={
+          <div className="flex h-screen overflow-hidden bg-[#131314] text-gray-100 relative">
+            <Sidebar
+              sidebarOpen={sidebarOpen}
+              setSidebarOpen={setSidebarOpen}
+              onSearchClick={() => setIsSearchOpen(true)}
+              isMobile={isMobile}
+            />
+            {isMobile && sidebarOpen && (
+              <div
+                className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30"
+                onClick={() => setSidebarOpen(false)}
+              />
+            )}
+            <ChatArea
+              sidebarOpen={sidebarOpen}
+              setSidebarOpen={setSidebarOpen}
+              isMobile={isMobile}
+            />
+            <AnimatePresence>
+              {isSearchOpen && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 bg-black/60 backdrop-blur-md z-60"
+                  onClick={() => setIsSearchOpen(false)}
+                />
+              )}
+            </AnimatePresence>
+            <SearchPage isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+          </div>
+        } />
+        {/* Add chat/:chatId route below when chat create logic is ready */}
+      </Routes>
+    </>
   );
 }
 

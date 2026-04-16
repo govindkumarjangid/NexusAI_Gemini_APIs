@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Image, Mic, PanelLeft, Sparkles, User, Plus, ArrowUp, FolderUp, Menu, SquareChevronRight } from 'lucide-react';
 import logo from '/nexusai-logo.svg';
+import useAuthStore from '../store/useAuthStore';
 
 export default function ChatArea({ sidebarOpen, setSidebarOpen, isMobile }) {
+  const { user } = useAuthStore();
   const [messages, setMessages] = useState([
     { id: 1, role: 'ai', text: 'Hello! I am NexusAI. How can I help you today?' },
     { id: 2, role: 'user', text: 'Can you help me build a React component?' },
@@ -72,6 +74,14 @@ export default function ChatArea({ sidebarOpen, setSidebarOpen, isMobile }) {
           <img src={logo} alt="NexusAI Logo" className="w-8 h-8 rounded-full shadow-lg" />
           <h1 className="font-semibold text-lg text-gray-200">NexusAI</h1>
         </div>
+        {user && (
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-lg uppercase">
+              {user.name?.[0] || user.username?.[0] || '?'}
+            </div>
+            <span className="text-gray-200 hidden sm:flex font-normal text-base max-w-30 truncate">{user.name || user.username || 'User'}</span>
+          </div>
+        )}
       </header>
 
       {/* Chat Messages */}
