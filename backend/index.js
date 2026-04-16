@@ -24,6 +24,9 @@ app.use(cors({
 }))
 
 // Routes
+app.use('/', (req, res) => {
+    res.send('Welcome to NexusAI API');
+});
 app.use('/api/users', userRoutes);
 app.use('/api/chats', chatRoutes);
 app.use('/api/messages', messageRoutes);
@@ -37,7 +40,7 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-const startServer = () => {
+const startServer = async () => {
     try {
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}...`);
@@ -47,4 +50,4 @@ const startServer = () => {
     }
 }
 
-startServer();
+await startServer();

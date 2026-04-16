@@ -4,6 +4,7 @@ import Auth from './pages/Auth';
 import Sidebar from './components/Sidebar';
 import ChatArea from './components/ChatArea';
 import SearchPage from './pages/SearchPage';
+import { Toaster, toast } from 'react-hot-toast';
 
 const App = () => {
   const [user, setUser] = useState({
@@ -14,6 +15,8 @@ const App = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  toast.error('Welcome to NexusAI!');
 
   useEffect(() => {
     const handleResize = () => {
@@ -33,6 +36,41 @@ const App = () => {
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#131314] text-gray-100 relative">
+
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          style: {
+            background: '#232326',
+            color: '#fff',
+            border: '1px solid #F0F0F0',
+          },
+          success: {
+            iconTheme: {
+              primary: '#22c55e',
+              secondary: '#fff',
+            },
+            style: {
+              background: '#232326',
+              color: '#fff',
+              border: '1px solid #22c55e',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#fff',
+            },
+            style: {
+              background: '#232326',
+              color: '#fff',
+              border: '1px solid #ef4444',
+            },
+          },
+        }}
+      />
+
       <Sidebar
         setOnLogout={() => setUser(null)}
         sidebarOpen={sidebarOpen}
@@ -62,7 +100,7 @@ const App = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-md z-[60]"
+            className="fixed inset-0 bg-black/60 backdrop-blur-md z-60"
             onClick={() => setIsSearchOpen(false)}
           />
         )}

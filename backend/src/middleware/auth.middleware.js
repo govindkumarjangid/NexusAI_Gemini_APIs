@@ -1,4 +1,3 @@
-// add user middleware to all routes in this file
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
 
