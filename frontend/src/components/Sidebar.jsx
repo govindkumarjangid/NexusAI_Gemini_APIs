@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import  { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Plus, MessageSquare, Settings, LogOut,
-  Search, Menu, MoreVertical, Trash2, Edit2, UserCircle, SquarePen,
+  Search, Trash2, Edit2, UserCircle, SquarePen,
   SquareChevronLeft,
   SquareChevronRight
 } from 'lucide-react';
+import logo from '/nexusai-logo.svg';
 
-export default function Sidebar({ setOnLogout, sidebarOpen, setSidebarOpen, onSearchClick }) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showSearch, setShowSearch] = useState(false);
+export default function Sidebar({ setOnLogout, sidebarOpen, setSidebarOpen, onSearchClick, isMobile }) {
+
+  // const [searchQuery, setSearchQuery] = useState('');
+  // const [showSearch, setShowSearch] = useState(false);
 
   // Mock data
   const chats = [
@@ -22,37 +24,57 @@ export default function Sidebar({ setOnLogout, sidebarOpen, setSidebarOpen, onSe
     <motion.div
       initial={false}
       animate={{
-        width: sidebarOpen ? 260 : 70
+        width: isMobile ? 280 : (sidebarOpen ? 260 : 70),
+        x: isMobile ? (sidebarOpen ? 0 : -280) : 0
       }}
-      className="h-screen flex flex-col bg-[#1e1f20] border-r border-gray-800/60 overflow-hidden whitespace-nowrap"
+      transition={{ ease: "easeInOut", duration: 0.3 }}
+      className={`h-screen flex flex-col bg-[#1e1f20] border-r border-gray-800/60 overflow-hidden whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl' : 'relative'
+        }`}
     >
       {/* Top Header */}
-      <div className="p-3 flex items-center justify-between">
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 hover:bg-gray-800 rounded-full transition-colors text-gray-400 hover:text-gray-200 mx-auto sm:mx-0"
-          title={sidebarOpen ? "Collapse Menu" : "Expand Menu"}
-        >
-        {
-          sidebarOpen ? <SquareChevronLeft  size={20} /> : <SquareChevronRight  size={20} />
-        }
-        </button>
+      <div className="h-14 flex items-center justify-between border-b border-gray-800/60 shrink-0">
+        <div className="w-[70px] flex items-center justify-center shrink-0 relative group">
+          {sidebarOpen ? (
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="p-0 sm:p-3 hover:bg-gray-800 rounded-full transition-colors cursor-pointer text-gray-400 hover:text-gray-200"
+              title="Collapse Menu"
+            >
+              <SquareChevronLeft size={22} />
+            </button>
+          ) : (
+            <div className="group">
+              <img
+                src={logo}
+                alt="NexusAI Logo"
+                className="w-9 h-9 rounded-full shadow-lg cursor-pointer transition-all duration-200 hover:scale-105 group-hover:hidden"
+              />
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="p-0 sm:p-3 hover:bg-gray-800 rounded-full transition-colors hidden group-hover:flex cursor-pointer text-gray-400 hover:text-gray-200"
+                title="Collapse Menu"
+              >
+                <SquareChevronRight size={22} />
+              </button>
+            </div>
+          )}
+        </div>
 
         <AnimatePresence>
           {sidebarOpen && (
             <motion.div
-              initial={{ opacity: 0, width: 0 }}
-              animate={{ opacity: 1, width: 'auto' }}
-              exit={{ opacity: 0, width: 0 }}
-              className="flex gap-1 overflow-hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex gap-1 pr-3"
             >
               <button
                 onClick={onSearchClick}
-                className="p-2 hover:bg-gray-800 rounded-lg transition-colors text-gray-400 hover:text-gray-200"
+                className="p-2 hover:bg-gray-800 rounded-full cursor-pointer transition-colors text-gray-400 hover:text-gray-200"
               >
                 <Search size={20} />
               </button>
-              <button className="p-2 hover:bg-gray-800 rounded-lg transition-colors text-gray-400 hover:text-gray-200">
+              <button className="p-2 hover:bg-gray-800 rounded-full cursor-pointer transition-colors text-gray-400 hover:text-gray-200">
                 <Plus size={20} />
               </button>
             </motion.div>
@@ -61,16 +83,18 @@ export default function Sidebar({ setOnLogout, sidebarOpen, setSidebarOpen, onSe
       </div>
 
       {/* New Chat Button (Prominent) */}
-      <div className="px-3 pb-3">
-        <button className={`flex items-center bg-[#2d2f31] hover:bg-[#383a3c] rounded-xl transition-colors text-gray-200 w-full ${sidebarOpen ? 'p-3 gap-3' : 'p-3 justify-center'}`}>
-          <SquarePen size={18} className="shrink-0" />
+      <div className="px-3 py-3 mt-1 shrink-0">
+        <button className="flex items-center bg-[#2d2f31] hover:bg-[#383a3c] cursor-pointer rounded-full transition-colors text-gray-200 w-full overflow-hidden h-[46px]">
+          <div className="w-[46px] shrink-0 flex items-center justify-center">
+            <SquarePen size={18} />
+          </div>
           <AnimatePresence>
             {sidebarOpen && (
               <motion.span
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: 'auto' }}
-                exit={{ opacity: 0, width: 0 }}
-                className="text-sm font-medium overflow-hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="text-sm font-medium whitespace-nowrap"
               >
                 New Chat
               </motion.span>
@@ -96,16 +120,16 @@ export default function Sidebar({ setOnLogout, sidebarOpen, setSidebarOpen, onSe
           <AnimatePresence>
             {sidebarOpen && (
               <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="space-y-1 overflow-hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="space-y-1"
               >
                 {chats.map((chat) => (
                   <div
                     key={chat.id}
                     title={chat.title}
-                    className="group flex items-center justify-between rounded-lg hover:bg-[#2d2f31] cursor-pointer text-gray-300 hover:text-gray-100 transition-colors p-2"
+                    className="group flex items-center justify-between rounded-full hover:bg-[#2d2f31] cursor-pointer text-gray-300 hover:text-gray-100 transition-colors px-4 py-2"
                   >
                     <div className="flex items-center gap-3 overflow-hidden text-sm">
                       <MessageSquare size={18} className="shrink-0" />
@@ -129,22 +153,28 @@ export default function Sidebar({ setOnLogout, sidebarOpen, setSidebarOpen, onSe
       </div>
 
       {/* Bottom Area */}
-      <div className="p-3 border-t border-gray-800/60 space-y-1">
-        <button className={`w-full flex items-center rounded-lg hover:bg-gray-800 transition-colors text-sm text-gray-300 ${sidebarOpen ? 'p-3 gap-3' : 'p-3 justify-center'}`} title={!sidebarOpen ? "Profile Settings" : ""}>
-          <UserCircle size={20} className="shrink-0" />
-          {sidebarOpen && <span>Profile Settings</span>}
+      <div className="p-3 border-t border-gray-800/60 space-y-1 shrink-0">
+        <button className="w-full flex items-center rounded-full hover:bg-gray-800 cursor-pointer transition-colors text-sm text-gray-300 h-[46px] overflow-hidden" title={!sidebarOpen ? "Profile Settings" : ""}>
+          <div className="w-[46px] shrink-0 flex items-center justify-center">
+            <UserCircle size={20} />
+          </div>
+          {sidebarOpen && <span className="whitespace-nowrap truncate pr-3">Profile Settings</span>}
         </button>
-        <button className={`w-full flex items-center rounded-lg hover:bg-gray-800 transition-colors text-sm text-gray-300 ${sidebarOpen ? 'p-3 gap-3' : 'p-3 justify-center'}`} title={!sidebarOpen ? "Preferences" : ""}>
-          <Settings size={20} className="shrink-0" />
-          {sidebarOpen && <span>Preferences</span>}
+        <button className="w-full flex items-center rounded-full hover:bg-gray-800 cursor-pointer transition-colors text-sm text-gray-300 h-[46px] overflow-hidden" title={!sidebarOpen ? "Preferences" : ""}>
+          <div className="w-[46px] shrink-0 flex items-center justify-center">
+            <Settings size={20} />
+          </div>
+          {sidebarOpen && <span className="whitespace-nowrap truncate pr-3">Preferences</span>}
         </button>
         <button
           onClick={setOnLogout}
-          className={`w-full flex items-center rounded-lg hover:bg-red-500/10 hover:text-red-400 transition-colors text-sm text-gray-300 ${sidebarOpen ? 'p-3 gap-3' : 'p-3 justify-center'}`}
+          className="w-full flex items-center rounded-full hover:bg-red-500/10 cursor-pointer hover:text-red-400 transition-colors text-sm text-gray-300 h-[46px] overflow-hidden"
           title={!sidebarOpen ? "Log out" : ""}
         >
-          <LogOut size={20} className="shrink-0" />
-          {sidebarOpen && <span>Log out</span>}
+          <div className="w-[46px] shrink-0 flex items-center justify-center">
+            <LogOut size={20} />
+          </div>
+          {sidebarOpen && <span className="whitespace-nowrap truncate pr-3">Log out</span>}
         </button>
       </div>
     </motion.div>

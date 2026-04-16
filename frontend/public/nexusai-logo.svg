@@ -1,0 +1,17 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="nexus-gradient" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7F5BFF"/>
+      <stop offset="1" stop-color="#00E6F6"/>
+    </linearGradient>
+    <radialGradient id="nexus-glow" cx="24" cy="24" r="24" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#7F5BFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="24" cy="24" r="20" fill="url(#nexus-gradient)" />
+  <circle cx="24" cy="24" r="16" fill="url(#nexus-glow)" />
+  <path d="M16 32C16 25 32 25 32 32" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="19.5" cy="20.5" r="2.5" fill="#fff"/>
+  <circle cx="28.5" cy="20.5" r="2.5" fill="#fff"/>
+</svg>

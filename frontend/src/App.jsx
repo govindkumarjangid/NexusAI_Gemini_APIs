@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Auth from './pages/Auth';
 import Sidebar from './components/Sidebar';
 import ChatArea from './components/ChatArea';
 import SearchPage from './pages/SearchPage';
 
-function App() {
+const App = () => {
   const [user, setUser] = useState({
     name: 'User',
     email: 'user@gmail.com'
   });
-  
+
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -21,7 +22,7 @@ function App() {
       if (!mobile) setSidebarOpen(true);
       else setSidebarOpen(false);
     };
-    
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -39,10 +40,10 @@ function App() {
         onSearchClick={() => setIsSearchOpen(true)}
         isMobile={isMobile}
       />
-      
+
       {/* Mobile Backdrop for Sidebar overlay */}
       {isMobile && sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30"
           onClick={() => setSidebarOpen(false)}
         />
@@ -53,14 +54,19 @@ function App() {
         setSidebarOpen={setSidebarOpen}
         isMobile={isMobile}
       />
-      
+
       {/* Search Drawer Overlay */}
-      {isSearchOpen && (
-        <div 
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[60]"
-          onClick={() => setIsSearchOpen(false)}
-        />
-      )}
+      <AnimatePresence>
+        {isSearchOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-md z-[60]"
+            onClick={() => setIsSearchOpen(false)}
+          />
+        )}
+      </AnimatePresence>
       <SearchPage isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </div>
   );
