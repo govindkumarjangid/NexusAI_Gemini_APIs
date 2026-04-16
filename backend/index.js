@@ -1,10 +1,14 @@
 import express from 'express';
-import connectDB from './src/configs/db.js';
-import userRoutes from './src/routes/user.routes.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
-
 dotenv.config();
+
+import connectDB from './src/configs/db.js';
+
+import userRoutes from './src/routes/user.routes.js';
+import chatRoutes from './src/routes/chat.routes.js';
+import messageRoutes from './src/routes/messge.routes.js';
+
 
 const app = express();
 
@@ -21,6 +25,8 @@ app.use(cors({
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/chats', chatRoutes);
+app.use('/api/messages', messageRoutes);
 
 
 // Error handling middleware
