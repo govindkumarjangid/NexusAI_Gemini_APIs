@@ -1,7 +1,6 @@
-// app, datbase connection, and server setup
 import express from 'express';
-import connectDB from './configs/db.js';
-import userRoutes from './routes/user.routes.js';
+import connectDB from './src/configs/db.js';
+import userRoutes from './src/routes/user.routes.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
 

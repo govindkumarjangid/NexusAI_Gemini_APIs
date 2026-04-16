@@ -1,21 +1,21 @@
-# ChatGPT Clone using OpenAI APIs
+# NexusAI - Google Gemini APIs Integration
 
-This project is a full-stack clone of ChatGPT, built using React (Vite) for the frontend and Node.js/Express for the backend. It integrates the official OpenAI APIs to generate dynamic, conversational responses.
+This project is a full-stack AI application, built using React (Vite) for the frontend and Node.js/Express for the backend. It integrates the official **Google Gemini APIs** to generate dynamic, conversational, and advanced AI responses.
 
-## 📁 Folder Structure (Fie & Folder Layout)
+## Folder Structure (File & Folder Layout)
 
 ```text
-ChatGPT_OpenAI-APIs/
+NexusAI_Gemini_APIs/
 ├── backend/                  # Server-side code (Node.js + Express)
 │   ├── src/
 │   │   ├── configs/          # Database & environment configurations
-│   │   ├── controllers/      # Route logic & OpenAI API calling logic
+│   │   ├── controllers/      # Route logic & Gemini API calling logic
 │   │   ├── models/           # MongoDB schemas (e.g., User, Chat)
 │   │   ├── routes/           # API Endpoints (e.g., /api/chat)
 │   │   └── utils/            # Helper functions (Validators, error handlers)
 │   ├── index.js              # Server entry point
 │   ├── .env                  # Backend environment variables
-│   └── package.json          # Backend dependencies (express, mongoose, openai, etc.)
+│   └── package.json          # Backend dependencies (express, mongoose, @google/generative-ai, etc.)
 └── frontend/                 # Client-side code (React + Vite)
     ├── public/               # Static assets folder
     ├── src/
@@ -36,12 +36,12 @@ Follow these steps to get the project up and running locally.
 
 ### Prerequisite
 Ensure you have [Node.js](https://nodejs.org/) installed on your machine.
-You will also need an [OpenAI API Key](https://platform.openai.com/account/api-keys).
+You will also need a [Google Gemini API Key](https://aistudio.google.com/app/apikey).
 
 ### 1. Clone the repository
 ```bash
 git clone <your-repo-url>
-cd ChatGPT_OpenAI-APIs
+cd NexusAI_Gemini_APIs
 ```
 
 ### 2. Backend Setup
@@ -52,12 +52,11 @@ cd backend
 npm install
 ```
 
-Create a `.env` file in the `backend/` directory and add the following configuration:
+Create a \`.env\` file in the \`backend/\` directory and add the following configuration:
 ```env
 PORT=5000
 MONGODB_URL=your_mongodb_connection_string
-OPENAI_API_KEY=your_openai_api_key
-OPENAI_ORGANIZATION_ID=your_openai_org_id (optional)
+GEMINI_API_KEY=your_gemini_api_key
 JWT_SECRET=your_jwt_secret
 ```
 
@@ -76,7 +75,7 @@ cd frontend
 npm install
 ```
 
-Create a `.env` file in the `frontend/` directory (optional depending on your Vite setup):
+Create a \`.env\` file in the \`frontend/\` directory (optional depending on your Vite setup):
 ```env
 VITE_API_URL=http://localhost:5000/api/v1
 ```
@@ -86,14 +85,14 @@ Start the React dev server:
 npm run dev
 ```
 
-## 🚀 Key Libraries and Commands
+## Key Libraries and Commands
 
 To install dependencies manually, you can use these commands:
 
 **For Backend:**
 ```bash
 cd backend
-npm install express mongoose openai dotenv cors jsonwebtoken bcrypt cookie-parser
+npm install express mongoose @google/generative-ai dotenv cors jsonwebtoken bcrypt cookie-parser
 npm install --save-dev nodemon
 ```
 
@@ -103,9 +102,9 @@ cd frontend
 npm install axios react-router-dom react-hot-toast @mui/material @emotion/react @emotion/styled
 ```
 
-## 💡 How it works
+## How it works
 1. **Frontend:** User types a prompt. React uses Axios to send a POST request to your backend proxy.
-2. **Backend:** Express receives the authenticated request and safely passes the prompt along with your `OPENAI_API_KEY` to the OpenAI API servers.
-3. **OpenAI API:** Processes the text and sends back a response.
-4. **Database:** (Optional) Backend saves the Chat logs to MongoDB so users can view their chat history later.
+2. **Backend:** Express receives the authenticated request and safely passes the prompt along with your \`GEMINI_API_KEY\` to the Google Gemini API.
+3. **Gemini API:** Processes the text/image and sends back an advanced AI response.
+4. **Database:** Backend saves the Chat logs to MongoDB so users can view their chat history later.
 5. **Result:** Backend responds to the React Frontend, updating the Chat UI dynamically.

@@ -1,5 +1,4 @@
-// create registerUser, loginUser, logoutUser functions in user.controller.js
-import User from '../models/User.js';
+import User from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
 import wrapAsync from '../utils/wrapasync.js';
 import genrateToken from '../utils/generateToken.js';
