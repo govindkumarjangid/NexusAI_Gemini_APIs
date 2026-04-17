@@ -10,6 +10,14 @@ const useAuthStore = create((set) => ({
     isLoading: false,
     error: null,
 
+    // UI State
+    isMobile: window.innerWidth < 768,
+    setIsMobile: (val) => set({ isMobile: val }),
+    sidebarOpen: !(window.innerWidth < 768),
+    setSidebarOpen: (val) => set({ sidebarOpen: val }),
+    isSearchOpen: false,
+    setIsSearchOpen: (val) => set({ isSearchOpen: val }),
+
     register: async ({ name, email, password, navigate }) => {
         set({ isLoading: true, error: null });
         try {
@@ -20,6 +28,9 @@ const useAuthStore = create((set) => ({
             });
             set({ isLoading: false });
             if (response.data.success) {
+                set({ user, token, isLoading: false });
+                localStorage.setItem('user', JSON.stringify(user));
+                localStorage.setItem('token', token);
                 navigate('/chat');
                 toast.success('Registration successful');
             } else {

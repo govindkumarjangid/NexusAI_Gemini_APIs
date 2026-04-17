@@ -4,13 +4,15 @@ import { Send, Image, Mic, PanelLeft, Sparkles, User, Plus, ArrowUp, FolderUp, M
 import logo from '/nexusai-logo.svg';
 import useAuthStore from '../store/useAuthStore';
 
-export default function ChatArea({ sidebarOpen, setSidebarOpen, isMobile }) {
-  const { user } = useAuthStore();
+const ChatArea = () => {
+  const { user, isMobile, sidebarOpen, setSidebarOpen } = useAuthStore();
+
   const [messages, setMessages] = useState([
     { id: 1, role: 'ai', text: 'Hello! I am NexusAI. How can I help you today?' },
     { id: 2, role: 'user', text: 'Can you help me build a React component?' },
     { id: 3, role: 'ai', text: 'Absolutely! Id be happy to help you build a React component. Could you provide some details on what the component should do? For example, is it a button, a form, a complex layout, or something else entirely?' },
   ]);
+
   const [inputMessage, setInputMessage] = useState('');
   const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
   const textareaRef = useRef(null);
@@ -20,18 +22,16 @@ export default function ChatArea({ sidebarOpen, setSidebarOpen, isMobile }) {
   // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+      if (menuRef.current && !menuRef.current.contains(event.target))
         setIsAddMenuOpen(false);
-      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   useEffect(() => {
-    if (messagesEndRef.current) {
+    if (messagesEndRef.current)
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
   }, [messages]);
 
   const handleSend = (e) => {
@@ -63,10 +63,10 @@ export default function ChatArea({ sidebarOpen, setSidebarOpen, isMobile }) {
       {/* Top Navbar */}
       <header className="h-14 flex items-center justify-between px-3 sm:px-4 border-b border-gray-700/40 sticky top-0 z-20 bg-[#131314]">
         <div className="flex items-center gap-3">
-          {isMobile && (
+          {isMobile && !sidebarOpen && (
             <button
               onClick={() => setSidebarOpen(true)}
-              className="p-0 sm:p-2 hover:bg-gray-800 rounded-full text-gray-400 transition-colors"
+              className="p-0 sm:p-2 hover:text-gray-200 rounded-full text-gray-400 transition-colors cursor-pointer"
             >
               <SquareChevronRight size={22} />
             </button>
@@ -96,24 +96,23 @@ export default function ChatArea({ sidebarOpen, setSidebarOpen, isMobile }) {
             >
               {/* Avatar */}
               <div
-                className={`w-8 h-8 shrink-0 rounded-full flex items-center justify-center mt-1 sm:w-10 sm:h-10 ${
-                  msg.role === 'user'
-                    ? 'bg-gray-800 text-gray-300 hidden sm:flex'
-                    : 'bg-gradient-to-br from-blue-500 to-purple-600 text-white'
-                }`}
+                className={`w-8 h-8 shrink-0 rounded-full flex items-center justify-center mt-1 sm:w-10 sm:h-10 ${msg.role === 'user'
+                  ? 'bg-gray-800 text-gray-300 hidden sm:flex'
+                  : 'bg-linear-to-br from-blue-500 to-purple-600 text-white'
+                  }`}
               >
                 {msg.role === 'user' ? <User size={20} /> : <Sparkles size={20} />}
               </div>
 
               {/* Message Content */}
               <div
-                className={`max-w-[90%] sm:max-w-[80%] ${
-                  msg.role === 'user'
-                    ? 'bg-[#2d2f31] text-gray-100 rounded-3xl rounded-tr-sm px-5 py-3.5 shadow-sm'
-                    : 'text-gray-200 px-2 py-2 sm:px-4 sm:py-3 leading-relaxed' /* AI response has no bubble background */
-                }`}
+                className={`max-w-[90%] sm:max-w-[80%] ${msg.role === 'user'
+                  ? 'bg-[#2d2f31] text-gray-100 rounded-3xl rounded-tr-sm px-5 py-3.5 shadow-sm'
+                  : 'text-gray-200 px-2 py-2 sm:px-4 sm:py-3 leading-relaxed'
+                  }`}
+                style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
               >
-                <div className="text-[15px] leading-relaxed whitespace-pre-wrap break-words">
+                <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words">
                   {msg.text}
                 </div>
               </div>
@@ -128,7 +127,7 @@ export default function ChatArea({ sidebarOpen, setSidebarOpen, isMobile }) {
         <div className="max-w-4xl mx-auto">
           <form
             onSubmit={handleSend}
-            className="flex flex-col bg-[#1e1f20] border border-gray-700/60 rounded-[24px] px-2 py-2 shadow-sm focus-within:border-gray-600 transition-all"
+            className="flex flex-col bg-[#1e1f20] border border-gray-700/60 rounded-3xl px-2 py-2 shadow-sm focus-within:border-gray-600 transition-all"
           >
             <textarea
               ref={textareaRef}
@@ -140,7 +139,7 @@ export default function ChatArea({ sidebarOpen, setSidebarOpen, isMobile }) {
                 e.target.style.height = `${e.target.scrollHeight}px`;
               }}
               placeholder="Ask NexusAI anything..."
-              className="w-full max-h-[250px] min-h-[50px] bg-transparent text-gray-100 placeholder-gray-500 px-4 py-3 focus:outline-none resize-none overflow-y-auto custom-scrollbar"
+              className="w-full max-h-62.5 min-h-12.5 bg-transparent text-gray-100 placeholder-gray-500 px-4 py-3 focus:outline-none resize-none overflow-y-auto custom-scrollbar"
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
@@ -154,31 +153,30 @@ export default function ChatArea({ sidebarOpen, setSidebarOpen, isMobile }) {
                 <button
                   type="button"
                   onClick={() => setIsAddMenuOpen(!isAddMenuOpen)}
-                  className={`p-2 rounded-full transition-colors ${
-                    isAddMenuOpen ? 'bg-gray-800 text-gray-200' : 'hover:bg-gray-800 text-gray-400'
-                  }`}
+                  className={`p-2 rounded-full transition-colors ${isAddMenuOpen ? 'bg-gray-800 text-gray-200' : 'hover:bg-gray-800 text-gray-400'
+                    }`}
                 >
-                  <Plus size={22} className={`transition-transform duration-200 ${isAddMenuOpen ? 'rotate-45' : ''}`} />
+                  <Plus size={22} className={`transition-transform duration-200 active:scale-95 cursor-pointer ${isAddMenuOpen ? 'rotate-45' : ''}`} />
                 </button>
 
                 <AnimatePresence>
                   {isAddMenuOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      initial={{ opacity: 0, y: 100, scale: 0 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      exit={{ opacity: 0, y: 100, scale: 0 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute bottom-full left-0 mb-3 w-48 bg-[#2d2f31] border border-gray-700/50 rounded-2xl shadow-xl overflow-hidden z-50 py-2"
+                      className="absolute bottom-full left-0 mb-3 w-48 bg-[#2d2f31] border border-gray-700/50 rounded-2xl shadow-xl overflow-hidden z-50 p-2 text-sm font-semibold"
                     >
-                      <button type="button" className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-200 hover:bg-[#3f4145] transition-colors text-left">
+                      <button type="button" className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-200 hover:bg-[#3f4145] transition-colors text-left rounded-xl cursor-pointer">
                         <Image size={18} className="text-gray-400" />
                         <span>Upload Image</span>
                       </button>
-                      <button type="button" className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-200 hover:bg-[#3f4145] transition-colors text-left">
+                      <button type="button" className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-200 hover:bg-[#3f4145] transition-colors text-left rounded-xl cursor-pointer">
                         <FolderUp size={18} className="text-gray-400" />
                         <span>Upload File</span>
                       </button>
-                      <button type="button" className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-200 hover:bg-[#3f4145] transition-colors text-left border-t border-gray-700/50 mt-1 pt-3">
+                      <button type="button" className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-200 hover:bg-[#3f4145] transition-colors text-left border-t border-gray-700/50 mt-1 pt-3 rounded-xl cursor-pointer">
                         <Mic size={18} className="text-gray-400" />
                         <span>Voice Input</span>
                       </button>
@@ -206,3 +204,5 @@ export default function ChatArea({ sidebarOpen, setSidebarOpen, isMobile }) {
     </div>
   );
 }
+
+export default ChatArea;

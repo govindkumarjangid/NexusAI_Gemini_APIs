@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X } from 'lucide-react';
+import useAuthStore from '../store/useAuthStore';
 
-export default function SearchPage({ isOpen, onClose }) {
+const SearchPage = () => {
+  const { isSearchOpen, setIsSearchOpen } = useAuthStore();
   const [searchQuery, setSearchQuery] = useState('');
 
   const recentChats = [
@@ -17,20 +19,20 @@ export default function SearchPage({ isOpen, onClose }) {
 
   return (
     <AnimatePresence>
-      {isOpen && (
+      {isSearchOpen && (
         <motion.div
           initial={{ x: '100%' }}
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-          className="fixed top-0 right-0 h-full w-full sm:w-[450px] md:w-[550px] bg-[#1e1f20] border-l border-gray-800/60 z-[70] flex flex-col shadow-2xl"
+          className="fixed top-0 right-0 h-full w-full sm:w-112.5 md:w-137.5 bg-[#1e1f20] border-l border-gray-800/60 z-70 flex flex-col shadow-2xl"
         >
           {/* Header */}
           <div className="p-6 flex items-center justify-between pb-2">
             <h2 className="text-2xl font-semibold text-gray-100">Search</h2>
             <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-800 rounded-full transition-colors text-gray-400 hover:text-gray-200"
+              onClick={() => setIsSearchOpen(false)}
+              className="p-2 cursor-pointer hover:bg-gray-800 rounded-full transition-colors text-gray-400 hover:text-gray-200"
             >
               <X size={24} />
             </button>
@@ -73,3 +75,5 @@ export default function SearchPage({ isOpen, onClose }) {
     </AnimatePresence>
   );
 }
+
+export default SearchPage;

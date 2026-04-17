@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import useAuthStore from './store/useAuthStore.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import Auth from './pages/Auth';
 import Sidebar from './components/Sidebar';
@@ -11,11 +12,16 @@ import { useNavigate } from 'react-router-dom';
 const App = () => {
 
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const {
+    user,
+    isMobile,
+    setIsMobile,
+    sidebarOpen,
+    setSidebarOpen,
+    isSearchOpen,
+    setIsSearchOpen,
+  } = useAuthStore();
 
-  const user = localStorage.getItem('user');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,7 +35,7 @@ const App = () => {
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [user, navigate]);
+  }, [user, navigate, setIsMobile, setSidebarOpen]);
 
 
   return (
@@ -78,38 +84,22 @@ const App = () => {
         />
         <Route path="/chat" element={
           <div className="flex h-screen overflow-hidden bg-[#131314] text-gray-100 relative">
-            <Sidebar
-              sidebarOpen={sidebarOpen}
-              setSidebarOpen={setSidebarOpen}
-              onSearchClick={() => setIsSearchOpen(true)}
-              isMobile={isMobile}
-            />
-            {isMobile && sidebarOpen && (
-              <div
-                className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30"
-                onClick={() => setSidebarOpen(false)}
-              />
-            )}
-            <ChatArea
-              sidebarOpen={sidebarOpen}
-              setSidebarOpen={setSidebarOpen}
-              isMobile={isMobile}
-            />
+            <Sidebar />
+            <ChatArea />
             <AnimatePresence>
               {isSearchOpen && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="fixed inset-0 bg-black/60 backdrop-blur-md z-60"
+                  className="fixed inset-0 bg-black/10 backdrop-blur-md z-60"
                   onClick={() => setIsSearchOpen(false)}
                 />
               )}
             </AnimatePresence>
-            <SearchPage isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+            <SearchPage />
           </div>
         } />
-        {/* Add chat/:chatId route below when chat create logic is ready */}
       </Routes>
     </>
   );
