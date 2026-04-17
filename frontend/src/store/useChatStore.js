@@ -22,7 +22,8 @@ const useChatStore = create((set) => ({
                 if (navigate) navigate(`/chat/${chat._id}`);
                 toast.success('Chat created successfully');
                 if (firstMessage) {
-                  await useChatStore.getState().addMessageToChat({ chatId: chat._id, message: firstMessage });
+                  const useMessageStore = (await import('./useMessageStore.js')).default;
+                  await useMessageStore.getState().sendMessage({ chatId: chat._id, ...firstMessage });
                   await useChatStore.getState().getChatsByUser(userId);
                 }
             } else {
@@ -38,10 +39,8 @@ const useChatStore = create((set) => ({
     getChatsByUser: async (userId) => {
         set({ isLoading: true, error: null });
         try {
-            console.log(userId);
             const response = await axiosInstance.get(`/chats/user-chats/${userId}`);
             const { chats } = response.data;
-            console.log(chats)
             set({ chats, isLoading: false });
         } catch (error) {
             set({ isLoading: false, error: error.response?.data?.message || 'Failed to fetch chats' });
@@ -49,20 +48,6 @@ const useChatStore = create((set) => ({
         }
     },
 
-    addMessageToChat: async ({ chatId, message }) => {
-        set({ isLoading: true, error: null });
-        try {
-            const response = await axiosInstance.post(`/chats/${chatId}/message`, { message });
-            set({ isLoading: false });
-            if (!response.data.success) {
-                set({ error: response.data.message || 'Failed to add message' });
-                toast.error(response.data.message || 'Failed to add message');
-            }
-        } catch (error) {
-            set({ isLoading: false, error: error.response?.data?.message || 'Failed to add message' });
-            toast.error(error.response?.data?.message || 'Failed to add message');
-        }
-    },
 
     deleteChat: async (chatId) => {
         set({ isLoading: true, error: null });

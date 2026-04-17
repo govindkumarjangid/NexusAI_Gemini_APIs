@@ -1,7 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Plus, MessageSquare, Settings, LogOut,
-  Search, Trash2, Edit2, UserCircle, SquarePen,
+  Plus, Search, SquarePen,
   SquareChevronLeft,
   SquareChevronRight
 } from 'lucide-react';
@@ -11,29 +10,16 @@ import useAuthStore from '../store/useAuthStore.js';
 import useChatStore from '../store/useChatStore.js';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ChatList from './ChatList.jsx';
+import SidebarBottom from './SidebarBottom.jsx';
 
 const Sidebar = () => {
 
-  const {
-    isMobile,
-    sidebarOpen,
-    setSidebarOpen,
-    setIsSearchOpen,
-    logout,
-    user
-  } = useAuthStore();
+  const { isMobile, sidebarOpen, setSidebarOpen, setIsSearchOpen, logout, user } = useAuthStore();
 
-  const {
-    chats,
-    getChatsByUser,
-    createChat,
-    deleteChat,
-    setCurrentChat,
-    isLoading: chatLoading
-  } = useChatStore();
+  const { chats, getChatsByUser, createChat, deleteChat, setCurrentChat, currentChat, isLoading: chatLoading } = useChatStore();
 
   const navigate = useNavigate();
-  console.log(chats)
 
   useEffect(() => {
     if (user?.id)
@@ -46,8 +32,9 @@ const Sidebar = () => {
   };
 
   const handleCreateChat = async () => {
-    setCurrentChat(null);
-    navigate('/chat');
+    if (!user?.id) return;
+    await createChat({ userId: user.id, navigate });
+    await getChatsByUser(user.id);
   };
 
   return (
@@ -168,41 +155,14 @@ const Sidebar = () => {
                   exit={{ opacity: 0 }}
                   className="space-y-1"
                 >
-                  {chats && chats.length > 0 ? (
-                    chats.map((chat) => (
-                      <div
-                        key={chat._id}
-                        title={chat.title}
-                        className="group flex items-center justify-between rounded-full hover:bg-[#2d2f31] cursor-pointer text-gray-300 hover:text-gray-100 transition-colors px-4 py-2"
-                        onClick={() => {
-                          setCurrentChat(chat);
-                          navigate(`/chat/${chat._id}`);
-                        }}
-                      >
-                        <div className="flex items-center gap-3 overflow-hidden text-sm">
-                          <MessageSquare size={18} className="shrink-0" />
-                          <span className="truncate">{chat.title}</span>
-                        </div>
-
-                        <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button className="p-1 hover:text-blue-400 text-gray-400 transition-colors">
-                            <Edit2 size={14} />
-                          </button>
-                          <button
-                            className="p-1 hover:text-red-400 text-gray-400 transition-colors"
-                            onClick={e => {
-                              e.stopPropagation();
-                              deleteChat(chat._id);
-                            }}
-                          >
-                            <Trash2 size={14} />
-                          </button>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="text-gray-500 px-2 py-4 text-center">No chats found.</div>
-                  )}
+                  <ChatList
+                    chats={chats}
+                    currentChat={currentChat}
+                    setCurrentChat={setCurrentChat}
+                    navigate={navigate}
+                    deleteChat={deleteChat}
+                    getChatsByUser={getChatsByUser}
+                  />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -210,30 +170,7 @@ const Sidebar = () => {
         </div>
 
         {/* Bottom Area */}
-        <div className="p-3 border-t border-gray-800/60 space-y-1 shrink-0">
-          <button className="w-full flex items-center rounded-full hover:bg-gray-800 cursor-pointer transition-colors text-sm text-gray-300 h-11.5 overflow-hidden" title={!sidebarOpen ? "Profile Settings" : ""}>
-            <div className="w-11.5 shrink-0 flex items-center justify-center">
-              <UserCircle size={20} />
-            </div>
-            {sidebarOpen && <span className="whitespace-nowrap truncate pr-3">Profile Settings</span>}
-          </button>
-          <button className="w-full flex items-center rounded-full hover:bg-gray-800 cursor-pointer transition-colors text-sm text-gray-300 h-11.5 overflow-hidden" title={!sidebarOpen ? "Preferences" : ""}>
-            <div className="w-11.5 shrink-0 flex items-center justify-center">
-              <Settings size={20} />
-            </div>
-            {sidebarOpen && <span className="whitespace-nowrap truncate pr-3">Preferences</span>}
-          </button>
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center rounded-full hover:bg-red-500/10 cursor-pointer hover:text-red-400 transition-colors text-sm text-gray-300 h-11.5 overflow-hidden"
-            title={!sidebarOpen ? "Log out" : ""}
-          >
-            <div className="w-11.5 shrink-0 flex items-center justify-center">
-              <LogOut size={20} />
-            </div>
-            {sidebarOpen && <span className="whitespace-nowrap truncate pr-3">Log out</span>}
-          </button>
-        </div>
+        <SidebarBottom sidebarOpen={sidebarOpen} handleLogout={handleLogout} />
       </motion.div>
     </>
   );

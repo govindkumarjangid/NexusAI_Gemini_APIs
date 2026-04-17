@@ -1,6 +1,7 @@
 import Chat from '../models/chat.model.js';
 import User from '../models/user.model.js';
 import wrapAsync from '../utils/wrapAsync.js';
+import Message from '../models/message.model.js';
 
 // create new chat
 const createChat = wrapAsync(async (req, res) => {
@@ -32,40 +33,26 @@ const getChatsByUser = wrapAsync(async (req, res) => {
     res.status(200).json({ success: true, message: 'Chats fetched successfully', chats });
 });
 
-
-
 // add message to chat
 const addMessageToChat = wrapAsync(async (req, res) => {
 
     const { chatId } = req.params;
-    const { messageId, role, content } = req.body;
+    const { role, content } = req.body;
+
+    if (!role || !content)
+        return res.status(400).json({ message: 'role and content are required' });
 
     const chat = await Chat.findById(chatId);
-
     if (!chat)
         return res.status(404).json({ message: 'Chat not found' });
-    
-    chat.messages.push({ messageId, role, content });
+
+    // Create a new Message document
+    const newMessage = await Message.create({ chatId, role, content });
+
+    chat.messages.push({ messageId: newMessage._id, role, content });
     await chat.save();
 
-    res.status(200).json({ message: 'Message added to chat successfully' });
-
-});
-
-// update chat with new message
-const updateChatWithMessage = wrapAsync(async (req, res) => {
-    const { chatId } = req.params;
-    const { messageId, role, content } = req.body;
-
-    // Check if chat exists
-    const chat = await Chat.findById(chatId);
-    if (!chat) {
-        return res.status(404).json({ message: 'Chat not found' });
-    }
-    // Update chat with new message
-    chat.messages.push({ messageId, role, content });
-    await chat.save();
-    res.status(200).json({ message: 'Chat updated with new message successfully' });
+    res.status(200).json({ success: true, message: 'Message added to chat successfully', messageObj: newMessage });
 });
 
 // delete chat and all its messages
@@ -73,13 +60,14 @@ const deleteChat = wrapAsync(async (req, res) => {
     const { chatId } = req.params;
     // Check if chat exists
     const chat = await Chat.findById(chatId);
-    if (!chat) {
+    if (!chat)
         return res.status(404).json({ message: 'Chat not found' });
-    }
+
+    await Message.deleteMany({ chatId });
 
     // Delete chat
     await Chat.findByIdAndDelete(chatId);
-    res.status(200).json({ message: 'Chat deleted successfully' });
+    res.status(200).json({ success: true, message: 'Chat and its messages deleted successfully' });
 });
 
 
@@ -87,6 +75,5 @@ export {
     createChat,
     getChatsByUser,
     addMessageToChat,
-    updateChatWithMessage,
     deleteChat
 };

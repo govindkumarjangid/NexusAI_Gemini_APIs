@@ -2,37 +2,73 @@ import Message from '../models/message.model.js';
 import Chat from '../models/chat.model.js';
 import User from '../models/user.model.js';
 import wrapAsync from '../utils/wrapAsync.js';
+import genAI from '../configs/genAI.js';
 
-// send message
 const sendMessage = wrapAsync(async (req, res) => {
     const { chatId } = req.params;
     const { content } = req.body;
 
     // Check if chat exists
-    const chat = await Chat.findById(chatId);
+    const chat = await Chat.findById(chatId).populate('messages.messageId');
+    if (!chat) return res.status(404).json({ message: 'Chat not found' });
 
-    if (!chat) {
-        return res.status(404).json({ message: 'Chat not found' });
-    }
-
-    // Create new message
+    // Save user message
     const newMessage = new Message({ chatId, role: 'user', content });
     await newMessage.save();
-    // Add message to chat
+
     chat.messages.push({ messageId: newMessage._id, role: 'user', content });
     await chat.save();
-    // Here you would typically call your AI assistant service to get a response
-    // For demonstration, we'll just echo the user's message
-    const assistantResponse = `Echo: ${content}`;
-    // Create assistant message
-    const assistantMessage = new Message({ chatId, role: 'assistant', content: assistantResponse });
-    await assistantMessage.save();
 
-    // Add assistant message to chat
-    chat.messages.push({ messageId: assistantMessage._id, role: 'assistant', content: assistantResponse });
-    await chat.save();
+    // Set SSE Headers
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
 
-    res.status(200).json({ message: 'Message sent successfully', assistantResponse });
+    let fullAssistantResponse = "";
+
+    try {
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+
+        const formattedMessages = chat.messages.map(msg => ({
+            role: msg.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: msg.content }]
+        }));
+
+        // Remove the latest user message
+        formattedMessages.pop();
+
+        const chatSession = model.startChat({
+            history: formattedMessages,
+        });
+
+        const result = await chatSession.sendMessageStream(content);
+
+        // Await the stream properly
+        for await (const chunk of result.stream) {
+            const chunkText = chunk.text();
+            if (chunkText) {
+                fullAssistantResponse += chunkText;
+                // Send chunk to frontend
+                res.write(`data: ${JSON.stringify({ text: chunkText })}\n\n`);
+            }
+        }
+
+        // SAVE TO DB AFTER STREAM IS COMPLETE
+        const assistantMessage = new Message({ chatId, role: 'assistant', content: fullAssistantResponse });
+        await assistantMessage.save();
+
+        chat.messages.push({ messageId: assistantMessage._id, role: 'assistant', content: fullAssistantResponse });
+        await chat.save();
+
+        // End the stream cleanly
+        res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
+        return res.end();
+
+    } catch (error) {
+        console.error("Stream Error:", error);
+        res.write(`data: ${JSON.stringify({ error: "Something went wrong" })}\n\n`);
+        return res.end();
+    }
 });
 
 // get all messages for a chat

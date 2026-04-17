@@ -1,19 +1,27 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Image, Mic, PanelLeft, Sparkles, User, Plus, ArrowUp, FolderUp, Menu, SquareChevronRight } from 'lucide-react';
+import { Image, Mic, Sparkles, User, Plus, ArrowUp, FolderUp, SquareChevronRight } from 'lucide-react';
 import logo from '/nexusai-logo.svg';
 import useAuthStore from '../store/useAuthStore';
 import useChatStore from '../store/useChatStore';
-import { useParams, useNavigate } from 'react-router-dom';
+import useMessageStore from '../store/useMessageStore';
+import { useParams } from 'react-router-dom';
 
 const ChatArea = () => {
-  const { isMobile, sidebarOpen, setSidebarOpen } = useAuthStore();
-  const { user } = useAuthStore();
-  const { currentChat, setCurrentChat, createChat, chats, addMessageToChat, getChatsByUser } = useChatStore();
-  const { chatId } = useParams();
-  const navigate = useNavigate();
 
   const [messages, setMessages] = useState([]);
+  const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
+  const [inputText, setInputText] = useState("");
+  const [isStreaming, setIsStreaming] = useState(false);
+
+  const { isMobile, sidebarOpen, setSidebarOpen, user } = useAuthStore();
+  const { currentChat, setCurrentChat, chats, createChat } = useChatStore();
+  const { sendAndStreamMessage } = useMessageStore();
+  const { chatId } = useParams();
+
+  const textareaRef = useRef(null);
+  const menuRef = useRef(null);
+  const messagesEndRef = useRef(null);
 
   // Load chat by URL param
   useEffect(() => {
@@ -21,7 +29,6 @@ const ChatArea = () => {
       const found = chats.find(c => c._id === chatId);
       if (found) setCurrentChat(found);
     }
-    // eslint-disable-next-line
   }, [chatId, chats]);
 
   useEffect(() => {
@@ -35,11 +42,6 @@ const ChatArea = () => {
     }
   }, [currentChat]);
 
-  const [inputMessage, setInputMessage] = useState('');
-  const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
-  const textareaRef = useRef(null);
-  const menuRef = useRef(null);
-  const messagesEndRef = useRef(null);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -56,39 +58,52 @@ const ChatArea = () => {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = async (e) => {
+
+
+  // Unified send message handler (always uses sendMessage)
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!inputMessage.trim()) return;
+    if (!inputText.trim()) return;
 
-    // If no chat, create one and send message
-    if (!currentChat && user) {
-      await createChat({
-        userId: user._id || user.id,
-        navigate,
-        firstMessage: {
-          role: 'user',
-          content: inputMessage,
-          messageId: Date.now().toString(),
-        }
-      });
-      setInputMessage('');
-      await getChatsByUser(user._id || user.id);
-      return;
+    let chat_id = currentChat?._id;
+    let chatJustCreated = false;
+    const userMessage = inputText;
+    setInputText("");
+
+    // If no chat exists, create one first
+    if (!chat_id && user) {
+      await createChat({ userId: user.id || user._id });
+      chat_id = useChatStore.getState().currentChat?._id;
+      // Refresh chat list in sidebar
+      if (user.id || user._id) {
+        const { getChatsByUser } = useChatStore.getState();
+        await getChatsByUser(user.id || user._id);
+      }
+      chatJustCreated = true;
     }
 
-    if (currentChat) {
-      await addMessageToChat({
-        chatId: currentChat._id,
-        message: {
-          role: 'user',
-          content: inputMessage,
-          messageId: Date.now().toString(),
-        }
-      });
-      setInputMessage('');
-      await getChatsByUser(user._id || user.id);
-    }
+    // 1. Add user message to UI immediately
+    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    // 2. Add an empty assistant message that we will update word-by-word
+    setMessages(prev => [...prev, { role: 'assistant', content: "" }]);
+    setIsStreaming(true);
+
+    await sendAndStreamMessage({
+      chatId: chat_id,
+      role: 'user',
+      content: userMessage,
+      onStream: (text) => {
+        setMessages(prev => {
+          const newMessages = [...prev];
+          const lastIndex = newMessages.length - 1;
+          newMessages[lastIndex].content += text;
+          return newMessages;
+        });
+      },
+      onDone: () => setIsStreaming(false)
+    });
   };
+
 
   return (
     <div className="flex-1 flex flex-col h-screen bg-[#131314]">
@@ -110,9 +125,9 @@ const ChatArea = () => {
         {user && (
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-lg uppercase">
-              {user.name?.[0] || user.username?.[0] || '?'}
+              {user.name?.[0] || '?'}
             </div>
-            <span className="text-gray-200 hidden sm:flex font-normal text-base max-w-30 truncate">{user.name || user.username || 'User'}</span>
+            <span className="text-gray-200 hidden sm:flex font-normal text-base max-w-30 truncate">{user.name || 'User'}</span>
           </div>
         )}
       </header>
@@ -129,7 +144,7 @@ const ChatArea = () => {
           ) : (
             messages.map((msg) => (
               <motion.div
-                key={msg.id}
+                key={msg._id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
@@ -148,7 +163,7 @@ const ChatArea = () => {
                 <div
                   className={`max-w-[90%] sm:max-w-[80%] ${msg.role === 'user'
                     ? 'bg-[#2d2f31] text-gray-100 rounded-3xl rounded-tr-sm px-5 py-3.5 shadow-sm'
-                    : 'text-gray-200 px-2 py-2 sm:px-4 sm:py-3 leading-relaxed' /* AI response has no bubble background */
+                    : 'text-gray-200 px-2 py-2 sm:px-4 sm:py-3 leading-relaxed'
                     }`}
                   style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
                 >
@@ -167,15 +182,15 @@ const ChatArea = () => {
       <div className="p-4 sm:p-6 bg-linear-to-t from-[#131314] to-transparent pt-0">
         <div className="max-w-4xl mx-auto">
           <form
-            onSubmit={handleSend}
+            onSubmit={handleSendMessage}
             className="flex flex-col bg-[#1e1f20] border border-gray-700/60 rounded-3xl px-2 py-2 shadow-sm focus-within:border-gray-600 transition-all"
           >
             <textarea
               ref={textareaRef}
               rows="1"
-              value={inputMessage}
+              value={inputText}
               onChange={(e) => {
-                setInputMessage(e.target.value);
+                setInputText(e.target.value);
                 e.target.style.height = 'auto';
                 e.target.style.height = `${e.target.scrollHeight}px`;
               }}
@@ -184,7 +199,7 @@ const ChatArea = () => {
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
-                  handleSend(e);
+                  handleSendMessage(e);
                 }
               }}
             />
@@ -229,8 +244,8 @@ const ChatArea = () => {
               <div className="flex items-center gap-2">
                 <button
                   type="submit"
-                  disabled={!inputMessage.trim()}
-                  className="p-2.5 bg-[#2563eb] hover:bg-blue-500 disabled:bg-[#2d2f31] disabled:text-gray-500 text-white rounded-full transition-colors flex items-center justify-center"
+                  disabled={!inputText.trim()}
+                  className="p-2.5 bg-[#2563eb] hover:bg-blue-500 disabled:bg-[#2d2f31] disabled:text-gray-500 text-white rounded-full transition-all flex items-center justify-center cursor-pointer active:scale-95"
                 >
                   <ArrowUp size={20} />
                 </button>

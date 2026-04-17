@@ -11,17 +11,17 @@ const {
 
 const router = express.Router();
 
-// send message
-router.post('/send', sendMessage);
-// get all messages for a chat
+
+router.post('/send/:chatId', sendMessage);
+
 router.get('/chat/:chatId', getMessagesByChat);
-// get message by id
+
 router.get('/:messageId', getMessageById);
-// delete message by id
+
 router.delete('/:messageId', deleteMessageById);
-// edit message by id
+
 router.put('/:messageId', editMessageById);
-// get all messages for a user
+
 router.get('/user/:userId', getMessagesByUser);
 
 export default router;
