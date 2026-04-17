@@ -100,6 +100,13 @@ const App = () => {
             <SearchPage />
           </div>
         } />
+        <Route path="/chat/:chatId" element={
+          <div className="flex h-screen overflow-hidden bg-[#131314] text-gray-100 relative">
+            <Sidebar />
+            <ChatArea />
+            <SearchPage />
+          </div>
+        } />
       </Routes>
     </>
   );

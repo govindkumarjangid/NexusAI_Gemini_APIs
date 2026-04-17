@@ -10,15 +10,15 @@ import {
 
 const router = express.Router();
 
-// create new chat
+
 router.post('/create', createChat);
-// get all chats for a user
-router.get('/user/:userId', getChatsByUser);
-// add message to chat
+
+router.get('/user-chats/:userId', getChatsByUser);
+
 router.post('/:chatId/message', addMessageToChat);
-// update chat with new message
+
 router.put('/:chatId/message', updateChatWithMessage);
-// delete chat by id
+
 router.delete('/:chatId', deleteChat);
 
 

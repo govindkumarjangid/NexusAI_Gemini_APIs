@@ -3,15 +3,37 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Image, Mic, PanelLeft, Sparkles, User, Plus, ArrowUp, FolderUp, Menu, SquareChevronRight } from 'lucide-react';
 import logo from '/nexusai-logo.svg';
 import useAuthStore from '../store/useAuthStore';
+import useChatStore from '../store/useChatStore';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const ChatArea = () => {
-  const { user, isMobile, sidebarOpen, setSidebarOpen } = useAuthStore();
+  const { isMobile, sidebarOpen, setSidebarOpen } = useAuthStore();
+  const { user } = useAuthStore();
+  const { currentChat, setCurrentChat, createChat, chats, addMessageToChat, getChatsByUser } = useChatStore();
+  const { chatId } = useParams();
+  const navigate = useNavigate();
 
-  const [messages, setMessages] = useState([
-    { id: 1, role: 'ai', text: 'Hello! I am NexusAI. How can I help you today?' },
-    { id: 2, role: 'user', text: 'Can you help me build a React component?' },
-    { id: 3, role: 'ai', text: 'Absolutely! Id be happy to help you build a React component. Could you provide some details on what the component should do? For example, is it a button, a form, a complex layout, or something else entirely?' },
-  ]);
+  const [messages, setMessages] = useState([]);
+
+  // Load chat by URL param
+  useEffect(() => {
+    if (chatId && chats && chats.length > 0) {
+      const found = chats.find(c => c._id === chatId);
+      if (found) setCurrentChat(found);
+    }
+    // eslint-disable-next-line
+  }, [chatId, chats]);
+
+  useEffect(() => {
+    if (currentChat && currentChat.messages) {
+      setMessages(currentChat.messages.map((msg, idx) => ({
+        ...msg,
+        id: msg._id || idx
+      })));
+    } else {
+      setMessages([]);
+    }
+  }, [currentChat]);
 
   const [inputMessage, setInputMessage] = useState('');
   const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
@@ -34,32 +56,43 @@ const ChatArea = () => {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
     if (!inputMessage.trim()) return;
 
-    // Add user message
-    const newMsg = { id: Date.now(), role: 'user', text: inputMessage };
-    setMessages([...messages, newMsg]);
-    setInputMessage('');
-
-    // Reset textarea height
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
+    // If no chat, create one and send message
+    if (!currentChat && user) {
+      await createChat({
+        userId: user._id || user.id,
+        navigate,
+        firstMessage: {
+          role: 'user',
+          content: inputMessage,
+          messageId: Date.now().toString(),
+        }
+      });
+      setInputMessage('');
+      await getChatsByUser(user._id || user.id);
+      return;
     }
 
-    // Mock AI response
-    setTimeout(() => {
-      setMessages(prev => [...prev, {
-        id: Date.now() + 1,
-        role: 'ai',
-        text: 'This is a simulated response based on your query.'
-      }]);
-    }, 1000);
+    if (currentChat) {
+      await addMessageToChat({
+        chatId: currentChat._id,
+        message: {
+          role: 'user',
+          content: inputMessage,
+          messageId: Date.now().toString(),
+        }
+      });
+      setInputMessage('');
+      await getChatsByUser(user._id || user.id);
+    }
   };
 
   return (
     <div className="flex-1 flex flex-col h-screen bg-[#131314]">
+
       {/* Top Navbar */}
       <header className="h-14 flex items-center justify-between px-3 sm:px-4 border-b border-gray-700/40 sticky top-0 z-20 bg-[#131314]">
         <div className="flex items-center gap-3">
@@ -84,40 +117,48 @@ const ChatArea = () => {
         )}
       </header>
 
+
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4 sm:p-6">
         <div className="max-w-4xl mx-auto space-y-6">
-          {messages.map((msg) => (
-            <motion.div
-              key={msg.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
-            >
-              {/* Avatar */}
-              <div
-                className={`w-8 h-8 shrink-0 rounded-full flex items-center justify-center mt-1 sm:w-10 sm:h-10 ${msg.role === 'user'
-                  ? 'bg-gray-800 text-gray-300 hidden sm:flex'
-                  : 'bg-linear-to-br from-blue-500 to-purple-600 text-white'
-                  }`}
+          {(!currentChat || messages.length === 0) ? (
+            <div className="flex flex-col items-start justify-end h-80 text-center text-gray-400 select-none">
+              <div className="text-2xl font-semibold mb-2">Hi {user?.name || user?.username || 'Govind kumar'}</div>
+              <div className="text-3xl">Where should we start?</div>
+            </div>
+          ) : (
+            messages.map((msg) => (
+              <motion.div
+                key={msg.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
               >
-                {msg.role === 'user' ? <User size={20} /> : <Sparkles size={20} />}
-              </div>
-
-              {/* Message Content */}
-              <div
-                className={`max-w-[90%] sm:max-w-[80%] ${msg.role === 'user'
-                  ? 'bg-[#2d2f31] text-gray-100 rounded-3xl rounded-tr-sm px-5 py-3.5 shadow-sm'
-                  : 'text-gray-200 px-2 py-2 sm:px-4 sm:py-3 leading-relaxed'
-                  }`}
-                style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
-              >
-                <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words">
-                  {msg.text}
+                {/* Avatar */}
+                <div
+                  className={`w-8 h-8 shrink-0 rounded-full flex items-center justify-center mt-1 sm:w-10 sm:h-10 ${msg.role === 'user'
+                    ? 'bg-gray-800 text-gray-300 hidden sm:flex'
+                    : 'bg-linear-to-br from-blue-500 to-purple-600 text-white'
+                    }`}
+                >
+                  {msg.role === 'user' ? <User size={20} /> : <Sparkles size={20} />}
                 </div>
-              </div>
-            </motion.div>
-          ))}
+
+                {/* Message Content */}
+                <div
+                  className={`max-w-[90%] sm:max-w-[80%] ${msg.role === 'user'
+                    ? 'bg-[#2d2f31] text-gray-100 rounded-3xl rounded-tr-sm px-5 py-3.5 shadow-sm'
+                    : 'text-gray-200 px-2 py-2 sm:px-4 sm:py-3 leading-relaxed' /* AI response has no bubble background */
+                    }`}
+                  style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
+                >
+                  <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words">
+                    {msg.content || msg.text}
+                  </div>
+                </div>
+              </motion.div>
+            ))
+          )}
           <div ref={messagesEndRef} />
         </div>
       </div>
@@ -196,10 +237,12 @@ const ChatArea = () => {
               </div>
             </div>
           </form>
+
           <p className="text-center text-xs text-gray-500 mt-3 hidden sm:block">
             NexusAI may produce inaccurate information about people, places, or facts.
           </p>
         </div>
+
       </div>
     </div>
   );

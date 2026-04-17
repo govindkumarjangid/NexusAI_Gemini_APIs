@@ -8,6 +8,8 @@ import {
 
 import logo from '/nexusai-logo.svg';
 import useAuthStore from '../store/useAuthStore.js';
+import useChatStore from '../store/useChatStore.js';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
@@ -17,22 +19,36 @@ const Sidebar = () => {
     sidebarOpen,
     setSidebarOpen,
     setIsSearchOpen,
-    logout
+    logout,
+    user
   } = useAuthStore();
 
-  // Mock data
-  const chats = [
-    { id: 1, title: 'Learn React Hooks', date: 'Today' },
-    { id: 2, title: 'Tailwind CSS Tips', date: 'Yesterday' },
-    { id: 3, title: 'Framer Motion Guide', date: 'Previous 7 Days' },
-  ];
+  const {
+    chats,
+    getChatsByUser,
+    createChat,
+    deleteChat,
+    setCurrentChat,
+    isLoading: chatLoading
+  } = useChatStore();
 
   const navigate = useNavigate();
+  console.log(chats)
+
+  useEffect(() => {
+    if (user?.id)
+      getChatsByUser(user.id);
+  }, [user, getChatsByUser]);
 
   const handleLogout = async () => {
     await logout();
     navigate('/');
-  }
+  };
+
+  const handleCreateChat = async () => {
+    setCurrentChat(null);
+    navigate('/chat');
+  };
 
   return (
     <>
@@ -105,7 +121,11 @@ const Sidebar = () => {
 
         {/* New Chat Button */}
         <div className="px-3 py-3 mt-1 shrink-0">
-          <button className="flex items-center bg-[#2d2f31] hover:bg-[#383a3c] cursor-pointer rounded-full transition-colors text-gray-200 w-full overflow-hidden h-11.5">
+          <button
+            className="flex items-center bg-[#2d2f31] hover:bg-[#383a3c] cursor-pointer rounded-full transition-colors text-gray-200 w-full overflow-hidden h-11.5"
+            onClick={handleCreateChat}
+            disabled={chatLoading}
+          >
             <div className="w-11.5 shrink-0 flex items-center justify-center">
               <SquarePen size={18} />
             </div>
@@ -148,27 +168,41 @@ const Sidebar = () => {
                   exit={{ opacity: 0 }}
                   className="space-y-1"
                 >
-                  {chats.map((chat) => (
-                    <div
-                      key={chat.id}
-                      title={chat.title}
-                      className="group flex items-center justify-between rounded-full hover:bg-[#2d2f31] cursor-pointer text-gray-300 hover:text-gray-100 transition-colors px-4 py-2"
-                    >
-                      <div className="flex items-center gap-3 overflow-hidden text-sm">
-                        <MessageSquare size={18} className="shrink-0" />
-                        <span className="truncate">{chat.title}</span>
-                      </div>
+                  {chats && chats.length > 0 ? (
+                    chats.map((chat) => (
+                      <div
+                        key={chat._id}
+                        title={chat.title}
+                        className="group flex items-center justify-between rounded-full hover:bg-[#2d2f31] cursor-pointer text-gray-300 hover:text-gray-100 transition-colors px-4 py-2"
+                        onClick={() => {
+                          setCurrentChat(chat);
+                          navigate(`/chat/${chat._id}`);
+                        }}
+                      >
+                        <div className="flex items-center gap-3 overflow-hidden text-sm">
+                          <MessageSquare size={18} className="shrink-0" />
+                          <span className="truncate">{chat.title}</span>
+                        </div>
 
-                      <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button className="p-1 hover:text-blue-400 text-gray-400 transition-colors">
-                          <Edit2 size={14} />
-                        </button>
-                        <button className="p-1 hover:text-red-400 text-gray-400 transition-colors">
-                          <Trash2 size={14} />
-                        </button>
+                        <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button className="p-1 hover:text-blue-400 text-gray-400 transition-colors">
+                            <Edit2 size={14} />
+                          </button>
+                          <button
+                            className="p-1 hover:text-red-400 text-gray-400 transition-colors"
+                            onClick={e => {
+                              e.stopPropagation();
+                              deleteChat(chat._id);
+                            }}
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <div className="text-gray-500 px-2 py-4 text-center">No chats found.</div>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>

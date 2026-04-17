@@ -1,23 +1,30 @@
-// add chat create, fetch user chats, add message to chat and delete chat functionality
 import axiosInstance from '../configs/axiosInstance.js';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { toast } from 'react-hot-toast';
 
 const useChatStore = create((set) => ({
+
     chats: [],
     currentChat: null,
+    setCurrentChat: (chat) => set({ currentChat: chat }),
     isLoading: false,
     error: null,
 
-    createChat: async ({ userId, navigate }) => {
+    createChat: async ({ userId, navigate, firstMessage }) => {
         set({ isLoading: true, error: null });
         try {
             const response = await axiosInstance.post('/chats/create', { userId });
             set({ isLoading: false });
             if (response.data.success) {
-                navigate(`/chat/${response.data.chat._id}`);
+                const chat = response.data.chat;
+                set({ currentChat: chat });
+                if (navigate) navigate(`/chat/${chat._id}`);
                 toast.success('Chat created successfully');
+                if (firstMessage) {
+                  await useChatStore.getState().addMessageToChat({ chatId: chat._id, message: firstMessage });
+                  await useChatStore.getState().getChatsByUser(userId);
+                }
             } else {
                 set({ error: response.data.message || 'Chat creation failed' });
                 toast.error(response.data.message || 'Chat creation failed');
@@ -31,8 +38,10 @@ const useChatStore = create((set) => ({
     getChatsByUser: async (userId) => {
         set({ isLoading: true, error: null });
         try {
-            const response = await axiosInstance.get(`/chats/user/${userId}`);
+            console.log(userId);
+            const response = await axiosInstance.get(`/chats/user-chats/${userId}`);
             const { chats } = response.data;
+            console.log(chats)
             set({ chats, isLoading: false });
         } catch (error) {
             set({ isLoading: false, error: error.response?.data?.message || 'Failed to fetch chats' });
