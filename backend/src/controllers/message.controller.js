@@ -7,6 +7,7 @@ import genAI from '../configs/genAI.js';
 const sendMessage = wrapAsync(async (req, res) => {
     const { chatId } = req.params;
     const { content } = req.body;
+    console.log(chatId, content);
 
     // Check if chat exists
     const chat = await Chat.findById(chatId).populate('messages.messageId');
@@ -16,8 +17,12 @@ const sendMessage = wrapAsync(async (req, res) => {
     const newMessage = new Message({ chatId, role: 'user', content });
     await newMessage.save();
 
+    console.log(newMessage)
+
     chat.messages.push({ messageId: newMessage._id, role: 'user', content });
     await chat.save();
+
+    console.log(chat)
 
     // Set SSE Headers
     res.setHeader('Content-Type', 'text/event-stream');
@@ -27,7 +32,7 @@ const sendMessage = wrapAsync(async (req, res) => {
     let fullAssistantResponse = "";
 
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest' });
 
         const formattedMessages = chat.messages.map(msg => ({
             role: msg.role === 'assistant' ? 'model' : 'user',
@@ -48,7 +53,7 @@ const sendMessage = wrapAsync(async (req, res) => {
             const chunkText = chunk.text();
             if (chunkText) {
                 fullAssistantResponse += chunkText;
-                // Send chunk to frontend
+                console.log(chunkText)
                 res.write(`data: ${JSON.stringify({ text: chunkText })}\n\n`);
             }
         }
@@ -56,9 +61,11 @@ const sendMessage = wrapAsync(async (req, res) => {
         // SAVE TO DB AFTER STREAM IS COMPLETE
         const assistantMessage = new Message({ chatId, role: 'assistant', content: fullAssistantResponse });
         await assistantMessage.save();
+        console.log(assistantMessage)
 
         chat.messages.push({ messageId: assistantMessage._id, role: 'assistant', content: fullAssistantResponse });
         await chat.save();
+        console.log(chat);
 
         // End the stream cleanly
         res.write(`data: ${JSON.stringify({ done: true })}\n\n`);

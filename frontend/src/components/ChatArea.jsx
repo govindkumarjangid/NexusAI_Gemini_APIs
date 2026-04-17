@@ -82,15 +82,12 @@ const ChatArea = () => {
       chatJustCreated = true;
     }
 
-    // 1. Add user message to UI immediately
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
-    // 2. Add an empty assistant message that we will update word-by-word
     setMessages(prev => [...prev, { role: 'assistant', content: "" }]);
     setIsStreaming(true);
 
     await sendAndStreamMessage({
       chatId: chat_id,
-      role: 'user',
       content: userMessage,
       onStream: (text) => {
         setMessages(prev => {

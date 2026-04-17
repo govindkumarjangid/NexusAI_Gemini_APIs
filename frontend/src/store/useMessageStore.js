@@ -23,19 +23,27 @@ const useMessageStore = create((set) => ({
     }
   },
 
-  sendAndStreamMessage: async ({ chatId, role, content, onStream, onDone }) => {
-    // Add user message to backend
-    await useMessageStore.getState().sendMessage({ chatId, role, content });
-
-    // Stream AI response
+  sendAndStreamMessage: async ({ chatId, content, onStream, onDone }) => {
     try {
-      const response = await fetch(`/messages/send/${chatId}`, {
+
+      const BACKEND_URL = "http://localhost:5000/api/v1";
+      const token = localStorage.getItem('token');
+
+      const response = await fetch(`${BACKEND_URL}/messages/send/${chatId}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token ? `Bearer ${token}` : ''
+        },
         body: JSON.stringify({ content })
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       if (!response.body) throw new Error('No response body');
+
       const reader = response.body.getReader();
       const decoder = new TextDecoder('utf-8');
       let buffer = '';
@@ -43,24 +51,34 @@ const useMessageStore = create((set) => ({
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
+
         buffer += decoder.decode(value, { stream: true });
         let lines = buffer.split('\n');
         buffer = lines.pop(); // Save incomplete line for next chunk
+
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             try {
               const data = JSON.parse(line.replace('data: ', ''));
+
               if (data.done) {
                 if (onDone) onDone();
               } else if (data.text) {
                 if (onStream) onStream(data.text);
+              } else if (data.error) {
+                console.error("AI Streaming Error from Backend:", data.error);
+                toast.error(data.error); // Show error to user
               }
-            } catch { }
+            } catch (err) {
+              // Ignored JSON parse errors for incomplete chunks
+            }
           }
         }
       }
       if (onDone) onDone();
     } catch (error) {
+      console.error("Fetch/Stream failed:", error);
+      toast.error("Network error while trying to reach AI");
       if (onDone) onDone();
     }
   },
