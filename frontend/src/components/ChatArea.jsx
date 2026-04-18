@@ -66,11 +66,9 @@ const ChatArea = () => {
     const userMessage = inputText;
     setInputText("");
 
-    // If no chat exists, create one first
     if (!chat_id && user) {
       await createChat({ userId: user.id || user._id });
       chat_id = useChatStore.getState().currentChat?._id;
-      // Refresh chat list in sidebar
       if (user.id || user._id) {
         const { getChatsByUser } = useChatStore.getState();
         await getChatsByUser(user.id || user._id);
@@ -78,12 +76,10 @@ const ChatArea = () => {
       chatJustCreated = true;
     }
 
-    // Optimistically update local and global state
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setMessages(prev => [...prev, { role: 'assistant', content: "" }]);
     setIsStreaming(true);
 
-    // Also update Zustand global state for currentChat
     if (currentChat) {
       setCurrentChat({
         ...currentChat,
@@ -116,7 +112,6 @@ const ChatArea = () => {
     });
   };
 
-
   function renderMessageContent(content) {
     if (!content) return null;
 
@@ -124,18 +119,16 @@ const ChatArea = () => {
     let keyCounter = 0;
     let inlineKeyCounter = 0;
 
-    // 1. Helper: Text ke andar ke **bold** aur `code` ko format karne ke liye
     const parseInline = (str) => {
       if (!str) return str;
-      // Regex splits the string keeping the `code` and **bold** intact
       const parts = str.split(/(`[^`]+`|\*\*[^*]+\*\*)/).filter(Boolean);
 
       return parts.map(part => {
         if (part.startsWith('`') && part.endsWith('`')) {
           return (
-            <code key={`ic-${inlineKeyCounter++}`} style={{ background: '#2d3139', color: '#7dd3fc', borderRadius: '4px', padding: '0.15em 0.35em', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", fontSize: '0.9em' }}>
+            <code key={`ic-${inlineKeyCounter++}`} className="wrap-break-words" style={{ background: '#2d3139', color: '#7dd3fc', borderRadius: '4px', padding: '0.15em 0.35em', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", fontSize: '0.9em', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
               {part.slice(1, -1)}
-            </code> 
+            </code>
           );
         }
         if (part.startsWith('**') && part.endsWith('**')) {
@@ -145,11 +138,10 @@ const ChatArea = () => {
             </strong>
           );
         }
-        return <span key={`it-${inlineKeyCounter++}`}>{part}</span>;
+        return <span key={`it-${inlineKeyCounter++}`} className="wrap-break-words">{part}</span>;
       });
     };
 
-    // 2. Helper: Main Text Parser (Headings, Lists, Tables)
     const parseMarkdownText = (text) => {
       const lines = text.split(/\r?\n/);
       const textElements = [];
@@ -161,7 +153,6 @@ const ChatArea = () => {
       for (let i = 0; i < lines.length; i++) {
         let line = lines[i];
 
-        // Table Detection
         if (/^\s*\|(.+)\|\s*$/.test(line)) {
           inTable = true;
           tableRows.push(line);
@@ -172,8 +163,9 @@ const ChatArea = () => {
             const header = tableRows[0].split('|').map(c => c.trim()).filter(Boolean);
             const rows = tableRows.slice(2).map(r => r.split('|').map(c => c.trim()).filter(Boolean));
             textElements.push(
-              <div key={`table-${keyCounter++}`} style={{ overflowX: 'auto', margin: '1.5em 0' }}>
-                <table style={{ borderCollapse: 'collapse', width: '100%', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", background: '#181a1b', color: '#e6e6e6', borderRadius: '8px', overflow: 'hidden', fontSize: '0.92em', overflowX: 'auto' }}>
+
+              <div key={`table-${keyCounter++}`} className="w-full max-w-full overflow-x-auto" style={{ margin: '1.5em 0', WebkitOverflowScrolling: 'touch' }}>
+                <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 'max-content', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", background: '#181a1b', color: '#e6e6e6', borderRadius: '8px', overflow: 'hidden', fontSize: '0.92em' }}>
                   <thead>
                     <tr>
                       {header.map((cell, idx) => (
@@ -203,52 +195,44 @@ const ChatArea = () => {
         }
         if (inTable) continue;
 
-        // Headings (### or ####)
         if (/^#{3,4}\s+/.test(line)) {
           if (inList) { textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.2em', margin: '0.5em 0' }}>{listItems}</ul>); inList = false; listItems = []; }
           textElements.push(
-            <h3 key={`h-${keyCounter++}`} style={{ fontWeight: 600, fontSize: '1.2em', marginTop: '1.2em', marginBottom: '0.5em', color: '#ffffff' }}>
+            <h3 key={`h-${keyCounter++}`} style={{ fontWeight: 600, fontSize: '1.2em', marginTop: '1.2em', marginBottom: '0.5em', color: '#ffffff', wordBreak: 'break-word' }}>
               {parseInline(line.replace(/^#{3,4}\s+/, ''))}
             </h3>
           );
           continue;
         }
 
-        // Horizontal rule (---)
         if (/^\s*-{3,}\s*$/.test(line)) {
           textElements.push(<hr key={`hr-${keyCounter++}`} style={{ border: 0, borderTop: '1px solid #3a3f4b', margin: '1.5em 0' }} />);
           continue;
         }
 
-        // === NEW LIST LOGIC ===
-        // Ya toh bullet (* / -) se shuru ho, YA FIR directly double star (**) se shuru ho
         const isStandardBullet = /^\s*([*-])\s+/.test(line);
         const isBoldBullet = /^\s*\*\*[^*]+\*\*/.test(line);
 
         if (isStandardBullet || isBoldBullet) {
           inList = true;
-          // Agar standard bullet hai toh (* / -) hatao, warna line ko waisa hi rehne do taaki `parseInline` use bold kar sake
           let cleanLine = isStandardBullet ? line.replace(/^\s*([*-])\s+/, '') : line.trim();
-
           listItems.push(
-            <li key={`li-${keyCounter++}`} style={{ marginBottom: '0.4em', color: '#d1d5db', lineHeight: '1.6', marginLeft: '0.5em' }}>
+            <li key={`li-${keyCounter++}`} className="wrap-break-words" style={{ marginBottom: '0.4em', color: '#d1d5db', lineHeight: '1.6', marginLeft: '0.5em', wordBreak: 'break-word' }}>
               {parseInline(cleanLine)}
             </li>
           );
           continue;
         }
 
-        // Close List if current line is normal text
         if (inList && line.trim() !== '') {
           textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.5em', marginBottom: '1.2em' }}>{listItems}</ul>);
           inList = false;
           listItems = [];
         }
 
-        // Normal Text Paragraph
         if (line.trim() !== '') {
           textElements.push(
-            <p key={`p-${keyCounter++}`} style={{ margin: '0.6em 0', color: '#d1d5db', lineHeight: '1.6' }}>
+            <p key={`p-${keyCounter++}`} className="wrap-break-words" style={{ margin: '0.6em 0', color: '#d1d5db', lineHeight: '1.6', wordBreak: 'break-word' }}>
               {parseInline(line)}
             </p>
           );
@@ -259,7 +243,6 @@ const ChatArea = () => {
       return textElements;
     };
 
-    // 3. Main Parser: Extract Code Blocks and merge everything
     const regex = /```([\w]*)\n([\s\S]*?)```/g;
     let lastIndex = 0;
     let match;
@@ -272,8 +255,8 @@ const ChatArea = () => {
       const code = match[2];
 
       elements.push(
-        <div key={`codeblock-${keyCounter++}`} style={{ margin: '1.5rem 0', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#2d2d2d', padding: '0.4rem 1rem', borderBottom: '1px solid #1e1e1e' }}>
+        <div key={`codeblock-${keyCounter++}`} className="w-full max-w-full overflow-x-auto rounded-lg shadow-lg" style={{ margin: '1.5rem 0', WebkitOverflowScrolling: 'touch' }}>
+          <div className="flex items-center justify-between bg-[#2d2d2d] px-4 py-2 border-b border-[#1e1e1e] min-w-max w-full">
             <span style={{ color: '#cccccc', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", fontSize: '0.85rem' }}>{lang}</span>
             <button
               onClick={(e) => {
@@ -283,7 +266,7 @@ const ChatArea = () => {
                 btn.style.color = '#4bb74a';
                 setTimeout(() => { btn.innerText = 'Copy'; btn.style.color = '#cccccc'; }, 2000);
               }}
-              style={{ background: 'transparent', color: '#cccccc', border: 'none', cursor: 'pointer', fontSize: '0.85rem', transition: 'color 0.2s', fontWeight: 500 }}
+              style={{ background: 'transparent', color: '#cccccc', border: 'none', cursor: 'pointer', fontSize: '0.85rem', transition: 'color 0.2s', fontWeight: 500, marginLeft: 'auto' }}
             >
               Copy
             </button>
@@ -308,12 +291,11 @@ const ChatArea = () => {
     return elements;
   }
 
-
   return (
-    <div className="flex-1 flex flex-col h-screen bg-[#131314]">
+    <div className="flex-1 flex flex-col h-dvh w-full max-w-[100vw] overflow-x-hidden bg-[#131314]">
 
       {/* Top Navbar */}
-      <header className="h-14 flex items-center justify-between px-3 sm:px-4 border-b border-gray-700/40 sticky top-0 z-20 bg-[#131314]">
+      <header className="h-14 shrink-0 w-full flex items-center justify-between px-3 sm:px-4 border-b border-gray-700/40 sticky top-0 z-20 bg-[#131314]">
         <div className="flex items-center gap-3">
           {isMobile && !sidebarOpen && (
             <button
@@ -336,13 +318,12 @@ const ChatArea = () => {
         )}
       </header>
 
-
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-        <div className="max-w-4xl mx-auto space-y-6">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-6 w-full">
+        <div className="max-w-xl md:max-w-5xl mx-auto space-y-6">
           {(!currentChat || messages.length === 0) ? (
-            <div className="flex flex-col items-start justify-end h-80 text-center text-gray-400 select-none">
-              <div className="text-2xl font-semibold mb-2">Hi, {user?.name || user?.username || 'Govind kumar'}</div>
+            <div className="flex flex-col items-start justify-end h-80 text-center text-gray-400 select-none px-4">
+              <div className="text-2xl font-semibold mb-2">Hi, {user?.name || user?.username || 'Govind'}</div>
               <div className="text-3xl">Where should we start?</div>
             </div>
           ) : (
@@ -351,13 +332,13 @@ const ChatArea = () => {
                 key={msg._id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
+                className={`flex gap-3 sm:gap-4 w-full ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
               >
                 {/* Avatar */}
                 <div
                   className={`w-8 h-8 shrink-0 rounded-full flex items-center justify-center mt-1 sm:w-10 sm:h-10 ${msg.role === 'user'
                     ? 'bg-gray-800 text-gray-300 hidden sm:flex'
-                    : 'bg-linear-to-br from-blue-500 to-purple-600 text-white'
+                    : 'bg-linear-to-br from-blue-500 to-purple-600 text-white hidden sm:flex'
                     }`}
                 >
                   {msg.role === 'user' ? <User size={20} /> : <Sparkles size={20} />}
@@ -365,13 +346,12 @@ const ChatArea = () => {
 
                 {/* Message Content */}
                 <div
-                  className={`max-w-[90%] sm:max-w-[80%] ${msg.role === 'user'
-                    ? 'bg-[#2d2f31] text-gray-100 rounded-3xl rounded-tr-sm px-5 py-1 shadow-sm'
-                    : 'text-gray-200 px-2 py-2 sm:px-4 sm:py-3 leading-relaxed'
+                  className={`min-w-0 max-w-[95%] sm:max-w-[85%] md:max-w-[80%] ${msg.role === 'user'
+                    ? 'bg-[#2d2f31] text-gray-100 rounded-3xl rounded-tr-sm px-4 py-2 sm:px-5 sm:py-2 shadow-sm'
+                    : 'text-gray-200 px-1 py-2 sm:px-4 sm:py-3 leading-relaxed'
                     }`}
-                  style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
                 >
-                  <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words" >
+                  <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words w-full overflow-hidden" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
                     {renderMessageContent(msg.content || msg.text)}
                   </div>
                 </div>
@@ -383,8 +363,8 @@ const ChatArea = () => {
       </div>
 
       {/* Input Area */}
-      <div className="p-4 sm:p-6 bg-linear-to-t from-[#131314] to-transparent pt-0">
-        <div className="max-w-4xl mx-auto">
+      <div className="p-3 pb-5 sm:p-6 bg-linear-to-t from-[#131314] to-transparent pt-0 shrink-0 w-full max-w-full">
+        <div className="max-w-xl md:max-w-4xl mx-auto">
           <form
             onSubmit={handleSendMessage}
             className="flex flex-col bg-[#1e1f20] border border-gray-700/60 rounded-3xl px-2 py-2 shadow-sm focus-within:border-gray-600 transition-all"
@@ -399,7 +379,7 @@ const ChatArea = () => {
                 e.target.style.height = `${e.target.scrollHeight}px`;
               }}
               placeholder="Ask NexusAI anything..."
-              className="w-full max-h-62.5 min-h-12.5 bg-transparent text-gray-100 placeholder-gray-500 px-4 py-3 focus:outline-none resize-none overflow-y-auto custom-scrollbar"
+              className="w-full max-h-40 sm:max-h-62.5 min-h-12.5 bg-transparent text-gray-100 placeholder-gray-500 px-3 sm:px-4 py-3 focus:outline-none resize-none overflow-y-auto custom-scrollbar"
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
@@ -422,9 +402,9 @@ const ChatArea = () => {
                 <AnimatePresence>
                   {isAddMenuOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: 100, scale: 0 }}
+                      initial={{ opacity: 0, y: 50, scale: 0.9 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 100, scale: 0 }}
+                      exit={{ opacity: 0, y: 50, scale: 0.9 }}
                       transition={{ duration: 0.15 }}
                       className="absolute bottom-full left-0 mb-3 w-48 bg-[#2d2f31] border border-gray-700/50 rounded-2xl shadow-xl overflow-hidden z-50 p-2 text-sm font-semibold"
                     >
@@ -461,7 +441,6 @@ const ChatArea = () => {
             NexusAI may produce inaccurate information about people, places, or facts.
           </p>
         </div>
-
       </div>
     </div>
   );

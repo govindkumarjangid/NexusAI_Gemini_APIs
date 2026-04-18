@@ -16,7 +16,6 @@ import SidebarBottom from './SidebarBottom.jsx';
 const Sidebar = () => {
 
   const { isMobile, sidebarOpen, setSidebarOpen, setIsSearchOpen, logout, user } = useAuthStore();
-
   const { chats, getChatsByUser, createChat, deleteChat, setCurrentChat, currentChat, isLoading: chatLoading } = useChatStore();
 
   const navigate = useNavigate();
