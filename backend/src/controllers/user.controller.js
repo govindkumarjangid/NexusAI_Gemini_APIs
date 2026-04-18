@@ -1,6 +1,6 @@
 import User from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
-import wrapAsync from '../utils/wrapasync.js';
+import wrapAsync from '../utils/wrapAsync.js';
 import genrateToken from '../utils/generateToken.js';
 import dotenv from 'dotenv';
 
