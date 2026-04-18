@@ -15,6 +15,7 @@ const ChatArea = () => {
 
   const [messages, setMessages] = useState([]);
   const [isStreaming, setIsStreaming] = useState(false);
+  const [inputText, setInputText] = useState("");
 
   const { isMobile, sidebarOpen, setSidebarOpen, user } = useAuthStore();
   const { currentChat, setCurrentChat, chats, createChat } = useChatStore();
@@ -108,7 +109,11 @@ const ChatArea = () => {
 
 
       {/* Input Area */}
-      <ChatInputArea handleSendMessage={handleSendMessage} />
+      <ChatInputArea
+        inputText={inputText}
+        setInputText={setInputText}
+        handleSendMessage={handleSendMessage}
+      />
 
     </div>
   );

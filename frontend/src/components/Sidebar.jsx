@@ -3,14 +3,14 @@ import {
   Plus, Search, SquarePen,
   SquareChevronLeft,
   SquareChevronRight,
-  MessageCircle
+  MessageCircle,
 } from 'lucide-react';
 
 import logo from '/nexusai-logo.svg';
 import useAuthStore from '../store/useAuthStore.js';
 import useChatStore from '../store/useChatStore.js';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import ChatList from './ChatList.jsx';
 import SidebarBottom from './SidebarBottom.jsx';
 
@@ -57,39 +57,44 @@ const Sidebar = () => {
       >
         {/* Top Header */}
         <div className="h-14 flex items-center justify-between border-b border-gray-800/60 shrink-0">
-          <div className="w-17.5 flex items-center justify-center shrink-0 relative group">
-            {sidebarOpen && !isMobile ? (
-              <div className="w-17.5 flex items-center justify-between">
+          {sidebarOpen && !isMobile && (
+            <div className="w-full flex items-center justify-between shrink-0 relative groupc  px-3">
+              <NavLink to="/chat">
                 <img
                   src={logo}
                   alt="NexusAI Logo"
                   className="w-8 h-8 rounded-full shadow-lg cursor-pointer transition-all duration-200 hover:scale-105 "
                 />
-                <button
-                  onClick={() => setSidebarOpen(false)}
-                  className="p-0 sm:p-3 hover:bg-gray-800 rounded-full transition-colors cursor-pointer text-gray-400 hover:text-gray-200"
-                  title="Collapse Menu"
-                >
-                  <SquareChevronLeft size={22} />
-                </button>
+              </NavLink>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="rounded-full cursor-pointer text-gray-400 hover:text-gray-200"
+                title="Collapse Menu"
+              >
+                <SquareChevronLeft size={22} />
+              </button>
+            </div>
+          )}
+          {
+            (!sidebarOpen || isMobile) && (
+              <div className="w-17.5 flex items-center justify-center shrink-0 relative group">
+                <div className="group">
+                  <img
+                    src={logo}
+                    alt="NexusAI Logo"
+                    className="w-8 h-8 rounded-full shadow-lg cursor-pointer transition-all duration-200 hover:scale-105 group-hover:hidden"
+                  />
+                  <button
+                    onClick={() => setSidebarOpen(true)}
+                    className="p-0 sm:p-3 hover:bg-gray-800 rounded-full transition-colors hidden group-hover:flex cursor-pointer text-gray-400 hover:text-gray-200"
+                    title="Collapse Menu"
+                  >
+                    <SquareChevronRight size={22} />
+                  </button>
+                </div>
               </div>
-            ) : (
-              <div className="group">
-                <img
-                  src={logo}
-                  alt="NexusAI Logo"
-                  className="w-8 h-8 rounded-full shadow-lg cursor-pointer transition-all duration-200 hover:scale-105 group-hover:hidden"
-                />
-                <button
-                  onClick={() => setSidebarOpen(true)}
-                  className="p-0 sm:p-3 hover:bg-gray-800 rounded-full transition-colors hidden group-hover:flex cursor-pointer text-gray-400 hover:text-gray-200"
-                  title="Collapse Menu"
-                >
-                  <SquareChevronRight size={22} />
-                </button>
-              </div>
-            )}
-          </div>
+            )
+          }
         </div>
 
         {/* New Chat Button */}

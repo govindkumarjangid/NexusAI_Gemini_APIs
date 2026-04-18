@@ -2,10 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Image, FolderUp, Mic, Plus, ArrowUp } from 'lucide-react';
 
-const ChatInputArea = ({ handleSendMessage }) => {
+const ChatInputArea = ({ handleSendMessage, inputText, setInputText }) => {
 
     const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
-    const [inputText, setInputText] = useState("");
 
     const textareaRef = useRef(null);
     const menuRef = useRef(null);
