@@ -36,6 +36,7 @@ const ChatArea = () => {
         ...msg,
         id: msg._id || idx
       })));
+      document.title = `${currentChat.messages?.currentChat || 'Chat'} - NexusAI`;
     } else {
       setMessages([]);
     }
@@ -99,7 +100,7 @@ const ChatArea = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-dvh w-full max-w-[100vw] overflow-x-hidden bg-[#131314]">
+    <div className="flex-1 flex flex-col h-dvh w-full max-w-[100vw] overflow-x-hidden">
 
       {/* Top Navbar */}
       <ChatAreaHeader />

@@ -17,15 +17,11 @@ const SearchPage = () => {
     }
   }, [isSearchOpen, user, getChatsByUser]);
 
-  // Filter chats by search query
-  // Helper: get first user message as title
   function getChatTitle(chat) {
     if (!chat.messages || !Array.isArray(chat.messages)) return 'Untitled Chat';
     const userMsg = chat.messages.find(m => m.role === 'user' && m.content);
     return userMsg ? userMsg.content.slice(0, 60) : 'Untitled Chat';
   }
-
-  // Helper: format date and time
   function formatDateTime(dt) {
     if (!dt) return '';
     const d = new Date(dt);

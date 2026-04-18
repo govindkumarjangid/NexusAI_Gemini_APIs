@@ -13,7 +13,7 @@ export function renderMessageContent(content) {
     if (!str) return str;
     const parts = str.split(/(`[^`]+`|\*\*[^*]+\*\*)/).filter(Boolean);
 
-    return parts.map(part => {
+    return parts.map((part) => {
       if (part.startsWith('`') && part.endsWith('`')) {
         return (
           <code key={`ic-${inlineKeyCounter++}`} className="wrap-break-words" style={{ background: '#2d3139', color: '#7dd3fc', borderRadius: '4px', padding: '0.15em 0.35em', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", fontSize: '0.9em', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
@@ -50,10 +50,10 @@ export function renderMessageContent(content) {
       }
       if (inTable && !/^\s*\|(.+)\|\s*$/.test(line)) {
         if (tableRows.length >= 2) {
-          const header = tableRows[0].split('|').map(c => c.trim()).filter(Boolean);
-          const rows = tableRows.slice(2).map(r => r.split('|').map(c => c.trim()).filter(Boolean));
+          const header = tableRows[0].split('|').map((c) => c.trim()).filter(Boolean);
+          const rows = tableRows.slice(2).map((r) => r.split('|').map((c) => c.trim()).filter(Boolean));
           textElements.push(
-            <div key={`table-${keyCounter++}`} className="w-full max-w-full overflow-x-auto" style={{ margin: '1.5em 0', WebkitOverflowScrolling: 'touch' }}>
+            <div key={`table-${keyCounter++}`} className="w-full max-w-full overflow-x-auto" style={{ margin: '1.5em 0', WebkitOverflowScrolling: 'touch', textAlign: 'left' }}>
               <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 'max-content', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", background: '#181a1b', color: '#e6e6e6', borderRadius: '8px', overflow: 'hidden', fontSize: '0.92em' }}>
                 <thead>
                   <tr>
@@ -68,7 +68,7 @@ export function renderMessageContent(content) {
                   {rows.map((row, ridx) => (
                     <tr key={ridx}>
                       {row.map((cell, cidx) => (
-                        <td key={cidx} style={{ border: '1px solid #333', padding: '0.6em 1em', background: ridx % 2 === 0 ? '#23272f' : '#202124', verticalAlign: 'top', color: '#e6e6e6' }}>
+                        <td key={cidx} style={{ border: '1px solid #333', padding: '0.6em 1em', background: ridx % 2 === 0 ? '#23272f' : '#202124', verticalAlign: 'top', color: '#e6e6e6', textAlign: 'left' }}>
                           {parseInline(cell)}
                         </td>
                       ))}
@@ -85,9 +85,13 @@ export function renderMessageContent(content) {
       if (inTable) continue;
 
       if (/^#{3,4}\s+/.test(line)) {
-        if (inList) { textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.2em', margin: '0.5em 0' }}>{listItems}</ul>); inList = false; listItems = []; }
+        if (inList) {
+          textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.2em', margin: '0.5em 0', textAlign: 'left' }}>{listItems}</ul>);
+          inList = false;
+          listItems = [];
+        }
         textElements.push(
-          <h3 key={`h-${keyCounter++}`} style={{ fontWeight: 600, fontSize: '1.2em', marginTop: '1.2em', marginBottom: '0.5em', color: '#ffffff', wordBreak: 'break-word' }}>
+          <h3 key={`h-${keyCounter++}`} style={{ fontWeight: 600, fontSize: '1.2em', marginTop: '1.2em', marginBottom: '0.5em', color: '#ffffff', wordBreak: 'break-word', textAlign: 'left' }}>
             {parseInline(line.replace(/^#{3,4}\s+/, ''))}
           </h3>
         );
@@ -106,7 +110,7 @@ export function renderMessageContent(content) {
         inList = true;
         let cleanLine = isStandardBullet ? line.replace(/^\s*([*-])\s+/, '') : line.trim();
         listItems.push(
-          <li key={`li-${keyCounter++}`} className="wrap-break-words" style={{ marginBottom: '0.4em', color: '#d1d5db', lineHeight: '1.6', marginLeft: '0.5em', wordBreak: 'break-word' }}>
+          <li key={`li-${keyCounter++}`} className="wrap-break-words" style={{ marginBottom: '0.4em', color: '#d1d5db', lineHeight: '1.6', marginLeft: '0.5em', wordBreak: 'break-word', textAlign: 'left' }}>
             {parseInline(cleanLine)}
           </li>
         );
@@ -114,21 +118,21 @@ export function renderMessageContent(content) {
       }
 
       if (inList && line.trim() !== '') {
-        textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.5em', marginBottom: '1.2em' }}>{listItems}</ul>);
+        textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.5em', marginBottom: '1.2em', textAlign: 'left' }}>{listItems}</ul>);
         inList = false;
         listItems = [];
       }
 
       if (line.trim() !== '') {
         textElements.push(
-          <p key={`p-${keyCounter++}`} className="wrap-break-words" style={{ margin: '0.6em 0', color: '#d1d5db', lineHeight: '1.6', wordBreak: 'break-word' }}>
+          <p key={`p-${keyCounter++}`} className="wrap-break-words" style={{ margin: '0.6em 0', color: '#d1d5db', lineHeight: '1.6', wordBreak: 'break-word', textAlign: 'left' }}>
             {parseInline(line)}
           </p>
         );
       }
     }
 
-    if (inList) textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.5em', marginBottom: '1.2em' }}>{listItems}</ul>);
+    if (inList) textElements.push(<ul key={`ul-${keyCounter++}`} style={{ marginBottom: '1.2em', textAlign: 'left' }}>{listItems}</ul>);
     return textElements;
   };
 
@@ -144,7 +148,7 @@ export function renderMessageContent(content) {
     const code = match[2];
 
     elements.push(
-      <div key={`codeblock-${keyCounter++}`} className="w-full max-w-full overflow-x-auto rounded-lg shadow-lg" style={{ margin: '1.5rem 0', WebkitOverflowScrolling: 'touch' }}>
+      <div key={`codeblock-${keyCounter++}`} className="w-full max-w-full overflow-x-auto rounded-lg shadow-lg" style={{ margin: '1.5rem 0', WebkitOverflowScrolling: 'touch', textAlign: 'left' }}>
         <div className="flex items-center justify-between bg-[#2d2d2d] px-4 py-2 border-b border-[#1e1e1e] min-w-max w-full">
           <span style={{ color: '#cccccc', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", fontSize: '0.85rem' }}>{lang}</span>
           <button
@@ -164,7 +168,7 @@ export function renderMessageContent(content) {
         <SyntaxHighlighter
           language={lang === 'text' ? null : lang}
           style={vscDarkPlus}
-          customStyle={{ margin: 0, padding: '1rem', backgroundColor: '#1e1e1e', fontSize: '0.9rem', lineHeight: '1.5', overflowX: 'auto', fontFamily: "'JetBrains Mono', 'Fira Code', monospace" }}
+          customStyle={{ margin: 0, padding: '1rem', backgroundColor: '#1e1e1e', fontSize: '0.9rem', lineHeight: '1.5', overflowX: 'auto', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", textAlign: 'left' }}
           codeTagProps={{ style: { fontFamily: "'JetBrains Mono', 'Fira Code', monospace" } }}
         >
           {code.trim()}
