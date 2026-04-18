@@ -1,21 +1,42 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X } from 'lucide-react';
 import useAuthStore from '../store/useAuthStore';
+import useChatStore from '../store/useChatStore';
 
 const SearchPage = () => {
-  const { isSearchOpen, setIsSearchOpen } = useAuthStore();
+  const { isSearchOpen, setIsSearchOpen, user } = useAuthStore();
+  const { chats, getChatsByUser, isLoading, setCurrentChat } = useChatStore();
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
-  const recentChats = [
-    { title: 'Backend Folder Structure Explained', date: 'Today' },
-    { title: 'Neck Aur Middle Back Dard Ke Karan Aur Upay', date: 'Yesterday' },
-    { title: 'Website Image Formats: Performance Comparison', date: 'Yesterday' },
-    { title: 'URL Building Fix Using `window.location.origin`', date: 'Apr 11' },
-    { title: 'React useEffect URL Cleanup Bug', date: 'Apr 11' },
-    { title: 'ye bson format jo direct mongodb me add ker saku', date: 'Apr 11' },
-    { title: 'Dummy Resume Data Generation', date: 'Apr 10' }
-  ];
+  useEffect(() => {
+    if (isSearchOpen && user && user._id) {
+      getChatsByUser(user._id);
+    }
+  }, [isSearchOpen, user, getChatsByUser]);
+
+  // Filter chats by search query
+  // Helper: get first user message as title
+  function getChatTitle(chat) {
+    if (!chat.messages || !Array.isArray(chat.messages)) return 'Untitled Chat';
+    const userMsg = chat.messages.find(m => m.role === 'user' && m.content);
+    return userMsg ? userMsg.content.slice(0, 60) : 'Untitled Chat';
+  }
+
+  // Helper: format date and time
+  function formatDateTime(dt) {
+    if (!dt) return '';
+    const d = new Date(dt);
+    return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  const filteredChats = chats
+    ? chats.filter(chat =>
+        getChatTitle(chat).toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
 
   return (
     <AnimatePresence>
@@ -67,17 +88,28 @@ const SearchPage = () => {
           {/* Results List */}
           <div className="flex-1 overflow-y-auto px-4 custom-scrollbar">
             <div className="px-2 py-3">
-              <p className="text-[15px] font-semibold text-gray-200 mb-3 px-2">Recent</p>
+              <p className="text-[15px] font-semibold text-gray-200 mb-3 px-2">Chats</p>
               <div className="space-y-1">
-                {recentChats.map((chat, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center justify-between px-4 py-3 rounded-full hover:bg-[#2d2f31] cursor-pointer text-gray-300 hover:text-gray-100 transition-colors"
-                  >
-                    <span className="text-[15px] truncate mr-4">{chat.title}</span>
-                    <span className="text-sm text-gray-400 whitespace-nowrap">{chat.date}</span>
-                  </div>
-                ))}
+                {isLoading ? (
+                  <div className="text-gray-400 px-4 py-3">Loading...</div>
+                ) : filteredChats.length === 0 ? (
+                  <div className="text-gray-400 px-4 py-3">No chats found.</div>
+                ) : (
+                  filteredChats.map((chat) => (
+                    <div
+                      key={chat._id}
+                      className="flex items-center justify-between px-4 py-3 rounded-full hover:bg-[#2d2f31] cursor-pointer text-gray-300 hover:text-gray-100 transition-colors"
+                      onClick={() => {
+                        setCurrentChat(chat);
+                        setIsSearchOpen(false);
+                        navigate(`/chat/${chat._id}`);
+                      }}
+                    >
+                      <span className="text-[15px] truncate mr-4">{getChatTitle(chat)}</span>
+                      <span className="text-sm text-gray-400 whitespace-nowrap">{formatDateTime(chat.updatedAt)}</span>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>

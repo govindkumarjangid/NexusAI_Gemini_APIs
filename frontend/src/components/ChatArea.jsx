@@ -106,20 +106,52 @@ const ChatArea = () => {
           return newMessages;
         });
       },
-      onDone: () => setIsStreaming(false)
+      onDone: async () => {
+        setIsStreaming(false);
+        if (user && (user.id || user._id)) {
+          const { getChatsByUser } = useChatStore.getState();
+          await getChatsByUser(user.id || user._id);
+        }
+      }
     });
   };
+
 
   function renderMessageContent(content) {
     if (!content) return null;
 
     const elements = [];
     let keyCounter = 0;
+    let inlineKeyCounter = 0;
 
-    // 1. Helper: Markdown Text Parser (Khud text ko filter aur design karega)
+    // 1. Helper: Text ke andar ke **bold** aur `code` ko format karne ke liye
+    const parseInline = (str) => {
+      if (!str) return str;
+      // Regex splits the string keeping the `code` and **bold** intact
+      const parts = str.split(/(`[^`]+`|\*\*[^*]+\*\*)/).filter(Boolean);
+
+      return parts.map(part => {
+        if (part.startsWith('`') && part.endsWith('`')) {
+          return (
+            <code key={`ic-${inlineKeyCounter++}`} style={{ background: '#2d3139', color: '#7dd3fc', borderRadius: '4px', padding: '0.15em 0.35em', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", fontSize: '0.9em' }}>
+              {part.slice(1, -1)}
+            </code> 
+          );
+        }
+        if (part.startsWith('**') && part.endsWith('**')) {
+          return (
+            <strong key={`ib-${inlineKeyCounter++}`} style={{ fontWeight: 600, color: '#ffffff' }}>
+              {part.slice(2, -2)}
+            </strong>
+          );
+        }
+        return <span key={`it-${inlineKeyCounter++}`}>{part}</span>;
+      });
+    };
+
+    // 2. Helper: Main Text Parser (Headings, Lists, Tables)
     const parseMarkdownText = (text) => {
-      // Replace all backticks with single quotes (except in code blocks)
-      const lines = text.replace(/`([^`]+)`/g, "'$1'").split(/\r?\n/);
+      const lines = text.split(/\r?\n/);
       const textElements = [];
       let inList = false;
       let listItems = [];
@@ -129,42 +161,25 @@ const ChatArea = () => {
       for (let i = 0; i < lines.length; i++) {
         let line = lines[i];
 
-
-        // Handle H2 Headings (####)
-        if (/^####\s+/.test(line)) {
-          if (inList) { textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.2em' }}>{listItems}</ul>); inList = false; listItems = []; }
-          textElements.push(
-            <h2 key={`h2-${keyCounter++}`} style={{ fontWeight: 700, fontSize: '1.25em', marginTop: '1em', marginBottom: '0.5em', color: '#fff' }}>
-              {line.replace(/^####\s+/, '')}
-            </h2>
-          );
-          continue;
-        }
-
-        // Horizontal rule (---)
-        if (/^\s*-{3,}\s*$/.test(line)) {
-          textElements.push(<hr key={`hr-${keyCounter++}`} style={{ border: 0, borderTop: '1.5px solid #333', margin: '1em 0' }} />);
-          continue;
-        }
-        // Table row detection
+        // Table Detection
         if (/^\s*\|(.+)\|\s*$/.test(line)) {
           inTable = true;
           tableRows.push(line);
           continue;
         }
         if (inTable && !/^\s*\|(.+)\|\s*$/.test(line)) {
-          // End of table, render it
           if (tableRows.length >= 2) {
-            const header = tableRows[0].split('|').map(cell => cell.trim()).filter(Boolean);
-            const aligns = tableRows[1].split('|').map(cell => cell.trim()).filter(Boolean);
-            const rows = tableRows.slice(2).map(row => row.split('|').map(cell => cell.trim()).filter(Boolean));
+            const header = tableRows[0].split('|').map(c => c.trim()).filter(Boolean);
+            const rows = tableRows.slice(2).map(r => r.split('|').map(c => c.trim()).filter(Boolean));
             textElements.push(
-              <div key={`table-${keyCounter++}`} style={{ overflowX: 'auto', margin: '1em 0' }}>
-                <table style={{ borderCollapse: 'collapse', width: '100%', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", background: '#181a1b', color: '#e6e6e6', borderRadius: '8px', overflow: 'hidden' }}>
+              <div key={`table-${keyCounter++}`} style={{ overflowX: 'auto', margin: '1.5em 0' }}>
+                <table style={{ borderCollapse: 'collapse', width: '100%', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", background: '#181a1b', color: '#e6e6e6', borderRadius: '8px', overflow: 'hidden', fontSize: '0.92em', overflowX: 'auto' }}>
                   <thead>
                     <tr>
                       {header.map((cell, idx) => (
-                        <th key={idx} style={{ border: '1px solid #333', padding: '0.5em 1em', background: '#23272f', fontWeight: 700, textAlign: 'left' }}>{parseMarkdownTableCell(cell)}</th>
+                        <th key={idx} style={{ border: '1px solid #333', padding: '0.6em 1em', background: '#23272f', fontWeight: 700, textAlign: 'left', fontSize: '1.05em', color: '#fff' }}>
+                          {parseInline(cell)}
+                        </th>
                       ))}
                     </tr>
                   </thead>
@@ -172,7 +187,9 @@ const ChatArea = () => {
                     {rows.map((row, ridx) => (
                       <tr key={ridx}>
                         {row.map((cell, cidx) => (
-                          <td key={cidx} style={{ border: '1px solid #333', padding: '0.5em 1em', background: ridx % 2 === 0 ? '#23272f' : '#202124', verticalAlign: 'top' }}>{parseMarkdownTableCell(cell)}</td>
+                          <td key={cidx} style={{ border: '1px solid #333', padding: '0.6em 1em', background: ridx % 2 === 0 ? '#23272f' : '#202124', verticalAlign: 'top', color: '#e6e6e6' }}>
+                            {parseInline(cell)}
+                          </td>
                         ))}
                       </tr>
                     ))}
@@ -185,151 +202,77 @@ const ChatArea = () => {
           tableRows = [];
         }
         if (inTable) continue;
-        // Helper to render markdown inside table cells (bold, code, etc.)
-        function parseMarkdownTableCell(cell) {
-          // Only bold (**text**) and inline code (`code`)
-          const boldRegex = /\*\*([^*]+)\*\*/g;
-          const codeRegex = /`([^`]+)`/g;
-          let result = [];
-          let lastIdx = 0;
-          let match;
-          let key = 0;
-          let working = cell;
-          // Handle bold
-          while ((match = boldRegex.exec(working)) !== null) {
-            if (match.index > lastIdx) result.push(working.slice(lastIdx, match.index));
-            result.push(<strong key={'b' + key++} style={{ fontWeight: 600, color: '#fff' }}>{match[1]}</strong>);
-            lastIdx = match.index + match[0].length;
-          }
-          if (lastIdx < working.length) result.push(working.slice(lastIdx));
-          // Now handle code
-          let final = [];
-          lastIdx = 0;
-          for (let i = 0; i < result.length; i++) {
-            if (typeof result[i] === 'string') {
-              let str = result[i];
-              let codeMatch;
-              let last = 0;
-              while ((codeMatch = codeRegex.exec(str)) !== null) {
-                if (codeMatch.index > last) final.push(str.slice(last, codeMatch.index));
-                final.push(<code key={'c' + key++} style={{ background: '#23272f', color: '#7dd3fc', borderRadius: '4px', padding: '0.1em 0.3em', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", fontSize: '0.97em' }}>{codeMatch[1]}</code>);
-                last = codeMatch.index + codeMatch[0].length;
-              }
-              if (last < str.length) final.push(str.slice(last));
-            } else {
-              final.push(result[i]);
-            }
-          }
-          return final;
-        }
 
-        // Handle Headings (###)
-        if (/^###\s+/.test(line)) {
-          if (inList) { textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.2em' }}>{listItems}</ul>); inList = false; listItems = []; }
+        // Headings (### or ####)
+        if (/^#{3,4}\s+/.test(line)) {
+          if (inList) { textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.2em', margin: '0.5em 0' }}>{listItems}</ul>); inList = false; listItems = []; }
           textElements.push(
-            <h3 key={`h3-${keyCounter++}`} style={{ fontWeight: 600, fontSize: '1.15em', marginTop: '1em', marginBottom: '0.5em', color: '#ffffff' }}>
-              {line.replace(/^###\s+/, '')}
+            <h3 key={`h-${keyCounter++}`} style={{ fontWeight: 600, fontSize: '1.2em', marginTop: '1.2em', marginBottom: '0.5em', color: '#ffffff' }}>
+              {parseInline(line.replace(/^#{3,4}\s+/, ''))}
             </h3>
           );
           continue;
         }
 
-        // Handle Lists (* or -)
-        if (/^\s*([*-])\s+/.test(line)) {
+        // Horizontal rule (---)
+        if (/^\s*-{3,}\s*$/.test(line)) {
+          textElements.push(<hr key={`hr-${keyCounter++}`} style={{ border: 0, borderTop: '1px solid #3a3f4b', margin: '1.5em 0' }} />);
+          continue;
+        }
+
+        // === NEW LIST LOGIC ===
+        // Ya toh bullet (* / -) se shuru ho, YA FIR directly double star (**) se shuru ho
+        const isStandardBullet = /^\s*([*-])\s+/.test(line);
+        const isBoldBullet = /^\s*\*\*[^*]+\*\*/.test(line);
+
+        if (isStandardBullet || isBoldBullet) {
           inList = true;
+          // Agar standard bullet hai toh (* / -) hatao, warna line ko waisa hi rehne do taaki `parseInline` use bold kar sake
+          let cleanLine = isStandardBullet ? line.replace(/^\s*([*-])\s+/, '') : line.trim();
+
           listItems.push(
-            <li key={`li-${keyCounter++}`} style={{ marginBottom: '0.2em', color: '#e5e7eb', lineHeight: '1.6' }}>
-              {line.replace(/^\s*([*-])\s+/, '')}
+            <li key={`li-${keyCounter++}`} style={{ marginBottom: '0.4em', color: '#d1d5db', lineHeight: '1.6', marginLeft: '0.5em' }}>
+              {parseInline(cleanLine)}
             </li>
           );
           continue;
         }
 
-        if (inList && !/^\s*([*-])\s+/.test(line)) {
-          textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.2em', marginBottom: '0.5em' }}>{listItems}</ul>);
+        // Close List if current line is normal text
+        if (inList && line.trim() !== '') {
+          textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.5em', marginBottom: '1.2em' }}>{listItems}</ul>);
           inList = false;
           listItems = [];
         }
 
-        // If line starts with ** and ends with **: treat as bold heading
-        if (/^\*\*[^*]+\*\*/.test(line.trim())) {
-          const headingText = line.trim().replace(/^\*\*([^*]+)\*\*:?\s*/, '$1').replace(/\*\*$/, '');
+        // Normal Text Paragraph
+        if (line.trim() !== '') {
           textElements.push(
-            <div key={`boldheading-${keyCounter++}`} style={{ fontWeight: 700, color: '#fff', fontSize: '1.08em', margin: '0.5em 0 0.2em 0' }}>{headingText}</div>
-          );
-          continue;
-        }
-
-        // Handle Bold (**text**) inside line
-        let bolded = [];
-        let lastIdx = 0;
-        let boldMatch;
-        const boldRegex = /\*\*([^*]+)\*\*/g;
-        while ((boldMatch = boldRegex.exec(line)) !== null) {
-          if (boldMatch.index > lastIdx) bolded.push(line.slice(lastIdx, boldMatch.index));
-          bolded.push(<strong key={`b-${keyCounter++}`} style={{ fontWeight: 600, color: '#ffffff' }}>{boldMatch[1]}</strong>);
-          lastIdx = boldMatch.index + boldMatch[0].length;
-        }
-        if (lastIdx < line.length) bolded.push(line.slice(lastIdx));
-
-        // Normal Text
-        if (bolded.length > 0 || line.trim() !== '') {
-          textElements.push(
-            <p key={`p-${keyCounter++}`} style={{ margin: '0.5em 0', color: '#d1d5db', lineHeight: '1.6' }}>
-              {bolded.length > 0 ? bolded : line}
+            <p key={`p-${keyCounter++}`} style={{ margin: '0.6em 0', color: '#d1d5db', lineHeight: '1.6' }}>
+              {parseInline(line)}
             </p>
           );
         }
       }
-      if (inList) textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.2em' }}>{listItems}</ul>);
-      // Table at end of text
-      if (inTable && tableRows.length >= 2) {
-        const header = tableRows[0].split('|').map(cell => cell.trim()).filter(Boolean);
-        const aligns = tableRows[1].split('|').map(cell => cell.trim()).filter(Boolean);
-        const rows = tableRows.slice(2).map(row => row.split('|').map(cell => cell.trim()).filter(Boolean));
-        textElements.push(
-          <div key={`table-${keyCounter++}`} style={{ overflowX: 'auto', margin: '1em 0' }}>
-            <table style={{ borderCollapse: 'collapse', width: '100%', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", background: '#181a1b', color: '#e6e6e6', borderRadius: '8px', overflow: 'hidden' }}>
-              <thead>
-                <tr>
-                  {header.map((cell, idx) => (
-                    <th key={idx} style={{ border: '1px solid #333', padding: '0.5em 1em', background: '#23272f', fontWeight: 700 }}>{cell}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row, ridx) => (
-                  <tr key={ridx}>
-                    {row.map((cell, cidx) => (
-                      <td key={cidx} style={{ border: '1px solid #333', padding: '0.5em 1em', background: ridx % 2 === 0 ? '#23272f' : '#202124' }}>{cell}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
-      }
+
+      if (inList) textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.5em', marginBottom: '1.2em' }}>{listItems}</ul>);
       return textElements;
     };
 
-    // 2. Main Parser: Extract Code Blocks and merge everything
+    // 3. Main Parser: Extract Code Blocks and merge everything
     const regex = /```([\w]*)\n([\s\S]*?)```/g;
     let lastIndex = 0;
     let match;
 
     while ((match = regex.exec(content)) !== null) {
-      // A. Pehle code se upar ka normal text daalo
       const textBefore = content.slice(lastIndex, match.index);
       if (textBefore.trim()) elements.push(...parseMarkdownText(textBefore));
 
-      // B. Ab Code Block ko filter karke VS Code style me daalo
       const lang = match[1] ? match[1].toLowerCase() : 'text';
       const code = match[2];
 
       elements.push(
-        <div key={`codeblock-${keyCounter++}`} style={{ margin: '1.2rem 0', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
-          {/* VS Code Style Header + Copy Button */}
+        <div key={`codeblock-${keyCounter++}`} style={{ margin: '1.5rem 0', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#2d2d2d', padding: '0.4rem 1rem', borderBottom: '1px solid #1e1e1e' }}>
             <span style={{ color: '#cccccc', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", fontSize: '0.85rem' }}>{lang}</span>
             <button
@@ -337,7 +280,7 @@ const ChatArea = () => {
                 navigator.clipboard.writeText(code);
                 const btn = e.currentTarget;
                 btn.innerText = 'Copied!';
-                btn.style.color = '#4bb74a'; // Green on copy
+                btn.style.color = '#4bb74a';
                 setTimeout(() => { btn.innerText = 'Copy'; btn.style.color = '#cccccc'; }, 2000);
               }}
               style={{ background: 'transparent', color: '#cccccc', border: 'none', cursor: 'pointer', fontSize: '0.85rem', transition: 'color 0.2s', fontWeight: 500 }}
@@ -349,20 +292,8 @@ const ChatArea = () => {
           <SyntaxHighlighter
             language={lang === 'text' ? null : lang}
             style={vscDarkPlus}
-            customStyle={{
-              margin: 0,
-              padding: '1rem',
-              backgroundColor: '#1e1e1e',
-              fontSize: '0.9rem',
-              lineHeight: '1.5',
-              overflowX: 'auto',
-              fontFamily: "'JetBrains Mono', 'Fira Code', monospace" // Container font
-            }}
-            codeTagProps={{
-              style: {
-                fontFamily: "'JetBrains Mono', 'Fira Code', monospace" // Code text font override
-              }
-            }}
+            customStyle={{ margin: 0, padding: '1rem', backgroundColor: '#1e1e1e', fontSize: '0.9rem', lineHeight: '1.5', overflowX: 'auto', fontFamily: "'JetBrains Mono', 'Fira Code', monospace" }}
+            codeTagProps={{ style: { fontFamily: "'JetBrains Mono', 'Fira Code', monospace" } }}
           >
             {code.trim()}
           </SyntaxHighlighter>
@@ -371,7 +302,6 @@ const ChatArea = () => {
       lastIndex = regex.lastIndex;
     }
 
-    // C. Aakhri bacha hua text daalo (Code block ke baad ka)
     const textAfter = content.slice(lastIndex);
     if (textAfter.trim()) elements.push(...parseMarkdownText(textAfter));
 
@@ -412,7 +342,7 @@ const ChatArea = () => {
         <div className="max-w-4xl mx-auto space-y-6">
           {(!currentChat || messages.length === 0) ? (
             <div className="flex flex-col items-start justify-end h-80 text-center text-gray-400 select-none">
-              <div className="text-2xl font-semibold mb-2">Hi {user?.name || user?.username || 'Govind kumar'}</div>
+              <div className="text-2xl font-semibold mb-2">Hi, {user?.name || user?.username || 'Govind kumar'}</div>
               <div className="text-3xl">Where should we start?</div>
             </div>
           ) : (

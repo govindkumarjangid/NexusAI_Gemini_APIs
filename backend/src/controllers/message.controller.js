@@ -32,7 +32,7 @@ const sendMessage = wrapAsync(async (req, res) => {
     let fullAssistantResponse = "";
 
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-flash-lite-latest' });
 
         const formattedMessages = chat.messages.map(msg => ({
             role: msg.role === 'assistant' ? 'model' : 'user',
@@ -52,6 +52,7 @@ const sendMessage = wrapAsync(async (req, res) => {
         for await (const chunk of result.stream) {
             const chunkText = chunk.text();
             if (chunkText) {
+                console.log(chunkText)
                 fullAssistantResponse += chunkText;
                 res.write(`data: ${JSON.stringify({ text: chunkText })}\n\n`);
             }
@@ -63,6 +64,8 @@ const sendMessage = wrapAsync(async (req, res) => {
 
         chat.messages.push({ messageId: assistantMessage._id, role: 'assistant', content: fullAssistantResponse });
         await chat.save();
+
+        console.log(assistantMessage);
 
         // End the stream cleanly
         res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
