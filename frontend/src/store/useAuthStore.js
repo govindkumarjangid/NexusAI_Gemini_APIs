@@ -1,4 +1,3 @@
-// add user login , register and logout functionality
 import axiosInstance from '../configs/axiosInstance.js';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
@@ -13,7 +12,7 @@ const useAuthStore = create((set) => ({
     // UI State
     isMobile: window.innerWidth < 768,
     setIsMobile: (val) => set({ isMobile: val }),
-    sidebarOpen: !(window.innerWidth < 768),
+    sidebarOpen: !(window.innerWidth < 768) && false,
     setSidebarOpen: (val) => set({ sidebarOpen: val }),
     isSearchOpen: false,
     setIsSearchOpen: (val) => set({ isSearchOpen: val }),

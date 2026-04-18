@@ -2,7 +2,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Plus, Search, SquarePen,
   SquareChevronLeft,
-  SquareChevronRight
+  SquareChevronRight,
+  MessageCircle
 } from 'lucide-react';
 
 import logo from '/nexusai-logo.svg';
@@ -57,20 +58,27 @@ const Sidebar = () => {
         {/* Top Header */}
         <div className="h-14 flex items-center justify-between border-b border-gray-800/60 shrink-0">
           <div className="w-17.5 flex items-center justify-center shrink-0 relative group">
-            {sidebarOpen ? (
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className="p-0 sm:p-3 hover:bg-gray-800 rounded-full transition-colors cursor-pointer text-gray-400 hover:text-gray-200"
-                title="Collapse Menu"
-              >
-                <SquareChevronLeft size={22} />
-              </button>
+            {sidebarOpen && !isMobile ? (
+              <div className="w-17.5 flex items-center justify-between">
+                <img
+                  src={logo}
+                  alt="NexusAI Logo"
+                  className="w-8 h-8 rounded-full shadow-lg cursor-pointer transition-all duration-200 hover:scale-105 "
+                />
+                <button
+                  onClick={() => setSidebarOpen(false)}
+                  className="p-0 sm:p-3 hover:bg-gray-800 rounded-full transition-colors cursor-pointer text-gray-400 hover:text-gray-200"
+                  title="Collapse Menu"
+                >
+                  <SquareChevronLeft size={22} />
+                </button>
+              </div>
             ) : (
               <div className="group">
                 <img
                   src={logo}
                   alt="NexusAI Logo"
-                  className="w-9 h-9 rounded-full shadow-lg cursor-pointer transition-all duration-200 hover:scale-105 group-hover:hidden"
+                  className="w-8 h-8 rounded-full shadow-lg cursor-pointer transition-all duration-200 hover:scale-105 group-hover:hidden"
                 />
                 <button
                   onClick={() => setSidebarOpen(true)}
@@ -82,31 +90,10 @@ const Sidebar = () => {
               </div>
             )}
           </div>
-
-          <AnimatePresence>
-            {sidebarOpen && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="flex gap-1 pr-3"
-              >
-                <button
-                  onClick={() => setIsSearchOpen(true)}
-                  className="p-2 hover:bg-gray-800 rounded-full cursor-pointer transition-colors text-gray-400 hover:text-gray-200"
-                >
-                  <Search size={20} />
-                </button>
-                <button className="p-2 hover:bg-gray-800 rounded-full cursor-pointer transition-colors text-gray-400 hover:text-gray-200">
-                  <Plus size={20} />
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
 
         {/* New Chat Button */}
-        <div className="px-3 py-3 mt-1 shrink-0">
+        <div className="px-3 py-3 mt-1 shrink-0 flex flex-col gap-2">
           <button
             className="flex items-center bg-[#2d2f31] hover:bg-[#383a3c] cursor-pointer rounded-full transition-colors text-gray-200 w-full overflow-hidden h-11.5"
             onClick={handleCreateChat}
@@ -128,6 +115,38 @@ const Sidebar = () => {
               )}
             </AnimatePresence>
           </button>
+          <button
+            className="flex items-center bg-[#2d2f31] hover:bg-[#383a3c] cursor-pointer rounded-full transition-colors text-gray-200 w-full overflow-hidden h-11.5"
+            onClick={() => setIsSearchOpen(true)}
+            disabled={chatLoading}
+          >
+            <div className="w-11.5 shrink-0 flex items-center justify-center">
+              <Search size={18} />
+            </div>
+            <AnimatePresence>
+              {sidebarOpen && (
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="text-sm font-medium whitespace-nowrap"
+                >
+                  Search
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </button>
+          {!sidebarOpen && (
+            <button
+              className="flex items-center bg-[#2d2f31] hover:bg-[#383a3c] cursor-pointer rounded-full transition-colors text-gray-200 w-full overflow-hidden h-11.5"
+              onClick={() => setIsSearchOpen(true)}
+              disabled={chatLoading}
+            >
+              <div className="w-11.5 shrink-0 flex items-center justify-center">
+                <MessageCircle size={18} />
+              </div>
+            </button>
+          )}
         </div>
 
         {/* Chats List */}
