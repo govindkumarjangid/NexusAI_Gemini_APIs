@@ -19,14 +19,16 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: ['https://nexusai-gemini-apis.onrender.com', 'http://localhost:5173'],
-    credentials: true
-}))
+    origin: ['https://nexus-ai-gemini-ap-is.vercel.app', 'http://localhost:5173'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // Routes
 app.get('/', (req, res) => {
     res.send('Welcome to NexusAI API');
 });
+
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/chats', chatRoutes);
 app.use('/api/v1/messages', messageRoutes);
