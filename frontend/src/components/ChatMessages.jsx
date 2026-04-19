@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
+import useAuthStore from '../store/useAuthStore';
+import useChatStore from '../store/useChatStore';
+import Spinner from './Spinner';
 import { motion } from 'framer-motion';
-import { renderMessageContent } from '../configs/renderMessageContent.jsx';
-import useChatStore from '../store/useChatStore.js';
-import useAuthStore from '../store/useAuthStore.js';
+import { renderMessageContent } from '../configs/renderMessageContent';
 
-const ChatMessages = ({ messages }) => {
+const ChatMessages = ({ messages, isStreaming }) => {
 
     const { user } = useAuthStore();
     const { currentChat } = useChatStore();
@@ -25,26 +26,38 @@ const ChatMessages = ({ messages }) => {
                         <div className="text-3xl">Where should we start?</div>
                     </div>
                 ) : (
-                    messages.map((msg) => (
-                        <motion.div
-                            key={msg._id}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className={`flex gap-3 sm:gap-4 w-full ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
-                        >
-                            {/* Message Content */}
-                            <div
-                                className={`min-w-0 ${msg.role === 'user'
-                                    ? 'bg-[#2d2f31] text-gray-100 rounded-3xl rounded-tr-sm px-4 py-2 sm:px-5 sm:py-2 shadow-xl max-w-[95%] sm:max-w-[85%] md:max-w-[70%] w-fit'
-                                    : 'text-gray-200 px-1 py-2 sm:px-4 sm:py-3 leading-relaxed w-full'
-                                    }`}
+                    <>
+                        {messages.map((msg, idx) => (
+                            <motion.div
+                                key={msg._id || idx}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className={`flex gap-3 sm:gap-4 w-full ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
                             >
-                                <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words w-full overflow-hidden" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
-                                    {renderMessageContent(msg.content || msg.text)}
+                                {/* Message Content */}
+                                <div
+                                    className={`min-w-0 ${msg.role === 'user'
+                                        ? 'bg-[#2d2f31] text-gray-100 rounded-3xl rounded-tr-sm px-4 py-2 sm:px-5 sm:py-2 shadow-xl max-w-[95%] sm:max-w-[85%] md:max-w-[70%] w-fit'
+                                        : 'text-gray-200 px-1 py-2 sm:px-4 sm:py-3 leading-relaxed w-full'
+                                        }`}
+                                >
+                                    <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words w-full overflow-hidden" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
+                                        {renderMessageContent(msg.content || msg.text)}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                        {isStreaming && (
+                            <div className="flex gap-3 sm:gap-4 w-full mt-2">
+                                <div className="min-w-0 px-2 py-2 sm:px-4 leading-relaxed w-full flex items-center">
+                                    <Spinner size={32} color="#6366f1" />
+                                    <span className="ml-3 text-[15px] font-medium text-gray-400 animate-pulse">
+                                        NexusAI is thinking...
+                                    </span>
                                 </div>
                             </div>
-                        </motion.div>
-                    ))
+                        )}
+                    </>
                 )}
                 <div ref={messagesEndRef} />
             </div>

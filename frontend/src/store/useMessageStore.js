@@ -25,7 +25,7 @@ const useMessageStore = create((set) => ({
 
   sendAndStreamMessage: async ({ chatId, content, onStream, onDone }) => {
     try {
-
+      set({ isLoading: true, error: null });
       const BACKEND_URL = "http://localhost:5000/api/v1";
       const token = localStorage.getItem('token');
 
@@ -75,7 +75,10 @@ const useMessageStore = create((set) => ({
           }
         }
       }
-      if (onDone) onDone();
+      if (onDone) {
+        onDone();
+        set({ isLoading: false, error: null });
+      };
     } catch (error) {
       console.error("Fetch/Stream failed:", error);
       toast.error("Network error while trying to reach AI");

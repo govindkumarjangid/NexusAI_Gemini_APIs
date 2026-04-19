@@ -100,13 +100,13 @@ const ChatArea = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-dvh w-full max-w-[100vw] overflow-x-hidden">
+    <div className="flex-1 flex flex-col h-dvh w-full max-w-[100vw] overflow-x-hidden bg-[#131314]">
 
       {/* Top Navbar */}
       <ChatAreaHeader />
 
       {/* Chat Messages */}
-      <ChatMessages messages={messages} />
+      <ChatMessages messages={messages} isStreaming={isStreaming} />
 
 
       {/* Input Area */}

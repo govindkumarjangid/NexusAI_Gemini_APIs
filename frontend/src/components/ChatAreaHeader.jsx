@@ -2,6 +2,7 @@ import React from 'react';
 import { SquareChevronRight } from 'lucide-react';
 import logo from '/nexusai-logo.svg';
 import useAuthStore from '../store/useAuthStore';
+import Spinner from './Spinner';
 
 const ChatAreaHeader = () => {
     const { isMobile, sidebarOpen, setSidebarOpen, user } = useAuthStore();
