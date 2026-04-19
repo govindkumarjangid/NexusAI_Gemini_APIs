@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X } from 'lucide-react';
+import { ChevronDown, MessageCircle, X } from 'lucide-react';
 import { useState } from 'react';
 
 const RecentChatsSidebar = ({
@@ -63,10 +63,10 @@ const RecentChatsSidebar = ({
                         })}
                         {hasMore && (
                             <button
-                                className="my-4 py-2 px-4 rounded-full hover:bg-[#2d2f31] bg-[#23272f] text-gray-200 font-semibold transition-colors cursor-pointer w-full max-w-fit mx-auto block shadow-lg"
+                                className="my-4 py-2 px-4 text-sm rounded-full hover:bg-[#2d2f31] bg-[#23272f] text-gray-200 transition-colors cursor-pointer w-full max-w-fit mx-auto shadow-lg flex items-center gap-1 justify-center"
                                 onClick={onLoadMore}
                             >
-                                Load More
+                                Load More <ChevronDown  size={18} />
                             </button>
                         )}
                     </div>

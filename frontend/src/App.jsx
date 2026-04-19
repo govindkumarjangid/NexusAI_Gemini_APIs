@@ -45,30 +45,34 @@ const App = () => {
         reverseOrder={false}
         toastOptions={{
           style: {
-            background: '#232326',
-            color: '#fff',
-            border: '1px solid #F0F0F0',
+            background: 'rgba(19, 19, 20, 0.85)',
+            color: '#e5e7eb',
+            border: '1px solid #232326',
+            boxShadow: '0 4px 24px 0 rgba(0,0,0,0.35)',
+            backdropFilter: 'blur(10px)',
           },
           success: {
             iconTheme: {
               primary: '#22c55e',
-              secondary: '#fff',
+              secondary: '#131314',
             },
             style: {
-              background: '#232326',
-              color: '#fff',
+              background: 'rgba(34,197,94,0.10)',
+              color: '#bbf7d0',
               border: '1px solid #22c55e',
+              backdropFilter: 'blur(10px)',
             },
           },
           error: {
             iconTheme: {
               primary: '#ef4444',
-              secondary: '#fff',
+              secondary: '#131314',
             },
             style: {
-              background: '#232326',
-              color: '#fff',
+              background: 'rgba(239,68,68,0.10)',
+              color: '#fecaca',
               border: '1px solid #ef4444',
+              backdropFilter: 'blur(10px)',
             },
           },
         }}
@@ -83,20 +87,9 @@ const App = () => {
         }
         />
         <Route path="/chat" element={
-          <div className="flex h-screen overflow-hidden bg-[#131314] text-gray-100 relative">
+          <div className="flex h-screen overflow-hidden text-gray-100 relative">
             <Sidebar />
             <ChatArea />
-            <AnimatePresence>
-              {isSearchOpen && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="fixed inset-0 bg-black/10 backdrop-blur-md z-60"
-                  onClick={() => setIsSearchOpen(false)}
-                />
-              )}
-            </AnimatePresence>
             <SearchPage />
           </div>
         } />

@@ -32,7 +32,7 @@ const sendMessage = wrapAsync(async (req, res) => {
     let fullAssistantResponse = "";
 
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-flash-lite-latest' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
 
         const formattedMessages = chat.messages.map(msg => ({
             role: msg.role === 'assistant' ? 'model' : 'user',

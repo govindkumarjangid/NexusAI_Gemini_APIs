@@ -1,6 +1,70 @@
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import React from 'react';
+import React, { useState } from 'react';
+import { Check, Copy } from 'lucide-react';
+
+const CodeBlockComponent = ({ lang, code }) => {
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setIsCopied(true);
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 2000);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  };
+
+  return (
+    <div className="w-full max-w-full overflow-x-auto rounded-lg shadow-lg" style={{ margin: '1.5rem 0', WebkitOverflowScrolling: 'touch', textAlign: 'left' }}>
+      <div className="flex items-center justify-between bg-[#2d2d2d] py-2 px-6 border-b border-[#1e1e1e] min-w-max w-full">
+        <span style={{ color: '#cccccc', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", fontSize: '0.85rem' }}>
+          {lang}
+        </span>
+        <button
+          onClick={handleCopy}
+          style={{
+            background: 'transparent',
+            color: isCopied ? '#4bb74a' : '#cccccc',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '0.85rem',
+            transition: 'color 0.2s',
+            fontWeight: 500,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          {isCopied ? <Check size={16} /> : <Copy size={16} />}
+          {isCopied ? 'Copied!' : 'Copy'}
+        </button>
+      </div>
+
+      <SyntaxHighlighter
+        language={lang === 'text' ? null : lang}
+        style={vscDarkPlus}
+        customStyle={{
+          margin: 0,
+          padding: '1rem 1.5rem',
+          backgroundColor: '#1e1e1e',
+          fontSize: '0.9rem',
+          lineHeight: '1.5',
+          overflowX: 'auto',
+          fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+          textAlign: 'left'
+        }}
+        codeTagProps={{ style: { fontFamily: "'JetBrains Mono', 'Fira Code', monospace" } }}
+      >
+        {code.trim()}
+      </SyntaxHighlighter>
+    </div>
+  );
+};
+
 
 export function renderMessageContent(content) {
   if (!content) return null;
@@ -12,18 +76,17 @@ export function renderMessageContent(content) {
   const parseInline = (str) => {
     if (!str) return str;
     const parts = str.split(/(`[^`]+`|\*\*[^*]+\*\*)/).filter(Boolean);
-
     return parts.map((part) => {
       if (part.startsWith('`') && part.endsWith('`')) {
         return (
-          <code key={`ic-${inlineKeyCounter++}`} className="wrap-break-words" style={{ background: '#2d3139', color: '#7dd3fc', borderRadius: '4px', padding: '0.15em 0.35em', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", fontSize: '0.9em', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
+          <code key={`ic-${inlineKeyCounter++}`} className="wrap-break-words" style={{ background: '#2d3139', color: '#7dd3fc', borderRadius: '4px', padding: '0.15em 0.35em', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", fontSize: '0.8em', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
             {part.slice(1, -1)}
           </code>
         );
       }
       if (part.startsWith('**') && part.endsWith('**')) {
         return (
-          <strong key={`ib-${inlineKeyCounter++}`} style={{ fontWeight: 600, color: '#ffffff' }}>
+          <strong key={`ib-${inlineKeyCounter++}`} style={{ fontWeight: 700, color: '#ffffff' }}>
             {part.slice(2, -2)}
           </strong>
         );
@@ -54,7 +117,7 @@ export function renderMessageContent(content) {
           const rows = tableRows.slice(2).map((r) => r.split('|').map((c) => c.trim()).filter(Boolean));
           textElements.push(
             <div key={`table-${keyCounter++}`} className="w-full max-w-full overflow-x-auto" style={{ margin: '1.5em 0', WebkitOverflowScrolling: 'touch', textAlign: 'left' }}>
-              <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 'max-content', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", background: '#181a1b', color: '#e6e6e6', borderRadius: '8px', overflow: 'hidden', fontSize: '0.92em' }}>
+              <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 'max-content', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", background: '#181a1b', color: '#e6e6e6', borderRadius: '8px', overflow: 'hidden', fontSize: '0.92em', textAlign: 'left' }}>
                 <thead>
                   <tr>
                     {header.map((cell, idx) => (
@@ -84,16 +147,34 @@ export function renderMessageContent(content) {
       }
       if (inTable) continue;
 
-      if (/^#{3,4}\s+/.test(line)) {
+      const headingMatch = line.match(/^(#{1,6})\s+(.*)/);
+      if (headingMatch) {
         if (inList) {
-          textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.2em', margin: '0.5em 0', textAlign: 'left' }}>{listItems}</ul>);
+          textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.5em', margin: '0.5em 0', textAlign: 'left' }}>{listItems}</ul>);
           inList = false;
           listItems = [];
         }
+
+        const hashCount = headingMatch[1].length;
+        const headingText = headingMatch[2];
+
+        let Tag = 'h3';
+        let fontSize = '1.2em';
+
+        if (hashCount === 2) {
+          Tag = 'h1';
+          fontSize = '1.8em';
+        } else if (hashCount === 3) {
+          Tag = 'h2';
+          fontSize = '1.5em';
+        } else {
+          Tag = `h${Math.min(hashCount, 6)}`;
+        }
+
         textElements.push(
-          <h3 key={`h-${keyCounter++}`} style={{ fontWeight: 600, fontSize: '1.2em', marginTop: '1.2em', marginBottom: '0.5em', color: '#ffffff', wordBreak: 'break-word', textAlign: 'left' }}>
-            {parseInline(line.replace(/^#{3,4}\s+/, ''))}
-          </h3>
+          <Tag key={`h-${keyCounter++}`} style={{ fontWeight: 700, fontSize: fontSize, marginTop: '1.2em', marginBottom: '0.5em', color: '#ffffff', wordBreak: 'break-word', textAlign: 'left' }}>
+            {parseInline(headingText)}
+          </Tag>
         );
         continue;
       }
@@ -132,7 +213,7 @@ export function renderMessageContent(content) {
       }
     }
 
-    if (inList) textElements.push(<ul key={`ul-${keyCounter++}`} style={{ marginBottom: '1.2em', textAlign: 'left' }}>{listItems}</ul>);
+    if (inList) textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.5em', marginBottom: '1.2em', textAlign: 'left' }}>{listItems}</ul>);
     return textElements;
   };
 
@@ -148,38 +229,14 @@ export function renderMessageContent(content) {
     const code = match[2];
 
     elements.push(
-      <div key={`codeblock-${keyCounter++}`} className="w-full max-w-full overflow-x-auto rounded-lg shadow-lg" style={{ margin: '1.5rem 0', WebkitOverflowScrolling: 'touch', textAlign: 'left' }}>
-        <div className="flex items-center justify-between bg-[#2d2d2d] px-4 py-2 border-b border-[#1e1e1e] min-w-max w-full">
-          <span style={{ color: '#cccccc', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", fontSize: '0.85rem' }}>{lang}</span>
-          <button
-            onClick={(e) => {
-              navigator.clipboard.writeText(code);
-              const btn = e.currentTarget;
-              btn.innerText = 'Copied!';
-              btn.style.color = '#4bb74a';
-              setTimeout(() => { btn.innerText = 'Copy'; btn.style.color = '#cccccc'; }, 2000);
-            }}
-            style={{ background: 'transparent', color: '#cccccc', border: 'none', cursor: 'pointer', fontSize: '0.85rem', transition: 'color 0.2s', fontWeight: 500, marginLeft: 'auto' }}
-          >
-            Copy
-          </button>
-        </div>
-
-        <SyntaxHighlighter
-          language={lang === 'text' ? null : lang}
-          style={vscDarkPlus}
-          customStyle={{ margin: 0, padding: '1rem', backgroundColor: '#1e1e1e', fontSize: '0.9rem', lineHeight: '1.5', overflowX: 'auto', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", textAlign: 'left' }}
-          codeTagProps={{ style: { fontFamily: "'JetBrains Mono', 'Fira Code', monospace" } }}
-        >
-          {code.trim()}
-        </SyntaxHighlighter>
-      </div>
+      <CodeBlockComponent key={`codeblock-${keyCounter++}`} lang={lang} code={code} />
     );
+
     lastIndex = regex.lastIndex;
   }
 
   const textAfter = content.slice(lastIndex);
   if (textAfter.trim()) elements.push(...parseMarkdownText(textAfter));
 
-  return elements;
+  return <div style={{ textAlign: 'left', width: '100%' }}>{elements}</div>;
 }

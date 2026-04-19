@@ -15,7 +15,6 @@ const ChatList = ({ chats, currentChat, setCurrentChat, navigate, deleteChat, ge
       {chats && chats.length > 0 ? (
         chats.map((chat) => {
           const isActive = currentChat && currentChat._id === chat._id;
-          // Get first user message as title
           let userMsg = '';
           if (chat.messages && Array.isArray(chat.messages)) {
             const found = chat.messages.find(m => m.role === 'user' && m.content);
@@ -37,7 +36,7 @@ const ChatList = ({ chats, currentChat, setCurrentChat, navigate, deleteChat, ge
                 <MessageSquare size={18} className="shrink-0" />
                 <span className="truncate">{userMsg}</span>
               </div>
-              <div className={`flex items-center space-x-1 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}> 
+              <div className={`flex items-center space-x-1 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
                 <button className="p-1 hover:text-blue-400 text-gray-400 transition-colors cursor-pointer">
                   <Edit2 size={14} />
                 </button>

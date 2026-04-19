@@ -80,7 +80,7 @@ const Sidebar = () => {
           }`}
       >
         {/* Top Header */}
-        <div className="h-14 flex items-center justify-between border-b border-gray-800/60 shrink-0">
+        <div className="h-14 flex items-center justify-between shrink-0">
           {sidebarOpen && (sidebarOpen && isMobile ? isMobile : !isMobile) && (
             <div className="w-full flex items-center justify-between shrink-0 relative group px-4.5">
               <NavLink to="/chat" className="flex items-center gap-3">
@@ -215,20 +215,28 @@ const Sidebar = () => {
                   exit={{ opacity: 0 }}
                   className="space-y-1"
                 >
-                  <ChatList
-                    chats={paginatedChats}
-                    currentChat={currentChat}
-                    setCurrentChat={setCurrentChat}
-                    navigate={navigate}
-                    deleteChat={deleteChat}
-                    getChatsByUser={getChatsByUser}
-                  />
+                  {chatLoading ? (
+                    <div className="space-y-2">
+                      {[...Array(6)].map((_, i) => (
+                        <div className="flex-1 px-4 py-4 bg-gray-700/40 rounded-full animate-pulse" />
+                      ))}
+                    </div>
+                  ) : (
+                    <ChatList
+                      chats={paginatedChats}
+                      currentChat={currentChat}
+                      setCurrentChat={setCurrentChat}
+                      navigate={navigate}
+                      deleteChat={deleteChat}
+                      getChatsByUser={getChatsByUser}
+                    />
+                  )}
                   {hasMoreRecent && (
                     <button
                       className="my-4 py-2 px-4 text-sm rounded-full hover:bg-[#2d2f31] bg-[#23272f] text-gray-200 transition-colors cursor-pointer w-full max-w-fit mx-auto shadow-lg flex items-center gap-1 justify-center"
                       onClick={handleLoadMoreRecent}
                     >
-                      Load More <ChevronDown  size={18} />
+                      Load More <ChevronDown size={18} />
                     </button>
                   )}
                 </motion.div>
