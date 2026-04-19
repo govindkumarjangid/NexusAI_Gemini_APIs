@@ -1,16 +1,67 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# NexusAI Frontend
 
-Currently, two official plugins are available:
+This is the frontend for NexusAI, built with **React** and **Vite**. It provides a modern chat interface with authentication, chat management, and AI-powered messaging.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- **Authentication:** Login and registration with persistent user sessions.
+- **Chat System:** Create, view, search, and delete chats.
+- **Real-time Messaging:** Send and receive AI-powered messages with streaming responses.
+- **Responsive UI:** Mobile-friendly sidebar, chat area, and search.
+- **State Management:** Uses Zustand for global state (auth, chat, message).
+- **UI Libraries:** TailwindCSS for styling, Framer Motion for animation, Lucide for icons, PrismJS for code highlighting, and React Hot Toast for notifications.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Folder Structure
 
-## Expanding the ESLint configuration
+```
+src/
+  App.jsx                # Main app and routing
+  index.css, main.jsx    # Entry point and global styles
+  components/            # UI components (Sidebar, ChatArea, ChatList, etc.)
+  configs/               # Axios instance, message rendering helpers
+  pages/                 # Auth (login/register), SearchPage
+  store/                 # Zustand stores for auth, chat, message
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Main Components
+
+- **App.jsx:** Handles routing, authentication state, and layout.
+- **Sidebar:** Navigation, new chat, search, recent chats, and logout.
+- **ChatArea:** Displays messages, input area, and chat header.
+- **ChatMessages:** Renders chat history with markdown/code formatting.
+- **ChatInputArea:** Text input, file/image/voice upload (UI only).
+- **SearchPage:** Search chats by message content.
+- **RecentChatsSidebar:** Quick access to recent chats.
+
+## State Management
+
+- **useAuthStore:** Handles user authentication, UI state (sidebar, search), and session.
+- **useChatStore:** Manages chat list, current chat, create/delete chat.
+- **useMessageStore:** Handles sending and streaming messages.
+
+## API Integration
+
+- **axiosInstance.js:** Configured with base URL and token from localStorage.
+- **All API calls** are made to the backend for authentication, chat, and message operations.
+
+## UI/UX
+
+- **TailwindCSS** for utility-first styling.
+- **Framer Motion** for smooth animations.
+- **PrismJS** for code block syntax highlighting in messages.
+- **React Hot Toast** for notifications.
+
+## How to Run
+
+1. Install dependencies:
+	```
+	npm install
+	```
+2. Start the development server:
+	```
+	npm run dev
+	```
+3. The app runs at `http://localhost:5173` by default.
+
+---
