@@ -4,27 +4,21 @@ import User from '../models/user.model.js';
 import wrapAsync from '../utils/wrapAsync.js';
 import genAI from '../configs/genAI.js';
 
+
+// send message in a chat and get streaming response from Gemini
 const sendMessage = wrapAsync(async (req, res) => {
     const { chatId } = req.params;
     const { content } = req.body;
 
-
-    // Check if chat exists
     const chat = await Chat.findById(chatId).populate('messages.messageId');
     if (!chat) return res.status(404).json({ message: 'Chat not found' });
 
-    // Save user message
     const newMessage = new Message({ chatId, role: 'user', content });
     await newMessage.save();
-
-
 
     chat.messages.push({ messageId: newMessage._id, role: 'user', content });
     await chat.save();
 
-
-
-    // Set SSE Headers
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
@@ -33,22 +27,15 @@ const sendMessage = wrapAsync(async (req, res) => {
 
     try {
         const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
-
         const formattedMessages = chat.messages.map(msg => ({
             role: msg.role === 'assistant' ? 'model' : 'user',
             parts: [{ text: msg.content }]
         }));
 
-        // Remove the latest user message
         formattedMessages.pop();
-
-        const chatSession = model.startChat({
-            history: formattedMessages,
-        });
-
+        const chatSession = model.startChat({ history: formattedMessages });
         const result = await chatSession.sendMessageStream(content);
 
-        // Await the stream properly
         for await (const chunk of result.stream) {
             const chunkText = chunk.text();
             if (chunkText) {
@@ -58,7 +45,6 @@ const sendMessage = wrapAsync(async (req, res) => {
             }
         }
 
-        // SAVE TO DB AFTER STREAM IS COMPLETE
         const assistantMessage = new Message({ chatId, role: 'assistant', content: fullAssistantResponse });
         await assistantMessage.save();
 
@@ -67,10 +53,8 @@ const sendMessage = wrapAsync(async (req, res) => {
 
         console.log(assistantMessage);
 
-        // End the stream cleanly
         res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
         return res.end();
-
     } catch (error) {
         console.error("Stream Error:", error);
         res.write(`data: ${JSON.stringify({ error: "Something went wrong" })}\n\n`);
@@ -81,13 +65,9 @@ const sendMessage = wrapAsync(async (req, res) => {
 // get all messages for a chat
 const getMessagesByChat = wrapAsync(async (req, res) => {
     const { chatId } = req.params;
-    // Check if chat exists
     const chat = await Chat.findById(chatId);
-    if (!chat) {
+    if (!chat)
         return res.status(404).json({ message: 'Chat not found' });
-
-    }
-    // Get all messages for the chat
     const messages = await Message.find({ chatId }).sort({ createdAt: 1 });
     res.status(200).json({ messages });
 });

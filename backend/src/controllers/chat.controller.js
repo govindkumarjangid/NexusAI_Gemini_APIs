@@ -33,28 +33,6 @@ const getChatsByUser = wrapAsync(async (req, res) => {
     res.status(200).json({ success: true, message: 'Chats fetched successfully', chats });
 });
 
-// add message to chat
-const addMessageToChat = wrapAsync(async (req, res) => {
-
-    const { chatId } = req.params;
-    const { role, content } = req.body;
-
-    if (!role || !content)
-        return res.status(400).json({ message: 'role and content are required' });
-
-    const chat = await Chat.findById(chatId);
-    if (!chat)
-        return res.status(404).json({ message: 'Chat not found' });
-
-    // Create a new Message document
-    const newMessage = await Message.create({ chatId, role, content });
-
-    chat.messages.push({ messageId: newMessage._id, role, content });
-    await chat.save();
-
-    res.status(200).json({ success: true, message: 'Message added to chat successfully', messageObj: newMessage });
-});
-
 // delete chat and all its messages
 const deleteChat = wrapAsync(async (req, res) => {
     const { chatId } = req.params;
@@ -70,10 +48,8 @@ const deleteChat = wrapAsync(async (req, res) => {
     res.status(200).json({ success: true, message: 'Chat and its messages deleted successfully' });
 });
 
-
 export {
     createChat,
     getChatsByUser,
-    addMessageToChat,
     deleteChat
 };

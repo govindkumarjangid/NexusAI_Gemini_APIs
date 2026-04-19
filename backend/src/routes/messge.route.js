@@ -13,15 +13,10 @@ const router = express.Router();
 
 
 router.post('/send/:chatId', sendMessage);
-
 router.get('/chat/:chatId', getMessagesByChat);
-
 router.get('/:messageId', getMessageById);
-
 router.delete('/:messageId', deleteMessageById);
-
 router.put('/:messageId', editMessageById);
-
 router.get('/user/:userId', getMessagesByUser);
 
 export default router;

@@ -4,10 +4,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import connectDB from './src/configs/db.js';
-
-import userRoutes from './src/routes/user.routes.js';
-import chatRoutes from './src/routes/chat.routes.js';
-import messageRoutes from './src/routes/messge.routes.js';
+import userRoutes from './src/routes/user.route.js';
+import chatRoutes from './src/routes/chat.route.js';
+import messageRoutes from './src/routes/messge.route.js';
 
 
 const app = express();
@@ -28,7 +27,6 @@ app.use(cors({
 app.get('/', (req, res) => {
     res.send('Welcome to NexusAI API');
 });
-
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/chats', chatRoutes);
 app.use('/api/v1/messages', messageRoutes);
@@ -40,7 +38,7 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Internal Server Error' });
 });
 
-
+// Start the server
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
