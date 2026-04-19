@@ -26,7 +26,7 @@ const useMessageStore = create((set) => ({
   sendAndStreamMessage: async ({ chatId, content, onStream, onDone }) => {
     try {
       set({ isLoading: true, error: null });
-      const BACKEND_URL = "http://localhost:5000/api/v1";
+      const BACKEND_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
       const token = localStorage.getItem('token');
 
       const response = await fetch(`${BACKEND_URL}/messages/send/${chatId}`, {
