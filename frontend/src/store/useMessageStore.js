@@ -38,9 +38,8 @@ const useMessageStore = create((set) => ({
         body: JSON.stringify({ content })
       });
 
-      if (!response.ok) {
+      if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
-      }
 
       if (!response.body) throw new Error('No response body');
 
@@ -48,13 +47,42 @@ const useMessageStore = create((set) => ({
       const decoder = new TextDecoder('utf-8');
       let buffer = '';
 
+      const wordQueue = [];
+      let isStreamFinished = false;
+      let isTyping = false;
+
+      const processQueue = async () => {
+        if (isTyping) return;
+        isTyping = true;
+        while (wordQueue.length > 0 || !isStreamFinished) {
+          if (wordQueue.length > 0) {
+            const word = wordQueue.shift();
+            if (onStream) onStream(word);
+
+            await new Promise(resolve => setTimeout(resolve, 20));
+          } else {
+            await new Promise(resolve => setTimeout(resolve, 10));
+          }
+        }
+        isTyping = false;
+        if (onDone) {
+          onDone();
+          set({ isLoading: false, error: null });
+        }
+      };
+
+      processQueue();
+
       while (true) {
         const { done, value } = await reader.read();
-        if (done) break;
+        if (done) {
+          isStreamFinished = true;
+          break;
+        }
 
         buffer += decoder.decode(value, { stream: true });
         let lines = buffer.split('\n');
-        buffer = lines.pop(); // Save incomplete line for next chunk
+        buffer = lines.pop();
 
         for (const line of lines) {
           if (line.startsWith('data: ')) {
@@ -62,12 +90,13 @@ const useMessageStore = create((set) => ({
               const data = JSON.parse(line.replace('data: ', ''));
 
               if (data.done) {
-                if (onDone) onDone();
+                isStreamFinished = true;
               } else if (data.text) {
-                if (onStream) onStream(data.text);
+                wordQueue.push(data.text);
               } else if (data.error) {
                 console.error("AI Streaming Error from Backend:", data.error);
-                toast.error(data.error); // Show error to user
+                toast.error(data.error);
+                isStreamFinished = true; 
               }
             } catch (err) {
               // Ignored JSON parse errors for incomplete chunks
@@ -75,16 +104,14 @@ const useMessageStore = create((set) => ({
           }
         }
       }
-      if (onDone) {
-        onDone();
-        set({ isLoading: false, error: null });
-      };
+
     } catch (error) {
       console.error("Fetch/Stream failed:", error);
       toast.error("Network error while trying to reach AI");
       if (onDone) onDone();
+      set({ isLoading: false, error: null });
     }
-  },
+  }
 
 }));
 

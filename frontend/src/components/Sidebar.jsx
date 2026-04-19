@@ -218,7 +218,7 @@ const Sidebar = () => {
                   {chatLoading ? (
                     <div className="space-y-2">
                       {[...Array(6)].map((_, i) => (
-                        <div className="flex-1 px-4 py-4 bg-gray-700/40 rounded-full animate-pulse" />
+                        <div key={i} className="flex-1 px-4 py-4 bg-gray-700/40 rounded-full animate-pulse" />
                       ))}
                     </div>
                   ) : (

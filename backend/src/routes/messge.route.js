@@ -1,5 +1,6 @@
 import express from 'express';
 import messageController from '../controllers/message.controller.js';
+import authMiddleware from '../middleware/auth.middleware.js';
 const {
     sendMessage,
     getMessagesByChat,
@@ -12,8 +13,8 @@ const {
 const router = express.Router();
 
 
-router.post('/send/:chatId', sendMessage);
-router.get('/chat/:chatId', getMessagesByChat);
+router.post('/send/:chatId', authMiddleware, sendMessage);
+router.get('/chat/:chatId', authMiddleware, getMessagesByChat);
 router.get('/:messageId', getMessageById);
 router.delete('/:messageId', deleteMessageById);
 router.put('/:messageId', editMessageById);

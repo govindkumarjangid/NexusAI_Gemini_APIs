@@ -36,14 +36,12 @@ const getChatsByUser = wrapAsync(async (req, res) => {
 // delete chat and all its messages
 const deleteChat = wrapAsync(async (req, res) => {
     const { chatId } = req.params;
-    // Check if chat exists
     const chat = await Chat.findById(chatId);
     if (!chat)
         return res.status(404).json({ message: 'Chat not found' });
 
     await Message.deleteMany({ chatId });
 
-    // Delete chat
     await Chat.findByIdAndDelete(chatId);
     res.status(200).json({ success: true, message: 'Chat and its messages deleted successfully' });
 });

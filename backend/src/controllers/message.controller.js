@@ -5,12 +5,14 @@ import wrapAsync from '../utils/wrapAsync.js';
 import genAI from '../configs/genAI.js';
 
 
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 // send message in a chat and get streaming response from Gemini
 const sendMessage = wrapAsync(async (req, res) => {
     const { chatId } = req.params;
     const { content } = req.body;
 
-    const chat = await Chat.findById(chatId).populate('messages.messageId');
+    const chat = await Chat.findById(chatId);
     if (!chat) return res.status(404).json({ message: 'Chat not found' });
 
     const newMessage = new Message({ chatId, role: 'user', content });
@@ -38,20 +40,27 @@ const sendMessage = wrapAsync(async (req, res) => {
 
         for await (const chunk of result.stream) {
             const chunkText = chunk.text();
+            console.log(chunkText)
             if (chunkText) {
-                console.log(chunkText)
                 fullAssistantResponse += chunkText;
-                res.write(`data: ${JSON.stringify({ text: chunkText })}\n\n`);
+                const words = chunkText.match(/\S+\s*|\s+/g) || [];
+                console.log(words)
+                for (let i = 0; i < words.length; i++) {
+                    const singleWord = words[i];
+                    res.write(`data: ${JSON.stringify({ text: singleWord })}\n\n`);
+                    await delay(20);
+                }
             }
         }
+        console.log(fullAssistantResponse)
 
         const assistantMessage = new Message({ chatId, role: 'assistant', content: fullAssistantResponse });
         await assistantMessage.save();
+        console.log(assistantMessage)
 
         chat.messages.push({ messageId: assistantMessage._id, role: 'assistant', content: fullAssistantResponse });
         await chat.save();
-
-        console.log(assistantMessage);
+        console.log(chat)
 
         res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
         return res.end();

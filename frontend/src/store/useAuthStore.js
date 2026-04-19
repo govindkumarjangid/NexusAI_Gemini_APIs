@@ -9,7 +9,6 @@ const useAuthStore = create((set) => ({
     isLoading: false,
     error: null,
 
-    // UI State
     isMobile: window.innerWidth < 768,
     setIsMobile: (val) => set({ isMobile: val }),
     sidebarOpen: !(window.innerWidth < 768) && false,

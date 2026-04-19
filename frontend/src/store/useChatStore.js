@@ -4,12 +4,11 @@ import { persist } from 'zustand/middleware';
 import { toast } from 'react-hot-toast';
 
 const useChatStore = create((set) => ({
-
     chats: [],
+    error: null,
+    isLoading: false,
     currentChat: null,
     setCurrentChat: (chat) => set({ currentChat: chat }),
-    isLoading: false,
-    error: null,
 
     createChat: async ({ userId, navigate, firstMessage }) => {
         set({ isLoading: true, error: null });
@@ -22,9 +21,9 @@ const useChatStore = create((set) => ({
                 if (navigate) navigate(`/chat/${chat._id}`);
                 toast.success('Chat created successfully');
                 if (firstMessage) {
-                  const useMessageStore = (await import('./useMessageStore.js')).default;
-                  await useMessageStore.getState().sendMessage({ chatId: chat._id, ...firstMessage });
-                  await useChatStore.getState().getChatsByUser(userId);
+                    const useMessageStore = (await import('./useMessageStore.js')).default;
+                    await useMessageStore.getState().sendMessage({ chatId: chat._id, ...firstMessage });
+                    await useChatStore.getState().getChatsByUser(userId);
                 }
             } else {
                 set({ error: response.data.message || 'Chat creation failed' });
@@ -40,14 +39,15 @@ const useChatStore = create((set) => ({
         set({ isLoading: true, error: null });
         try {
             const response = await axiosInstance.get(`/chats/user-chats/${userId}`);
+            console.log(response);
             const { chats } = response.data;
             set({ chats, isLoading: false });
         } catch (error) {
             set({ isLoading: false, error: error.response?.data?.message || 'Failed to fetch chats' });
+            console.log("Error : ", error);
             toast.error(error.response?.data?.message || 'Failed to fetch chats');
         }
     },
-
 
     deleteChat: async (chatId) => {
         set({ isLoading: true, error: null });

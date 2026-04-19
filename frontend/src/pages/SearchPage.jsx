@@ -12,9 +12,8 @@ const SearchPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isSearchOpen && user && user._id) {
+    if (isSearchOpen && user && user._id)
       getChatsByUser(user._id);
-    }
   }, [isSearchOpen, user, getChatsByUser]);
 
   function getChatTitle(chat) {
@@ -22,6 +21,7 @@ const SearchPage = () => {
     const userMsg = chat.messages.find(m => m.role === 'user' && m.content);
     return userMsg ? userMsg.content.slice(0, 60) : 'Untitled Chat';
   }
+
   function formatDateTime(dt) {
     if (!dt) return '';
     const d = new Date(dt);
@@ -30,9 +30,8 @@ const SearchPage = () => {
 
   const filteredChats = chats
     ? chats.filter(chat =>
-        getChatTitle(chat).toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : [];
+      getChatTitle(chat).toLowerCase().includes(searchQuery.toLowerCase())
+    ) : [];
 
   return (
     <AnimatePresence>
