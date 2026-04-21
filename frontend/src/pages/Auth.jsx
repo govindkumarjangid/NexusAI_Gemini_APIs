@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
-  const [state, setState] = useState("login");
+  const [state, setState] = useState("register");
   const [formData, setFormData] = useState({
     name: "",
     email: "",

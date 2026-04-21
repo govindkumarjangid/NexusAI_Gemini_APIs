@@ -122,7 +122,7 @@ const Sidebar = () => {
         </div>
 
         {/*  Buttons */}
-        <div className="px-3 py-3 mt-1 shrink-0 flex flex-col gap-2">
+        <div className="px-3 py-3 mt-1 shrink-0 flex flex-col gap-2 border-b border-gray-600/40">
           <button
             className="flex items-center bg-[#2d2f31] hover:bg-[#383a3c] cursor-pointer rounded-full transition-colors text-gray-200 w-full overflow-hidden h-11"
             title="New Chat"
