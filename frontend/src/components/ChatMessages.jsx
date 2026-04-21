@@ -47,10 +47,10 @@ const ChatMessages = ({ messages, isStreaming }) => {
                                 </div>
                             </motion.div>
                         ))}
-                        {isStreaming && (
+                        {true && (
                             <div className="flex gap-3 sm:gap-4 w-full mt-2">
                                 <div className="min-w-0 px-2 py-2 sm:px-4 leading-relaxed w-full flex items-center">
-                                    <Spinner size={32} color="#6366f1" />
+                                    <Spinner />
                                     <span className="ml-3 text-[15px] font-medium text-gray-400 animate-pulse">
                                         NexusAI is thinking...
                                     </span>

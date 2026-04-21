@@ -113,6 +113,7 @@ const ChatArea = () => {
       <ChatInputArea
         inputText={inputText}
         setInputText={setInputText}
+        isStreaming={isStreaming}
         handleSendMessage={handleSendMessage}
       />
 

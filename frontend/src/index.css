@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+body{
+  overflow: hidden;
+}
+
+
 /* Global Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;

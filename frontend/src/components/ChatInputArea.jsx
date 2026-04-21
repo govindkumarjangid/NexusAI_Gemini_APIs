@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Image, FolderUp, Mic, Plus, ArrowUp } from 'lucide-react';
 
-const ChatInputArea = ({ handleSendMessage, inputText, setInputText }) => {
+const ChatInputArea = ({ handleSendMessage, inputText, setInputText, isStreaming }) => {
 
     const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
 
@@ -35,6 +35,7 @@ const ChatInputArea = ({ handleSendMessage, inputText, setInputText }) => {
                             e.target.style.height = 'auto';
                             e.target.style.height = `${e.target.scrollHeight}px`;
                         }}
+                        disabled={isStreaming}
                         placeholder="Ask NexusAI anything..."
                         className="w-full max-h-40 sm:max-h-62.5 min-h-12.5 bg-transparent  text-gray-100 placeholder-gray-500 px-3 sm:px-4 py-3 focus:outline-none resize-none overflow-y-auto custom-scrollbar rounded-2xl"
                         onKeyDown={(e) => {

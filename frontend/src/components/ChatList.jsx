@@ -1,4 +1,4 @@
-import { MessageSquare, Edit2, Trash2 } from 'lucide-react';
+import { Edit2, Trash2, MessageCircle } from 'lucide-react';
 import useAuthStore from '../store/useAuthStore.js';
 
 const ChatList = ({ chats, currentChat, setCurrentChat, navigate, deleteChat, getChatsByUser }) => {
@@ -33,7 +33,7 @@ const ChatList = ({ chats, currentChat, setCurrentChat, navigate, deleteChat, ge
               }}
             >
               <div className="flex items-center gap-3 overflow-hidden text-sm">
-                <MessageSquare size={18} className="shrink-0" />
+                <MessageCircle size={18} className="shrink-0" />
                 <span className="truncate">{userMsg}</span>
               </div>
               <div className={`flex items-center space-x-1 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
