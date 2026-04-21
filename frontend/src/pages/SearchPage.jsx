@@ -9,6 +9,7 @@ const SearchPage = () => {
   const { isSearchOpen, setIsSearchOpen, user } = useAuthStore();
   const { chats, getChatsByUser, isLoading, setCurrentChat } = useChatStore();
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchPage, setSearchPage] = useState(1);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,6 +33,13 @@ const SearchPage = () => {
     ? chats.filter(chat =>
       getChatTitle(chat).toLowerCase().includes(searchQuery.toLowerCase())
     ) : [];
+
+  const paginatedChats = filteredChats.slice(0, searchPage * 6);
+  const hasMoreChats = filteredChats.length > paginatedChats.length;
+
+  useEffect(() => {
+    setSearchPage(1);
+  }, [searchQuery]);
 
   return (
     <AnimatePresence>
@@ -90,20 +98,33 @@ const SearchPage = () => {
                 ) : filteredChats.length === 0 ? (
                   <div className="text-gray-400 px-4 py-3">No chats found.</div>
                 ) : (
-                  filteredChats.map((chat) => (
-                    <div
-                      key={chat._id}
-                      className="flex items-center justify-between px-4 py-3 rounded-full hover:bg-[#2d2f31] cursor-pointer text-gray-300 hover:text-gray-100 transition-colors"
-                      onClick={() => {
-                        setCurrentChat(chat);
-                        setIsSearchOpen(false);
-                        navigate(`/chat/${chat._id}`);
-                      }}
-                    >
-                      <span className="text-[15px] truncate mr-4">{getChatTitle(chat)}</span>
-                      <span className="text-sm text-gray-400 whitespace-nowrap">{formatDateTime(chat.updatedAt)}</span>
-                    </div>
-                  ))
+                  <>
+                    {paginatedChats.map((chat) => (
+                      <div
+                        key={chat._id}
+                        className="flex items-center justify-between px-4 py-3 rounded-full hover:bg-[#2d2f31] cursor-pointer text-gray-300 hover:text-gray-100 transition-colors"
+                        onClick={() => {
+                          setCurrentChat(chat);
+                          setIsSearchOpen(false);
+                          navigate(`/chat/${chat._id}`);
+                        }}
+                      >
+                        <span className="text-[15px] truncate mr-4">{getChatTitle(chat)}</span>
+                        <span className="text-sm text-gray-400 whitespace-nowrap">{formatDateTime(chat.updatedAt)}</span>
+                      </div>
+                    ))}
+                    {hasMoreChats && (
+                      <div className="flex justify-center mt-4">
+                        <button
+                          className="px-4 py-2 bg-gray-700 text-gray-200 rounded-full hover:bg-gray-600 transition-colors cursor-pointer"
+                          onClick={() => setSearchPage((p) => p + 1)}
+                        >
+                          Load More
+
+                        </button>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>

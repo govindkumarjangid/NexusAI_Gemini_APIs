@@ -50,6 +50,7 @@ const ChatInputArea = ({ handleSendMessage, inputText, setInputText, isStreaming
                         <div className="relative" ref={menuRef}>
                             <button
                                 type="button"
+                                disabled={isStreaming}
                                 onClick={() => setIsAddMenuOpen(!isAddMenuOpen)}
                                 className={`p-2 rounded-full transition-colors ${isAddMenuOpen ? 'bg-gray-800 text-gray-200' : 'hover:bg-gray-800 text-gray-400'}`}
                             >
@@ -85,7 +86,7 @@ const ChatInputArea = ({ handleSendMessage, inputText, setInputText, isStreaming
                         <div className="flex items-center gap-2">
                             <button
                                 type="submit"
-                                disabled={!inputText.trim()}
+                                disabled={!inputText.trim() || isStreaming}
                                 className="p-2.5 bg-[#2563eb] hover:bg-blue-500 disabled:bg-[#2d2f31] disabled:text-gray-500 text-white rounded-full transition-all flex items-center justify-center cursor-pointer active:scale-95"
                             >
                                 <ArrowUp size={20} />

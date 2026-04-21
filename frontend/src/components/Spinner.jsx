@@ -1,10 +1,10 @@
 import React from 'react';
 
 const Spinner = ({ size = 36 }) => {
-    const colors = ['#7F5BFF', '#00E6F6', '#7F5BFF', '#9810fa'];
+    const colors = ['#2B7FFF', '#9810fa', '#9810fa'];
     return (
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            {['#6366f1', '#8b5cf6', '#a78bfa', '#c084fc'].map((c, i) => (
+            {['#2B7FFF', '#9810fa', '#9810fa'].map((c, i) => (
                 <div key={i} style={{
                     width: 8, height: 8, borderRadius: '50%', background: c,
                     boxShadow: `0 0 8px ${c}80`,

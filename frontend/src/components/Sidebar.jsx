@@ -83,7 +83,7 @@ const Sidebar = () => {
         {/* Top Header */}
         <div className="h-14 flex items-center justify-between shrink-0">
           {sidebarOpen && (sidebarOpen && isMobile ? isMobile : !isMobile) && (
-            <div className="w-full flex items-center justify-between shrink-0 relative group px-4.5">
+            <div className="w-full flex items-center justify-between shrink-0 relative group px-3">
               <NavLink to="/chat" className="flex items-center gap-3">
                 <img
                   src={logo}

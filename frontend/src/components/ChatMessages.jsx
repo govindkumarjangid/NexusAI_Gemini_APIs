@@ -47,7 +47,7 @@ const ChatMessages = ({ messages, isStreaming }) => {
                                 </div>
                             </motion.div>
                         ))}
-                        {true && (
+                        {isStreaming && (
                             <div className="flex gap-3 sm:gap-4 w-full mt-2">
                                 <div className="min-w-0 px-2 py-2 sm:px-4 leading-relaxed w-full flex items-center">
                                     <Spinner />
