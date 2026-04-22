@@ -96,7 +96,7 @@ const useMessageStore = create((set) => ({
               } else if (data.error) {
                 console.error("AI Streaming Error from Backend:", data.error);
                 toast.error(data.error);
-                isStreamFinished = true; 
+                isStreamFinished = true;
               }
             } catch (err) {
               // Ignored JSON parse errors for incomplete chunks

@@ -43,7 +43,7 @@ const Login = () => {
         className="flex flex-col gap-5 mx-auto items-start p-8 py-12 w-full max-w-sm md:max-w-md rounded-2xl shadow-2xl border border-gray-800 bg-[#1E1F20] text-gray-100"
       >
         <p className="text-3xl font-bold m-auto text-gray-100 tracking-tight">
-          <span className="text-primary dark:text-accent font-bold">
+          <span className="accent font-bold">
             NexusAI
           </span>
           {state === "login" ? " Login" : " Sign Up"}
@@ -90,7 +90,7 @@ const Login = () => {
               Already have account ?{" "}
               <span
                 onClick={() => setState("login")}
-                className="text-primary cursor-pointer dark:text-accent font-semibold hover:underline"
+                className="accent cursor-pointer font-semibold hover:underline"
               >
                 Login
               </span>
@@ -100,7 +100,7 @@ const Login = () => {
               Create an account ?{" "}
               <span
                 onClick={() => setState("register")}
-                className="text-primary cursor-pointer dark:text-accent font-semibold hover:underline"
+                className="accent cursor-pointer font-semibold hover:underline"
               >
                 Sign Up
               </span>

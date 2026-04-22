@@ -39,7 +39,6 @@ const useChatStore = create((set) => ({
         set({ isLoading: true, error: null });
         try {
             const response = await axiosInstance.get(`/chats/user-chats/${userId}`);
-            console.log(response);
             const { chats } = response.data;
             set({ chats, isLoading: false });
         } catch (error) {

@@ -4,10 +4,34 @@ import { persist } from 'zustand/middleware';
 import { toast } from 'react-hot-toast';
 
 const useAuthStore = create((set) => ({
-    user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
+    user: JSON.parse(localStorage.getItem('user')) || null,
     token: localStorage.getItem('token') || null,
     isLoading: false,
     error: null,
+
+    // Theme and accent color state
+    theme: localStorage.getItem('theme') || 'dark',
+    accentColor: localStorage.getItem('accentColor') || 'yellow',
+    setTheme: (theme) => {
+        localStorage.setItem('theme', theme);
+        set({ theme });
+        const html = document.documentElement;
+        if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        } else {
+            html.classList.remove('dark');
+        }
+    },
+    setAccentColor: (accent) => {
+        localStorage.setItem('accentColor', accent);
+        set({ accentColor: accent });
+        const ACCENT_COLORS = {
+            yellow: '#FFD600',
+            blue: '#2196F3',
+            green: '#4CAF50',
+        };
+        document.documentElement.style.setProperty('--accent-color', ACCENT_COLORS[accent] || '#FFD600');
+    },
 
     isMobile: window.innerWidth < 768,
     setIsMobile: (val) => set({ isMobile: val }),

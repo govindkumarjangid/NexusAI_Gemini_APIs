@@ -25,6 +25,22 @@ const App = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Theme and accent color on initial load
+    const theme = localStorage.getItem('theme') || 'dark';
+    const accent = localStorage.getItem('accentColor') || 'yellow';
+    const ACCENT_COLORS = {
+      yellow: '#FFD600',
+      blue: '#2196F3',
+      green: '#4CAF50',
+    };
+    const html = document.documentElement;
+    if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+    html.style.setProperty('--accent-color', ACCENT_COLORS[accent] || '#FFD600');
+
     if (!user && window.location.pathname !== '/') navigate('/');
     if (user && window.location.pathname === '/') navigate('/chat');
     const handleResize = () => {

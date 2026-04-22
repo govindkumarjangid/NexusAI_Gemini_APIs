@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import useAuthStore from '../store/useAuthStore.js';
 
 const ACCENT_COLORS = [
   { name: "Yellow", value: "yellow", color: "#FFD600" },
@@ -7,9 +8,9 @@ const ACCENT_COLORS = [
 ];
 
 export default function GeneralSettings() {
-  const [appearance, setAppearance] = useState("dark");
+  
+  const { theme, accentColor, setTheme, setAccentColor } = useAuthStore();
   const [contrast, setContrast] = useState("system");
-  const [accent, setAccent] = useState("yellow");
   const [language, setLanguage] = useState("auto");
 
   return (
@@ -20,10 +21,10 @@ export default function GeneralSettings() {
         <span className="text-gray-300">Appearance</span>
         <select
           className="bg-[#292929] text-white rounded-full px-3 py-2 outline-none"
-          value={appearance}
-          onChange={e => setAppearance(e.target.value)}
+          value={theme}
+          onChange={e => setTheme(e.target.value)}
         >
-          <option value="light" className="rounded-full">Light</option>
+          <option value="light">Light</option>
           <option value="dark">Dark</option>
           <option value="system">System</option>
         </select>
@@ -47,8 +48,8 @@ export default function GeneralSettings() {
         <div className="flex items-center gap-2">
           <select
             className="bg-[#292929] text-white rounded-full px-3 py-2 outline-none"
-            value={accent}
-            onChange={e => setAccent(e.target.value)}
+            value={accentColor}
+            onChange={e => setAccentColor(e.target.value)}
           >
             {ACCENT_COLORS.map(c => (
               <option key={c.value} value={c.value}>
@@ -58,7 +59,7 @@ export default function GeneralSettings() {
           </select>
           <span
             className="inline-block w-4 h-4 rounded-full border border-gray-500"
-            style={{ background: ACCENT_COLORS.find(c => c.value === accent)?.color }}
+            style={{ background: ACCENT_COLORS.find(c => c.value === accentColor)?.color }}
           />
         </div>
       </div>

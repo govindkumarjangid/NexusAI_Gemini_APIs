@@ -1,7 +1,18 @@
 @import "tailwindcss";
 
+
 body{
   overflow: hidden;
+  /* Accent color variable for global use */
+  --accent-color: #FFD600;
+}
+
+/* Accent utility class */
+.accent {
+  color: var(--accent-color) !important;
+}
+.bg-accent {
+  background-color: var(--accent-color) !important;
 }
 
 
