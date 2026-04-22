@@ -24,7 +24,7 @@ const ChatInputArea = ({ handleSendMessage, inputText, setInputText, isStreaming
             <div className="w-full max-w-4xl mx-auto">
                 <form
                     onSubmit={handleSendMessage}
-                    className="flex flex-col border-2 border-gray-800 rounded-3xl px-2 py-2 shadow-sm focus-within:border-gray-700 transition-all bg-[#1e1f20]"
+                    className="flex flex-col border-2 dark:border-gray-800 border-gray-200 rounded-3xl px-2 py-2 shadow-sm dark:focus-within:border-gray-700 focus-within:border-gray-300 transition-all dark:bg-[#1e1f20] bg-[#f5f5f5]"
                 >
                     <textarea
                         ref={textareaRef}
@@ -37,7 +37,7 @@ const ChatInputArea = ({ handleSendMessage, inputText, setInputText, isStreaming
                         }}
                         disabled={isStreaming}
                         placeholder="Ask NexusAI anything..."
-                        className="w-full max-h-40 sm:max-h-62.5 min-h-12.5 bg-transparent  text-gray-100 placeholder-gray-500 px-3 sm:px-4 py-3 focus:outline-none resize-none overflow-y-auto custom-scrollbar rounded-2xl"
+                        className="w-full max-h-40 sm:max-h-62.5 min-h-12.5 bg-transparent dark:text-gray-100 text-gray-900 dark:placeholder-gray-500 placeholder-gray-400 px-3 sm:px-4 py-3 focus:outline-none resize-none overflow-y-auto custom-scrollbar rounded-2xl"
                         onKeyDown={(e) => {
                             if (e.key === 'Enter' && !e.shiftKey) {
                                 e.preventDefault();
@@ -52,7 +52,7 @@ const ChatInputArea = ({ handleSendMessage, inputText, setInputText, isStreaming
                                 type="button"
                                 disabled={isStreaming}
                                 onClick={() => setIsAddMenuOpen(!isAddMenuOpen)}
-                                className={`p-2 rounded-full transition-colors ${isAddMenuOpen ? 'bg-gray-800 text-gray-200' : 'hover:bg-gray-800 text-gray-400'}`}
+                                className={`p-2 rounded-full transition-colors ${isAddMenuOpen ? 'dark:bg-gray-800 bg-gray-200 dark:text-gray-200 text-gray-700' : 'dark:hover:bg-gray-800 hover:bg-gray-200 dark:text-gray-400 text-gray-500'}`}
                             >
                                 <Plus size={22} className={`transition-transform duration-200 active:scale-95 cursor-pointer ${isAddMenuOpen ? 'rotate-45' : ''}`} />
                             </button>
@@ -64,18 +64,18 @@ const ChatInputArea = ({ handleSendMessage, inputText, setInputText, isStreaming
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         exit={{ opacity: 0, y: 50, scale: 0.9 }}
                                         transition={{ duration: 0.15 }}
-                                        className="absolute bottom-full left-0 mb-3 w-48 bg-[#2d2f31] border border-gray-700/50 rounded-2xl shadow-xl overflow-hidden z-50 p-2 text-sm font-semibold"
+                                        className="absolute bottom-full left-0 mb-3 w-48 dark:bg-[#2d2f31] bg-white border dark:border-gray-700/50 border-gray-200 rounded-2xl shadow-xl overflow-hidden z-50 p-2 text-sm font-semibold"
                                     >
-                                        <button type="button" className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-200 hover:bg-[#3f4145] transition-colors text-left rounded-xl cursor-pointer">
-                                            <Image size={18} className="text-gray-400" />
+                                        <button type="button" className="w-full flex items-center gap-3 px-4 py-3 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-[#3f4145] hover:bg-gray-100 transition-colors text-left rounded-xl cursor-pointer">
+                                            <Image size={18} className="dark:text-gray-400 text-gray-500" />
                                             <span>Upload Image</span>
                                         </button>
-                                        <button type="button" className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-200 hover:bg-[#3f4145] transition-colors text-left rounded-xl cursor-pointer">
-                                            <FolderUp size={18} className="text-gray-400" />
+                                        <button type="button" className="w-full flex items-center gap-3 px-4 py-3 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-[#3f4145] hover:bg-gray-100 transition-colors text-left rounded-xl cursor-pointer">
+                                            <FolderUp size={18} className="dark:text-gray-400 text-gray-500" />
                                             <span>Upload File</span>
                                         </button>
-                                        <button type="button" className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-200 hover:bg-[#3f4145] transition-colors text-left border-t border-gray-700/50 mt-1 pt-3 rounded-xl cursor-pointer">
-                                            <Mic size={18} className="text-gray-400" />
+                                        <button type="button" className="w-full flex items-center gap-3 px-4 py-3 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-[#3f4145] hover:bg-gray-100 transition-colors text-left border-t dark:border-gray-700/50 border-gray-200 mt-1 pt-3 rounded-xl cursor-pointer">
+                                            <Mic size={18} className="dark:text-gray-400 text-gray-500" />
                                             <span>Voice Input</span>
                                         </button>
                                     </motion.div>
@@ -87,7 +87,7 @@ const ChatInputArea = ({ handleSendMessage, inputText, setInputText, isStreaming
                             <button
                                 type="submit"
                                 disabled={!inputText.trim() || isStreaming}
-                                className="p-2.5 bg-[#2563eb] hover:bg-blue-500 disabled:bg-[#2d2f31] disabled:text-gray-500 text-white rounded-full transition-all flex items-center justify-center cursor-pointer active:scale-95"
+                                className="p-2.5 bg-accent dark:disabled:bg-[#2d2f31] disabled:bg-gray-200 dark:disabled:text-gray-500 disabled:text-gray-400 text-accent-contrast rounded-full transition-all flex items-center justify-center cursor-pointer active:scale-95"
                             >
                                 <ArrowUp size={20} />
                             </button>
@@ -95,7 +95,7 @@ const ChatInputArea = ({ handleSendMessage, inputText, setInputText, isStreaming
                     </div>
                 </form>
 
-                <p className="text-center text-[10px] text-gray-500 py-1">
+                <p className="text-center text-[10px] dark:text-gray-500 text-gray-400 py-1">
                     NexusAI may produce inaccurate information about people, places, or facts.
                 </p>
             </div>

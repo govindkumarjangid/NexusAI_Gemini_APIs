@@ -100,7 +100,7 @@ const ChatArea = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-dvh w-full max-w-[100vw] overflow-x-hidden bg-[#131314]">
+    <div className="flex-1 flex flex-col h-dvh w-full max-w-[100vw] overflow-x-hidden dark:bg-[#131314] bg-white">
 
       {/* Top Navbar */}
       <ChatAreaHeader />

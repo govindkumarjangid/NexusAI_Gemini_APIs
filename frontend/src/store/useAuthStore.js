@@ -1,7 +1,84 @@
 import axiosInstance from '../configs/axiosInstance.js';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import { toast } from 'react-hot-toast';
+
+const ACCENT_COLORS = {
+    yellow: '#FFD600',
+    blue: '#2196F3',
+    green: '#4CAF50',
+    purple: '#9C27B0',
+    red: '#F44336',
+    orange: '#FF9800',
+    pink: '#E91E63',
+    teal: '#009688',
+};
+
+function applyTheme(theme) {
+    const html = document.documentElement;
+    if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        html.classList.add('dark');
+    } else {
+        html.classList.remove('dark');
+    }
+}
+
+function getContrastYIQ(hexcolor) {
+    if (hexcolor.startsWith('#')) hexcolor = hexcolor.slice(1);
+    const r = parseInt(hexcolor.substring(0, 2), 16);
+    const g = parseInt(hexcolor.substring(2, 4), 16);
+    const b = parseInt(hexcolor.substring(4, 6), 16);
+    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    return (yiq >= 128) ? '#000000' : '#FFFFFF';
+}
+
+function applyAccentColor(accent) {
+    const hex = ACCENT_COLORS[accent] || ACCENT_COLORS.yellow;
+    document.documentElement.style.setProperty('--accent-color', hex);
+    document.documentElement.style.setProperty('--accent-text-color', getContrastYIQ(hex));
+}
+
+function applyContrast(contrast) {
+    const html = document.documentElement;
+    if (contrast === 'high' || (contrast === 'system' && window.matchMedia('(prefers-contrast: more)').matches)) {
+        html.classList.add('high-contrast');
+    } else {
+        html.classList.remove('high-contrast');
+    }
+}
+
+function getActualTheme(theme) {
+    if (theme === 'system') return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return theme;
+}
+
+function getActualContrast(contrast) {
+    if (contrast === 'system') return window.matchMedia('(prefers-contrast: more)').matches ? 'high' : 'standard';
+    return contrast;
+}
+
+const initialTheme = localStorage.getItem('theme') || 'dark';
+const initialAccent = localStorage.getItem('accentColor') || 'yellow';
+const initialContrast = localStorage.getItem('contrast') || 'system';
+
+applyTheme(initialTheme);
+applyAccentColor(initialAccent);
+applyContrast(initialContrast);
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    if (currentTheme === 'system') {
+        applyTheme('system');
+        useAuthStore.setState({ actualTheme: getActualTheme('system') });
+    }
+});
+
+window.matchMedia('(prefers-contrast: more)').addEventListener('change', () => {
+    const currentContrast = localStorage.getItem('contrast') || 'system';
+    if (currentContrast === 'system') {
+        applyContrast('system');
+        useAuthStore.setState({ actualContrast: getActualContrast('system') });
+    }
+});
 
 const useAuthStore = create((set) => ({
     user: JSON.parse(localStorage.getItem('user')) || null,
@@ -9,29 +86,31 @@ const useAuthStore = create((set) => ({
     isLoading: false,
     error: null,
 
-    // Theme and accent color state
-    theme: localStorage.getItem('theme') || 'dark',
-    accentColor: localStorage.getItem('accentColor') || 'yellow',
+    theme: initialTheme,
+    actualTheme: getActualTheme(initialTheme),
+    accentColor: initialAccent,
+    contrast: initialContrast,
+    actualContrast: getActualContrast(initialContrast),
+
     setTheme: (theme) => {
         localStorage.setItem('theme', theme);
-        set({ theme });
-        const html = document.documentElement;
-        if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            html.classList.add('dark');
-        } else {
-            html.classList.remove('dark');
-        }
+        applyTheme(theme);
+        set({ theme, actualTheme: getActualTheme(theme) });
     },
+
     setAccentColor: (accent) => {
         localStorage.setItem('accentColor', accent);
+        applyAccentColor(accent);
         set({ accentColor: accent });
-        const ACCENT_COLORS = {
-            yellow: '#FFD600',
-            blue: '#2196F3',
-            green: '#4CAF50',
-        };
-        document.documentElement.style.setProperty('--accent-color', ACCENT_COLORS[accent] || '#FFD600');
     },
+
+    setContrast: (contrast) => {
+        localStorage.setItem('contrast', contrast);
+        applyContrast(contrast);
+        set({ contrast, actualContrast: getActualContrast(contrast) });
+    },
+
+    ACCENT_COLORS,
 
     isMobile: window.innerWidth < 768,
     setIsMobile: (val) => set({ isMobile: val }),

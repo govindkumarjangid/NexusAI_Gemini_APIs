@@ -4,8 +4,8 @@ import { Trash2 } from "lucide-react";
 const user = JSON.parse(localStorage.getItem("user")) || null;
 
 const mockUser = {
-    name: user.name || "Govind Kumar Jangid",
-    email: user.email || "govindkumarjangid17@gmail.com",
+    name: user?.name || "Govind Kumar Jangid",
+    email: user?.email || "govindkumarjangid17@gmail.com",
     lastUpdated: "2026-04-21 14:32",
 };
 

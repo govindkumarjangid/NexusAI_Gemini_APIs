@@ -77,7 +77,7 @@ const Sidebar = () => {
           x: isMobile ? (sidebarOpen ? 0 : -300) : 0
         }}
         transition={{ ease: "easeInOut", duration: 0.2 }}
-        className={`h-screen flex flex-col bg-[#1e1f20] border-r border-gray-800/60 overflow-hidden whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl' : 'relative'
+        className={`h-screen flex flex-col dark:bg-[#1e1f20] bg-[#f5f5f5] border-r dark:border-gray-800/60 border-gray-200 overflow-hidden whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl' : 'relative'
           }`}
       >
         {/* Top Header */}
@@ -90,11 +90,11 @@ const Sidebar = () => {
                   alt="NexusAI Logo"
                   className="w-11 h-11 rounded-full shadow-lg cursor-pointer transition-all duration-200 hover:scale-105 "
                 />
-                <h1 className="font-semibold text-lg text-gray-200">NexusAI</h1>
+                <h1 className="font-semibold text-lg dark:text-gray-200 text-gray-800">NexusAI</h1>
               </NavLink>
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="p-0 sm:p-3 hover:bg-gray-800 rounded-full transition-all cursor-ew-resize duration-300 active:scale-95 text-gray-400 hover:text-gray-200"
+                className="p-0 sm:p-3 dark:hover:bg-gray-800 hover:bg-gray-200 rounded-full transition-all cursor-ew-resize duration-300 active:scale-95 dark:text-gray-400 text-gray-500 dark:hover:text-gray-200 hover:text-gray-800"
                 title="Collapse Menu"
               >
                 <SquareChevronLeft size={22} />
@@ -111,7 +111,7 @@ const Sidebar = () => {
                 />
                 <button
                   onClick={() => setSidebarOpen(true)}
-                  className="p-0 sm:p-3 hover:bg-gray-800 rounded-full hidden group-hover:block transition-all cursor-ew-resize duration-300 active:scale-95 text-gray-400 hover:text-gray-200"
+                  className="p-0 sm:p-3 dark:hover:bg-gray-800 hover:bg-gray-200 rounded-full hidden group-hover:block transition-all cursor-ew-resize duration-300 active:scale-95 dark:text-gray-400 text-gray-500 dark:hover:text-gray-200 hover:text-gray-800"
                   title="Collapse Menu"
                 >
                   <SquareChevronRight size={22} />
@@ -122,9 +122,9 @@ const Sidebar = () => {
         </div>
 
         {/*  Buttons */}
-        <div className="px-3 py-3 mt-1 shrink-0 flex flex-col gap-2 border-b border-gray-700/40">
+        <div className="px-3 py-3 mt-1 shrink-0 flex flex-col gap-2 border-b dark:border-gray-700/40 border-gray-200">
           <button
-            className="flex items-center bg-[#2d2f31] hover:bg-[#383a3c] cursor-pointer rounded-full transition-colors text-gray-200 w-full overflow-hidden h-11"
+            className="flex items-center dark:bg-[#2d2f31] bg-gray-200 dark:hover:bg-[#383a3c] hover:bg-gray-300 cursor-pointer rounded-full transition-colors dark:text-gray-200 text-gray-700 w-full overflow-hidden h-11"
             title="New Chat"
             onClick={handleCreateChat}
             disabled={chatLoading}
@@ -146,7 +146,7 @@ const Sidebar = () => {
             </AnimatePresence>
           </button>
           <button
-            className="flex items-center bg-[#2d2f31] hover:bg-[#383a3c] cursor-pointer rounded-full transition-colors text-gray-200 w-full overflow-hidden h-11"
+            className="flex items-center dark:bg-[#2d2f31] bg-gray-200 dark:hover:bg-[#383a3c] hover:bg-gray-300 cursor-pointer rounded-full transition-colors dark:text-gray-200 text-gray-700 w-full overflow-hidden h-11"
             onClick={() => setIsSearchOpen(true)}
             disabled={chatLoading}
             title="Search in Chats"
@@ -169,7 +169,7 @@ const Sidebar = () => {
           </button>
           {!sidebarOpen && (
             <button
-              className="flex items-center bg-[#2d2f31] hover:bg-[#383a3c] cursor-pointer rounded-full transition-colors text-gray-200 w-full overflow-hidden h-11"
+              className="flex items-center dark:bg-[#2d2f31] bg-gray-200 dark:hover:bg-[#383a3c] hover:bg-gray-300 cursor-pointer rounded-full transition-colors dark:text-gray-200 text-gray-700 w-full overflow-hidden h-11"
               onClick={handleOpenRecentSidebar}
               disabled={chatLoading}
               title="Recent Chats"
@@ -201,7 +201,7 @@ const Sidebar = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="text-xs font-semibold text-gray-500 mb-2 px-2"
+                  className="text-xs font-semibold dark:text-gray-500 text-gray-400 mb-2 px-2"
                 >
                   Recent
                 </motion.p>
@@ -219,7 +219,7 @@ const Sidebar = () => {
                   {chatLoading ? (
                     <div className="space-y-2">
                       {[...Array(6)].map((_, i) => (
-                        <div key={i} className="flex-1 px-4 py-4 bg-gray-700/40 rounded-full animate-pulse" />
+                        <div key={i} className="flex-1 px-4 py-4 dark:bg-gray-700/40 bg-gray-300/60 rounded-full animate-pulse" />
                       ))}
                     </div>
                   ) : (
@@ -234,11 +234,11 @@ const Sidebar = () => {
                   )}
                   {hasMoreRecent && (
                     <button
-                      className="my-4 py-2 px-4 text-sm rounded-full hover:bg-[#2d2f31] bg-[#23272f] text-gray-200 transition-colors cursor-pointer w-full max-w-fit mx-auto shadow-lg flex items-center gap-2 justify-center"
+                      className="my-4 py-2 px-4 text-sm rounded-full dark:hover:bg-[#2d2f31] hover:bg-gray-200 dark:bg-[#23272f] bg-gray-100 dark:text-gray-200 text-gray-700 transition-colors cursor-pointer w-full max-w-fit mx-auto shadow-lg flex items-center gap-2 justify-center"
                       onClick={() => setIsSearchOpen(true)}
                     >
                       All Chats
-                      <EllipsisVertical size={20} className="p-1 bg-[#131314] rounded-full" />
+                      <EllipsisVertical size={20} className="p-1 dark:bg-[#131314] bg-gray-200 rounded-full" />
                     </button>
                   )}
                 </motion.div>

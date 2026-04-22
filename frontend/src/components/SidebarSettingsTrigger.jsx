@@ -8,7 +8,7 @@ export default function SidebarSettingsTrigger() {
     return (
         <>
             <button
-                className="w-full flex items-center rounded-full hover:bg-gray-800 cursor-pointer transition-colors text-sm text-gray-300 h-11 overflow-hidden"
+                className="w-full flex items-center rounded-full dark:hover:bg-gray-800 hover:bg-gray-200 cursor-pointer transition-colors text-sm dark:text-gray-300 text-gray-600 h-11 overflow-hidden"
                 onClick={() => setShowSettings(true)}
             >
                 <div className="w-11 shrink-0 flex items-center justify-center">

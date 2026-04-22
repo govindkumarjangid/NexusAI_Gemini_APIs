@@ -44,7 +44,7 @@ const sendMessage = wrapAsync(async (req, res) => {
             if (chunkText) {
                 fullAssistantResponse += chunkText;
                 const words = chunkText.match(/\S+\s*|\s+/g) || [];
-                console.log(words)
+                // console.log(words)
                 for (let i = 0; i < words.length; i++) {
                     const singleWord = words[i];
                     res.write(`data: ${JSON.stringify({ text: singleWord })}\n\n`);
@@ -56,11 +56,11 @@ const sendMessage = wrapAsync(async (req, res) => {
 
         const assistantMessage = new Message({ chatId, role: 'assistant', content: fullAssistantResponse });
         await assistantMessage.save();
-        console.log(assistantMessage)
+        // console.log(assistantMessage)
 
         chat.messages.push({ messageId: assistantMessage._id, role: 'assistant', content: fullAssistantResponse });
         await chat.save();
-        console.log(chat)
+        // console.log(chat)
 
         res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
         return res.end();

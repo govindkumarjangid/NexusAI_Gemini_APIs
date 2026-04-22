@@ -11,9 +11,9 @@ import { useNavigate } from 'react-router-dom';
 
 const App = () => {
 
-
   const {
     user,
+    actualTheme,
     isMobile,
     setIsMobile,
     sidebarOpen,
@@ -23,24 +23,9 @@ const App = () => {
   } = useAuthStore();
 
   const navigate = useNavigate();
+  const isDark = actualTheme === 'dark';
 
   useEffect(() => {
-    // Theme and accent color on initial load
-    const theme = localStorage.getItem('theme') || 'dark';
-    const accent = localStorage.getItem('accentColor') || 'yellow';
-    const ACCENT_COLORS = {
-      yellow: '#FFD600',
-      blue: '#2196F3',
-      green: '#4CAF50',
-    };
-    const html = document.documentElement;
-    if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      html.classList.add('dark');
-    } else {
-      html.classList.remove('dark');
-    }
-    html.style.setProperty('--accent-color', ACCENT_COLORS[accent] || '#FFD600');
-
     if (!user && window.location.pathname !== '/') navigate('/');
     if (user && window.location.pathname === '/') navigate('/chat');
     const handleResize = () => {
@@ -60,21 +45,32 @@ const App = () => {
         position="top-right"
         reverseOrder={false}
         toastOptions={{
-          style: {
+          style: isDark ? {
             background: 'rgba(19, 19, 20, 0.85)',
             color: '#e5e7eb',
             border: '1px solid #232326',
             boxShadow: '0 4px 24px 0 rgba(0,0,0,0.35)',
             backdropFilter: 'blur(10px)',
+          } : {
+            background: 'rgba(255, 255, 255, 0.92)',
+            color: '#1a1a1a',
+            border: '1px solid #e5e7eb',
+            boxShadow: '0 4px 24px 0 rgba(0,0,0,0.08)',
+            backdropFilter: 'blur(10px)',
           },
           success: {
             iconTheme: {
               primary: '#22c55e',
-              secondary: '#131314',
+              secondary: isDark ? '#131314' : '#ffffff',
             },
-            style: {
+            style: isDark ? {
               background: 'rgba(34,197,94,0.10)',
               color: '#bbf7d0',
+              border: '1px solid #22c55e',
+              backdropFilter: 'blur(10px)',
+            } : {
+              background: 'rgba(34,197,94,0.08)',
+              color: '#166534',
               border: '1px solid #22c55e',
               backdropFilter: 'blur(10px)',
             },
@@ -82,11 +78,16 @@ const App = () => {
           error: {
             iconTheme: {
               primary: '#ef4444',
-              secondary: '#131314',
+              secondary: isDark ? '#131314' : '#ffffff',
             },
-            style: {
+            style: isDark ? {
               background: 'rgba(239,68,68,0.10)',
               color: '#fecaca',
+              border: '1px solid #ef4444',
+              backdropFilter: 'blur(10px)',
+            } : {
+              background: 'rgba(239,68,68,0.08)',
+              color: '#991b1b',
               border: '1px solid #ef4444',
               backdropFilter: 'blur(10px)',
             },
@@ -103,14 +104,14 @@ const App = () => {
         }
         />
         <Route path="/chat" element={
-          <div className="flex h-screen overflow-hidden text-gray-100 relative">
+          <div className="flex h-screen overflow-hidden dark:text-gray-100 text-gray-900 relative dark:bg-[#131314] bg-white">
             <Sidebar />
             <ChatArea />
             <SearchPage />
           </div>
         } />
         <Route path="/chat/:chatId" element={
-          <div className="flex h-screen overflow-hidden bg-[#131314] text-gray-100 relative">
+          <div className="flex h-screen overflow-hidden dark:bg-[#131314] bg-white dark:text-gray-100 text-gray-900 relative">
             <Sidebar />
             <ChatArea />
             <SearchPage />

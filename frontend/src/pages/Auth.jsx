@@ -35,14 +35,14 @@ const Login = () => {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 bottom-0 z-100 flex items-center justify-center h-full w-full bg-[#131314] p-2"
+    <div className="fixed top-0 left-0 right-0 bottom-0 z-100 flex items-center justify-center h-full w-full dark:bg-[#131314] bg-gray-50 p-2"
     >
       <form
         onSubmit={handleSubmit}
         onClick={(e) => e.stopPropagation()}
-        className="flex flex-col gap-5 mx-auto items-start p-8 py-12 w-full max-w-sm md:max-w-md rounded-2xl shadow-2xl border border-gray-800 bg-[#1E1F20] text-gray-100"
+        className="flex flex-col gap-5 mx-auto items-start p-8 py-12 w-full max-w-sm md:max-w-md rounded-2xl shadow-2xl border dark:border-gray-800 border-gray-200 dark:bg-[#1E1F20] bg-white dark:text-gray-100 text-gray-900"
       >
-        <p className="text-3xl font-bold m-auto text-gray-100 tracking-tight">
+        <p className="text-3xl font-bold m-auto dark:text-gray-100 text-gray-900 tracking-tight">
           <span className="accent font-bold">
             NexusAI
           </span>
@@ -57,7 +57,7 @@ const Login = () => {
               placeholder="Name"
               value={formData.name}
               onChange={handleInputChange}
-              className="w-full peer bg-[#131314] border border-gray-100/20 focus:border-gray-100/50 focus:ring-3 focus:ring-gray-100/20 rounded-lg py-3 px-4 outline-none focus:border-primary  placeholder-gray-400 transition-colors duration-200"
+              className="w-full peer dark:bg-[#131314] bg-gray-50 border dark:border-gray-100/20 border-gray-300 dark:focus:border-gray-100/50 focus:border-gray-400 focus:ring-3 dark:focus:ring-gray-100/20 focus:ring-gray-200 rounded-lg py-3 px-4 outline-none dark:placeholder-gray-400 placeholder-gray-400 transition-colors duration-200 dark:text-gray-100 text-gray-900"
             />
           </div>
         )}
@@ -69,7 +69,7 @@ const Login = () => {
             placeholder="Email"
             value={formData.email}
             onChange={handleInputChange}
-            className="w-full peer bg-[#131314] border border-gray-100/20 focus:border-gray-100/50 focus:ring-3 focus:ring-gray-100/20 rounded-lg py-3 px-4 outline-none focus:border-primary  placeholder-gray-400 transition-colors duration-200"
+            className="w-full peer dark:bg-[#131314] bg-gray-50 border dark:border-gray-100/20 border-gray-300 dark:focus:border-gray-100/50 focus:border-gray-400 focus:ring-3 dark:focus:ring-gray-100/20 focus:ring-gray-200 rounded-lg py-3 px-4 outline-none dark:placeholder-gray-400 placeholder-gray-400 transition-colors duration-200 dark:text-gray-100 text-gray-900"
           />
         </div>
         {/* password field  */}
@@ -80,11 +80,11 @@ const Login = () => {
             value={formData.password}
             placeholder="Password"
             onChange={handleInputChange}
-            className="w-full bg-[#131314] peer border border-gray-100/20 focus:border-gray-100/50 focus:ring-3 focus:ring-gray-100/20 rounded-lg py-3 px-4 outline-none focus:border-primary  placeholder-gray-400 transition-colors duration-200"
+            className="w-full dark:bg-[#131314] bg-gray-50 peer border dark:border-gray-100/20 border-gray-300 dark:focus:border-gray-100/50 focus:border-gray-400 focus:ring-3 dark:focus:ring-gray-100/20 focus:ring-gray-200 rounded-lg py-3 px-4 outline-none dark:placeholder-gray-400 placeholder-gray-400 transition-colors duration-200 dark:text-gray-100 text-gray-900"
           />
         </div>
         {/* toggle login/register  */}
-        <div className="flex items-center justify-center w-full text-base font-semibold text-gray-400 mt-2">
+        <div className="flex items-center justify-center w-full text-base font-semibold dark:text-gray-400 text-gray-500 mt-2">
           {state === "register" ? (
             <p>
               Already have account ?{" "}

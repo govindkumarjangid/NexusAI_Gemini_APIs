@@ -17,9 +17,9 @@ export default function Modal({ open, onClose, children }) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center  backdrop-blur-sm transition-all">
-            <div ref={modalRef} className="relative w-full max-w-2xl max-h-2/3 h-full rounded-2xl bg-[#212121] shadow-2xl transition-all duration-300">
+            <div ref={modalRef} className="relative w-full max-w-2xl max-h-2/3 h-full rounded-2xl dark:bg-[#212121] bg-white shadow-2xl transition-all duration-300">
                 <button
-                    className="absolute top-2 right-2 bg-[#2d2f31] hover:bg-[#383a3c] cursor-pointer rounded-full transition-colors text-gray-200 p-1"
+                    className="absolute top-2 right-2 dark:bg-[#2d2f31] bg-gray-100 dark:hover:bg-[#383a3c] hover:bg-gray-200 cursor-pointer rounded-full transition-colors dark:text-gray-200 text-gray-700 p-1"
                     onClick={onClose}
                     aria-label="Close"
                 >

@@ -26,7 +26,7 @@ const ChatList = ({ chats, currentChat, setCurrentChat, navigate, deleteChat, ge
             <div
               key={chat._id}
               title={userMsg}
-              className={`group flex items-center justify-between rounded-full cursor-pointer transition-colors px-4 py-2 ${isActive ? 'bg-[#131314] text-gray-400' : 'hover:bg-[#2d2f31] text-gray-300 hover:text-gray-100'}`}
+              className={`group flex items-center justify-between rounded-full cursor-pointer transition-colors px-4 py-2 ${isActive ? 'dark:bg-[#131314] bg-gray-200 dark:text-gray-400 text-gray-500' : 'dark:hover:bg-[#2d2f31] hover:bg-gray-200 dark:text-gray-300 text-gray-600 dark:hover:text-gray-100 hover:text-gray-900'}`}
               onClick={() => {
                 setCurrentChat(chat);
                 navigate(`/chat/${chat._id}`);
@@ -37,11 +37,11 @@ const ChatList = ({ chats, currentChat, setCurrentChat, navigate, deleteChat, ge
                 <span className="truncate">{userMsg}</span>
               </div>
               <div className={`flex items-center space-x-1 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-                <button className="p-1 hover:text-blue-400 text-gray-400 transition-colors cursor-pointer">
+                <button className="p-1 hover:text-blue-400 dark:text-gray-400 text-gray-500 transition-colors cursor-pointer">
                   <Edit2 size={14} />
                 </button>
                 <button
-                  className="p-1 hover:text-red-400 text-gray-400 transition-colors cursor-pointer"
+                  className="p-1 hover:text-red-400 dark:text-gray-400 text-gray-500 transition-colors cursor-pointer"
                   onClick={e => handleDeleteChat(e, chat._id)}
                 >
                   <Trash2 size={14} />
@@ -51,7 +51,7 @@ const ChatList = ({ chats, currentChat, setCurrentChat, navigate, deleteChat, ge
           );
         })
       ) : (
-        <div className="text-gray-500 px-2 py-4 text-center">No chats found.</div>
+        <div className="dark:text-gray-500 text-gray-400 px-2 py-4 text-center">No chats found.</div>
       )}
     </div>
   );
