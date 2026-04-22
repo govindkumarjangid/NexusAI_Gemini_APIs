@@ -104,7 +104,7 @@ const App = () => {
         }
         />
         <Route path="/chat" element={
-          <div className="flex h-screen overflow-hidden dark:text-gray-100 text-gray-900 relative dark:bg-[#131314] bg-white">
+          <div className="flex h-screen overflow-hidden relative" style={{ backgroundColor: 'var(--bg-base)', color: 'var(--text-primary)' }}>
             <Sidebar />
             <ChatArea />
             <SearchPage />

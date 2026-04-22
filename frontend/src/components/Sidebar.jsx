@@ -77,8 +77,8 @@ const Sidebar = () => {
           x: isMobile ? (sidebarOpen ? 0 : -300) : 0
         }}
         transition={{ ease: "easeInOut", duration: 0.2 }}
-        className={`h-screen flex flex-col dark:bg-[#1e1f20] bg-[#f5f5f5] border-r dark:border-gray-800/60 border-gray-200 overflow-hidden whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl' : 'relative'
-          }`}
+        className={`h-screen flex flex-col border-r overflow-hidden whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl' : 'relative'}`}
+        style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-color)', color: 'var(--text-primary)' }}
       >
         {/* Top Header */}
         <div className="h-14 flex items-center justify-between shrink-0">
@@ -122,72 +122,38 @@ const Sidebar = () => {
         </div>
 
         {/*  Buttons */}
-        <div className="px-3 py-3 mt-1 shrink-0 flex flex-col gap-2 border-b dark:border-gray-700/40 border-gray-200">
-          <button
-            className="flex items-center dark:bg-[#2d2f31] bg-gray-200 dark:hover:bg-[#383a3c] hover:bg-gray-300 cursor-pointer rounded-full transition-colors dark:text-gray-200 text-gray-700 w-full overflow-hidden h-11"
-            title="New Chat"
-            onClick={handleCreateChat}
-            disabled={chatLoading}
-          >
-            <div className="w-11 shrink-0 flex items-center justify-center">
-              <SquarePen size={18} />
-            </div>
-            <AnimatePresence>
-              {sidebarOpen && (
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="text-sm font-medium whitespace-nowrap"
-                >
-                  New Chat
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </button>
-          <button
-            className="flex items-center dark:bg-[#2d2f31] bg-gray-200 dark:hover:bg-[#383a3c] hover:bg-gray-300 cursor-pointer rounded-full transition-colors dark:text-gray-200 text-gray-700 w-full overflow-hidden h-11"
-            onClick={() => setIsSearchOpen(true)}
-            disabled={chatLoading}
-            title="Search in Chats"
-          >
-            <div className="w-11 shrink-0 flex items-center justify-center">
-              <Search size={18} />
-            </div>
-            <AnimatePresence>
-              {sidebarOpen && (
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="text-sm font-medium whitespace-nowrap"
-                >
-                  Search
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </button>
+        <div className="px-3 py-3 mt-1 shrink-0 flex flex-col gap-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
+          {[
+            { label: 'New Chat', icon: <SquarePen size={18} />, onClick: handleCreateChat },
+            { label: 'Search', icon: <Search size={18} />, onClick: () => setIsSearchOpen(true) },
+          ].map(btn => (
+            <button
+              key={btn.label}
+              className="flex items-center cursor-pointer rounded-full transition-all w-full overflow-hidden h-11 hover:opacity-80 active:scale-95"
+              style={{ backgroundColor: 'var(--bg-elevated)', color: 'var(--text-primary)' }}
+              onClick={btn.onClick}
+              disabled={chatLoading}
+              title={btn.label}
+            >
+              <div className="w-11 shrink-0 flex items-center justify-center">{btn.icon}</div>
+              <AnimatePresence>
+                {sidebarOpen && (
+                  <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-sm font-medium whitespace-nowrap">
+                    {btn.label}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </button>
+          ))}
           {!sidebarOpen && (
             <button
-              className="flex items-center dark:bg-[#2d2f31] bg-gray-200 dark:hover:bg-[#383a3c] hover:bg-gray-300 cursor-pointer rounded-full transition-colors dark:text-gray-200 text-gray-700 w-full overflow-hidden h-11"
+              className="flex items-center cursor-pointer rounded-full transition-all w-full overflow-hidden h-11 hover:opacity-80 active:scale-95"
+              style={{ backgroundColor: 'var(--bg-elevated)', color: 'var(--text-primary)' }}
               onClick={handleOpenRecentSidebar}
               disabled={chatLoading}
               title="Recent Chats"
             >
-              <div className="w-11 shrink-0 flex items-center justify-center">
-                <AnimatePresence>
-                  {!sidebarOpen && (
-                    <motion.span
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="text-sm font-medium whitespace-nowrap"
-                    >
-                      <MessageCircle size={18} />
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </div>
+              <div className="w-11 shrink-0 flex items-center justify-center"><MessageCircle size={18} /></div>
             </button>
           )}
         </div>
@@ -234,11 +200,11 @@ const Sidebar = () => {
                   )}
                   {hasMoreRecent && (
                     <button
-                      className="my-4 py-2 px-4 text-sm rounded-full dark:hover:bg-[#2d2f31] hover:bg-gray-200 dark:bg-[#23272f] bg-gray-100 dark:text-gray-200 text-gray-700 transition-colors cursor-pointer w-full max-w-fit mx-auto shadow-lg flex items-center gap-2 justify-center"
+                      className="my-4 py-2 px-4 text-sm rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer w-full max-w-fit mx-auto shadow-lg flex items-center gap-2 justify-center active:scale-95 hover:opacity-90"
                       onClick={() => setIsSearchOpen(true)}
                     >
                       All Chats
-                      <EllipsisVertical size={20} className="p-1 dark:bg-[#131314] bg-gray-200 rounded-full" />
+                      <EllipsisVertical size={16} className="opacity-80" />
                     </button>
                   )}
                 </motion.div>

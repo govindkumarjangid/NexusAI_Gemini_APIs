@@ -2,71 +2,72 @@
 
 @custom-variant dark (&:is(.dark *));
 
-:root {
-  --accent-color: #FFD600;
-}
-
 body {
   overflow: hidden;
 }
 
-/* ===== Light Mode Base ===== */
 html {
-  background-color: #ffffff;
-  color: #1a1a1a;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
 }
 
-/* ===== Dark Mode Base ===== */
+:root {
+  --bg-base: #ffffff;
+  --bg-surface: #f5f5f5;
+  --bg-panel: #ffffff;
+  --bg-elevated: #f0f0f0;
+  --bg-hover: #e8e8e8;
+  --border-color: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+}
+
 html.dark {
-  background-color: #131314;
-  color: #e5e7eb;
+  --bg-base: #131314;
+  --bg-surface: #1e1f20;
+  --bg-panel: #212121;
+  --bg-elevated: #2d2f31;
+  --bg-hover: #383a3c;
+  --border-color: rgba(75, 85, 99, 0.4);
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
 }
 
-/* ===== High Contrast Base ===== */
+html.high-contrast {
+  --bg-base: #ffffff;
+  --bg-surface: #f0f0f0;
+  --bg-panel: #ffffff;
+  --bg-elevated: #e8e8e8;
+  --bg-hover: #d0d0d0;
+  --border-color: #000000;
+  --text-primary: #000000;
+  --text-secondary: #000000;
+  --text-muted: #111111;
+}
+
 html.high-contrast.dark {
-  background-color: #000000;
-  color: #ffffff;
-}
-html.high-contrast.dark .dark\:bg-\[\#131314\] {
-  background-color: #000000 !important;
-}
-html.high-contrast.dark .dark\:bg-\[\#1e1f20\] {
-  background-color: #080808 !important;
-}
-html.high-contrast.dark .dark\:bg-\[\#2d2f31\] {
-  background-color: #1a1a1a !important;
-}
-html.high-contrast.dark .dark\:border-gray-800,
-html.high-contrast.dark .dark\:border-gray-700\/40,
-html.high-contrast.dark .dark\:border-gray-700\/50 {
-  border-color: #333333 !important;
-}
-
-html.high-contrast:not(.dark) {
-  background-color: #ffffff;
-  color: #000000;
-}
-html.high-contrast:not(.dark) .bg-gray-50,
-html.high-contrast:not(.dark) .bg-gray-100 {
-  background-color: #ffffff !important;
-}
-html.high-contrast:not(.dark) .border-gray-200,
-html.high-contrast:not(.dark) .border-gray-300 {
-  border-color: #000000 !important;
-}
-html.high-contrast:not(.dark) .text-gray-500,
-html.high-contrast:not(.dark) .text-gray-600,
-html.high-contrast:not(.dark) .text-gray-700 {
-  color: #000000 !important;
+  --bg-base: #000000;
+  --bg-surface: #0a0a0a;
+  --bg-panel: #111111;
+  --bg-elevated: #1a1a1a;
+  --bg-hover: #222222;
+  --border-color: #555555;
+  --text-primary: #ffffff;
+  --text-secondary: #eeeeee;
+  --text-muted: #cccccc;
 }
 
 /* Accent utility class */
 .accent {
   color: var(--accent-color) !important;
 }
+
 .bg-accent {
   background-color: var(--accent-color) !important;
 }
+
 .text-accent-contrast {
   color: var(--accent-text-color) !important;
 }

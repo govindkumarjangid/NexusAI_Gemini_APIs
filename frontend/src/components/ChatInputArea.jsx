@@ -24,7 +24,11 @@ const ChatInputArea = ({ handleSendMessage, inputText, setInputText, isStreaming
             <div className="w-full max-w-4xl mx-auto">
                 <form
                     onSubmit={handleSendMessage}
-                    className="flex flex-col border-2 dark:border-gray-800 border-gray-200 rounded-3xl px-2 py-2 shadow-sm dark:focus-within:border-gray-700 focus-within:border-gray-300 transition-all dark:bg-[#1e1f20] bg-[#f5f5f5]"
+                    className="flex flex-col rounded-3xl px-2 py-2 shadow-sm transition-all border-2"
+                    style={{
+                        backgroundColor: 'var(--bg-surface)',
+                        borderColor: 'var(--border-color)',
+                    }}
                 >
                     <textarea
                         ref={textareaRef}
@@ -37,7 +41,8 @@ const ChatInputArea = ({ handleSendMessage, inputText, setInputText, isStreaming
                         }}
                         disabled={isStreaming}
                         placeholder="Ask NexusAI anything..."
-                        className="w-full max-h-40 sm:max-h-62.5 min-h-12.5 bg-transparent dark:text-gray-100 text-gray-900 dark:placeholder-gray-500 placeholder-gray-400 px-3 sm:px-4 py-3 focus:outline-none resize-none overflow-y-auto custom-scrollbar rounded-2xl"
+                        className="w-full max-h-40 sm:max-h-62.5 min-h-12.5 bg-transparent px-3 sm:px-4 py-3 focus:outline-none resize-none overflow-y-auto custom-scrollbar rounded-2xl"
+                        style={{ color: 'var(--text-primary)' }}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter' && !e.shiftKey) {
                                 e.preventDefault();
@@ -64,7 +69,8 @@ const ChatInputArea = ({ handleSendMessage, inputText, setInputText, isStreaming
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         exit={{ opacity: 0, y: 50, scale: 0.9 }}
                                         transition={{ duration: 0.15 }}
-                                        className="absolute bottom-full left-0 mb-3 w-48 dark:bg-[#2d2f31] bg-white border dark:border-gray-700/50 border-gray-200 rounded-2xl shadow-xl overflow-hidden z-50 p-2 text-sm font-semibold"
+                                        className="absolute bottom-full left-0 mb-3 w-48 rounded-2xl shadow-xl overflow-hidden z-50 p-2 text-sm font-semibold border"
+                                        style={{ backgroundColor: 'var(--bg-elevated)', borderColor: 'var(--border-color)' }}
                                     >
                                         <button type="button" className="w-full flex items-center gap-3 px-4 py-3 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-[#3f4145] hover:bg-gray-100 transition-colors text-left rounded-xl cursor-pointer">
                                             <Image size={18} className="dark:text-gray-400 text-gray-500" />
@@ -87,7 +93,7 @@ const ChatInputArea = ({ handleSendMessage, inputText, setInputText, isStreaming
                             <button
                                 type="submit"
                                 disabled={!inputText.trim() || isStreaming}
-                                className="p-2.5 bg-accent dark:disabled:bg-[#2d2f31] disabled:bg-gray-200 dark:disabled:text-gray-500 disabled:text-gray-400 text-accent-contrast rounded-full transition-all flex items-center justify-center cursor-pointer active:scale-95"
+                                className="p-2.5 bg-accent disabled:opacity-40 text-accent-contrast rounded-full transition-all flex items-center justify-center cursor-pointer active:scale-95"
                             >
                                 <ArrowUp size={20} />
                             </button>
@@ -95,7 +101,7 @@ const ChatInputArea = ({ handleSendMessage, inputText, setInputText, isStreaming
                     </div>
                 </form>
 
-                <p className="text-center text-[10px] dark:text-gray-500 text-gray-400 py-1">
+                <p className="text-center text-[10px] py-1" style={{ color: 'var(--text-muted)' }}>
                     NexusAI may produce inaccurate information about people, places, or facts.
                 </p>
             </div>

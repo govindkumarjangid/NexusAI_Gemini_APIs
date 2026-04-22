@@ -3,7 +3,7 @@ import SettingsModal from "./SettingsModal";
 import { Settings } from "lucide-react";
 
 export default function SidebarSettingsTrigger() {
-    const [showSettings, setShowSettings] = useState(true);
+    const [showSettings, setShowSettings] = useState(false);
 
     return (
         <>

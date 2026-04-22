@@ -22,19 +22,22 @@ function applyTheme(theme) {
     }
 }
 
-function getContrastYIQ(hexcolor) {
-    if (hexcolor.startsWith('#')) hexcolor = hexcolor.slice(1);
-    const r = parseInt(hexcolor.substring(0, 2), 16);
-    const g = parseInt(hexcolor.substring(2, 4), 16);
-    const b = parseInt(hexcolor.substring(4, 6), 16);
-    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-    return (yiq >= 128) ? '#000000' : '#FFFFFF';
-}
+const ACCENT_TEXT_COLORS = {
+    yellow: '#000000',
+    blue: '#FFFFFF',
+    green: '#FFFFFF',
+    purple: '#FFFFFF',
+    red: '#FFFFFF',
+    orange: '#000000',
+    pink: '#FFFFFF',
+    teal: '#FFFFFF',
+};
 
 function applyAccentColor(accent) {
     const hex = ACCENT_COLORS[accent] || ACCENT_COLORS.yellow;
+    const textColor = ACCENT_TEXT_COLORS[accent] || '#FFFFFF';
     document.documentElement.style.setProperty('--accent-color', hex);
-    document.documentElement.style.setProperty('--accent-text-color', getContrastYIQ(hex));
+    document.documentElement.style.setProperty('--accent-text-color', textColor);
 }
 
 function applyContrast(contrast) {

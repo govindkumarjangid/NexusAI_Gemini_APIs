@@ -38,7 +38,7 @@ const ChatMessages = ({ messages, isStreaming }) => {
                                 {/* Message Content */}
                                 <div
                                     className={`min-w-0 ${msg.role === 'user'
-                                        ? 'bg-accent text-accent-contrast rounded-3xl rounded-tr-sm px-4 py-2 sm:px-5 sm:py-2 shadow-xl max-w-[95%] sm:max-w-[85%] md:max-w-[70%] w-fit'
+                                        ? 'bg-accent text-accent-contrast rounded-3xl rounded-tr-sm px-4 py-1 sm:px-5 shadow-xl max-w-[95%] sm:max-w-[85%] md:max-w-[70%] w-fit'
                                         : 'dark:text-gray-200 text-gray-800 px-1 py-2 sm:px-4 sm:py-3 leading-relaxed w-full'
                                         }`}
                                 >

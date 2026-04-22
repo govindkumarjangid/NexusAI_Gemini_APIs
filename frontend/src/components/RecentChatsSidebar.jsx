@@ -22,12 +22,14 @@ const RecentChatsSidebar = ({
                     animate={{ x: 0 }}
                     exit={{ x: '100%' }}
                     transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                    className="fixed top-0 right-0 h-full w-120 max-w-full dark:bg-[#1e1f20] bg-white border-l dark:border-gray-800/60 border-gray-200 shadow-2xl flex flex-col z-70"
+                    className="fixed top-0 right-0 h-full w-120 max-w-full border-l shadow-2xl flex flex-col z-70"
+                    style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-color)', color: 'var(--text-primary)' }}
                 >
                     <div className="flex items-center justify-between p-6 pb-4">
-                        <span className="font-semibold text-2xl dark:text-gray-200 text-gray-800">Recent Chats</span>
+                        <span className="font-semibold text-2xl" style={{ color: 'var(--text-primary)' }}>Recent Chats</span>
                         <button
-                            className="p-2 cursor-pointer dark:hover:bg-gray-800 hover:bg-gray-100 rounded-full transition-colors dark:text-gray-400 text-gray-500 dark:hover:text-gray-200 hover:text-gray-800"
+                            className="p-2 cursor-pointer rounded-full transition-colors hover:opacity-80"
+                            style={{ color: 'var(--text-secondary)' }}
                             onClick={onClose}
                             title="Close"
                         >
@@ -46,10 +48,13 @@ const RecentChatsSidebar = ({
                             return (
                                 <button
                                     key={chat._id}
-                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-full transition-colors text-left mb-1 dark:text-gray-300 text-gray-600 dark:hover:text-gray-100 hover:text-gray-900 dark:hover:bg-[#2d2f31] hover:bg-gray-100 shadow-sm group cursor-pointer"
+                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-full transition-colors text-left mb-1 shadow-sm group cursor-pointer hover:opacity-80"
+                                    style={{ color: 'var(--text-secondary)' }}
+                                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--bg-elevated)'}
+                                    onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
                                     onClick={() => onChatClick(chat)}
                                 >
-                                    <div className="flex items-center justify-center w-9 h-9 rounded-full bg-linear-to-br from-blue-500 to-purple-600 text-white font-bold text-lg shrink-0">
+                                    <div className="flex items-center justify-center w-9 h-9 rounded-full bg-accent text-white font-bold text-lg shrink-0">
                                         <MessageCircle size={18} />
                                     </div>
                                     <div className="flex-1 min-w-0">
@@ -63,10 +68,10 @@ const RecentChatsSidebar = ({
                         })}
                         {hasMore && (
                             <button
-                                className="my-4 py-2 px-4 text-sm rounded-full dark:hover:bg-[#2d2f31] hover:bg-gray-200 dark:bg-[#23272f] bg-gray-100 dark:text-gray-200 text-gray-700 transition-colors cursor-pointer w-full max-w-fit mx-auto shadow-lg flex items-center gap-1 justify-center"
+                                className="my-4 py-2 px-5 text-sm rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer w-full max-w-fit mx-auto shadow-lg flex items-center gap-1 justify-center active:scale-95 hover:opacity-90"
                                 onClick={onLoadMore}
                             >
-                                Load More <ChevronDown  size={18} />
+                                Load More <ChevronDown size={16} />
                             </button>
                         )}
                     </div>

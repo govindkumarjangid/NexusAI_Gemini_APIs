@@ -19,23 +19,23 @@ export default function AccountSettings() {
     }
 
     return (
-        <div className="space-y-6 dark:bg-transparent bg-white rounded-2xl p-2">
-            <h2 className="text-xl font-semibold dark:text-white text-gray-900 mb-4">Account</h2>
+        <div className="space-y-6 rounded-2xl p-2">
+            <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Account</h2>
             <div className="flex items-center justify-between">
-                <span className="dark:text-gray-300 text-gray-700">Name</span>
-                <span className="dark:text-white text-gray-900">{mockUser.name}</span>
+                <span style={{ color: 'var(--text-secondary)' }}>Name</span>
+                <span style={{ color: 'var(--text-primary)' }}>{mockUser.name}</span>
             </div>
             <div className="flex items-center justify-between">
-                <span className="dark:text-gray-300 text-gray-700">Email</span>
-                <span className="dark:text-white text-gray-900">{mockUser.email}</span>
+                <span style={{ color: 'var(--text-secondary)' }}>Email</span>
+                <span style={{ color: 'var(--text-primary)' }}>{mockUser.email}</span>
             </div>
-            <div className="flex items-center justify-between border-b dark:border-gray-600/40 border-gray-200 pb-6">
-                <span className="dark:text-gray-300 text-gray-700">Last Updated</span>
-                <span className="dark:text-white text-gray-900">{mockUser.lastUpdated}</span>
+            <div className="flex items-center justify-between border-b pb-6" style={{ borderColor: 'var(--border-color)' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Last Updated</span>
+                <span style={{ color: 'var(--text-primary)' }}>{mockUser.lastUpdated}</span>
             </div>
             <div className="pt-4">
                 <button
-                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-red-600 hover:bg-red-700 text-white font-semibold transition-colors cursor-pointer"
+                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer active:scale-95 hover:opacity-90"
                     onClick={() => setShowDeleteConfirm(true)}
                 >
                     <Trash2 size={18} /> Delete Account
@@ -45,22 +45,34 @@ export default function AccountSettings() {
             {/* Delete Confirmation Dialog */}
             {showDeleteConfirm && (
                 <div className="fixed inset-0 z-60 flex items-center justify-center backdrop-blur-sm">
-                    <div className="dark:bg-[#232323] bg-white rounded-xl p-8 shadow-xl w-full max-w-xl text-center">
-                        <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">
-                            Are you sure you want to delete your account?
+                    <div
+                        className="rounded-2xl p-8 shadow-2xl w-full max-w-sm text-center border"
+                        style={{
+                            backgroundColor: 'var(--bg-panel)',
+                            borderColor: 'var(--border-color)',
+                        }}
+                    >
+                        <h3 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
+                            Delete Account?
                         </h3>
-                        <p className="dark:text-gray-400 text-gray-600 mb-6">
-                            This action cannot be undone.
+                        <p className="mb-6 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                            This action cannot be undone. All your chats will be permanently deleted.
                         </p>
-                        <div className="flex justify-center gap-4">
+                        <div className="flex justify-center gap-3">
                             <button
-                                className="px-6 py-2 rounded-full dark:bg-gray-700 bg-gray-200 dark:text-gray-200 text-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 cursor-pointer"
+                                className="px-6 py-2 rounded-full transition-colors cursor-pointer"
+                                style={{
+                                    backgroundColor: 'var(--bg-elevated)',
+                                    color: 'var(--text-primary)',
+                                }}
+                                onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--bg-hover)'}
+                                onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--bg-elevated)'}
                                 onClick={() => setShowDeleteConfirm(false)}
                             >
                                 Cancel
                             </button>
                             <button
-                                className="px-6 py-2 rounded-full bg-red-600 text-white hover:bg-red-700 font-semibold cursor-pointer"
+                                className="px-6 py-2 rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer active:scale-95 hover:opacity-90"
                                 onClick={handleDeleteAccount}
                             >
                                 Delete
@@ -69,7 +81,6 @@ export default function AccountSettings() {
                     </div>
                 </div>
             )}
-
         </div>
     );
 }
