@@ -12,7 +12,7 @@ const ChatAreaHeader = () => {
             className="h-14 shrink-0 w-full flex items-center justify-between px-3 sm:px-4 border-b sticky top-0 z-20 backdrop-blur-sm"
             style={{
                 borderColor: 'var(--border-color)',
-                backgroundColor: sidebarOpen ? 'transparent' : 'var(--bg-surface)',
+                backgroundColor:'var(--bg-surface)',
                 color: 'var(--text-primary)',
             }}
         >
@@ -28,14 +28,23 @@ const ChatAreaHeader = () => {
                 )}
                 <h1 className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>NexusAI</h1>
             </div>
-            {user && (
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-lg uppercase">
-                        {user.name?.[0] || '?'}
+            {user && (() => {
+                const initial = (() => {
+                    if (!user.name) return '?';
+                    const parts = user.name.trim().split(/\s+/);
+                    if (parts.length === 1) return parts[0][0].toUpperCase();
+                    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+                })();
+
+                return (
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-accent text-accent-contrast flex items-center justify-center font-semibold text-sm">
+                            {initial}
+                        </div>
+                        <span className="hidden sm:flex font-normal text-base max-w-30 truncate" style={{ color: 'var(--text-secondary)' }}>{user.name || 'User'}</span>
                     </div>
-                    <span className="hidden sm:flex font-normal text-base max-w-30 truncate" style={{ color: 'var(--text-secondary)' }}>{user.name || 'User'}</span>
-                </div>
-            )}
+                );
+            })()}
         </header>
     );
 };

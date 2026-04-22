@@ -77,7 +77,7 @@ const Sidebar = () => {
           x: isMobile ? (sidebarOpen ? 0 : -300) : 0
         }}
         transition={{ ease: "easeInOut", duration: 0.2 }}
-        className={`h-screen flex flex-col border-r overflow-hidden whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl' : 'relative'}`}
+        className={`h-screen flex flex-col border-r whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl overflow-hidden' : 'relative overflow-visible z-20'}`}
         style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-color)', color: 'var(--text-primary)' }}
       >
         {/* Top Header */}
@@ -122,7 +122,7 @@ const Sidebar = () => {
         </div>
 
         {/*  Buttons */}
-        <div className="px-3 py-3 mt-1 shrink-0 flex flex-col gap-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
+        <div className="px-3 py-3 mt-1 shrink-0 flex flex-col gap-2">
           {[
             { label: 'New Chat', icon: <SquarePen size={18} />, onClick: handleCreateChat },
             { label: 'Search', icon: <Search size={18} />, onClick: () => setIsSearchOpen(true) },
