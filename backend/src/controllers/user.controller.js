@@ -51,6 +51,11 @@ export const loginUser = wrapAsync(async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
+    if (user) {
+        user.lastLogin = new Date();
+        await user.save();
+    }
+
     const token = genrateToken(user._id);
 
     res.cookie('token', token, {
@@ -67,7 +72,8 @@ export const loginUser = wrapAsync(async (req, res) => {
             name: user.name,
             email: user.email,
             createdAt: user.createdAt,
-            UpdatedAt: user.updatedAt
+            UpdatedAt: user.updatedAt,
+            lastLogin: user.lastLogin
         }
     });
 });
