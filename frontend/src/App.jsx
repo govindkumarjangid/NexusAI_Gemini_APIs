@@ -1,13 +1,24 @@
 import { useEffect } from 'react';
 import useAuthStore from './store/useAuthStore.js';
 import { motion, AnimatePresence } from 'framer-motion';
-import Auth from './pages/Auth';
+import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import Sidebar from './components/Sidebar';
 import ChatArea from './components/ChatArea';
 import SearchPage from './pages/SearchPage';
 import { Toaster } from 'react-hot-toast';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+
+const ChatLayout = () => {
+  return (
+    <div className="flex h-screen overflow-hidden relative" style={{ backgroundColor: 'var(--bg-base)', color: 'var(--text-primary)' }}>
+      <Sidebar />
+      <ChatArea />
+      <SearchPage />
+    </div>
+  );
+};
 
 const App = () => {
 
@@ -22,12 +33,10 @@ const App = () => {
     setIsSearchOpen,
   } = useAuthStore();
 
-  const navigate = useNavigate();
+  const location = useLocation();
   const isDark = actualTheme === 'dark';
 
   useEffect(() => {
-    if (!user && window.location.pathname !== '/') navigate('/');
-    if (user && window.location.pathname === '/') navigate('/chat');
     const handleResize = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
@@ -36,7 +45,7 @@ const App = () => {
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [user, navigate, setIsMobile, setSidebarOpen]);
+  }, [setIsMobile, setSidebarOpen]);
 
 
   return (
@@ -94,30 +103,28 @@ const App = () => {
           },
         }}
       />
-      <Routes>
-        <Route path="/" element={
-          user
-            ? (
-              <Navigate to="/chat" />
-            )
-            : <Auth />
-        }
-        />
-        <Route path="/chat" element={
-          <div className="flex h-screen overflow-hidden relative" style={{ backgroundColor: 'var(--bg-base)', color: 'var(--text-primary)' }}>
-            <Sidebar />
-            <ChatArea />
-            <SearchPage />
-          </div>
-        } />
-        <Route path="/chat/:chatId" element={
-          <div className="flex h-screen overflow-hidden dark:bg-[#131314] bg-white dark:text-gray-100 text-gray-900 relative">
-            <Sidebar />
-            <ChatArea />
-            <SearchPage />
-          </div>
-        } />
-      </Routes>
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          {/* Public routes */}
+          <Route path="/" element={
+            user ? <Navigate to="/chat" replace /> : <LandingPage />
+          } />
+          <Route path="/login" element={
+            user ? <Navigate to="/chat" replace /> : <LoginPage />
+          } />
+          <Route path="/register" element={
+            user ? <Navigate to="/chat" replace /> : <RegisterPage />
+          } />
+
+          {/* Protected routes */}
+          <Route path="/chat" element={
+            !user ? <Navigate to="/" replace /> : <ChatLayout />
+          } />
+          <Route path="/chat/:chatId" element={
+            !user ? <Navigate to="/" replace /> : <ChatLayout />
+          } />
+        </Routes>
+      </AnimatePresence>
     </>
   );
 }

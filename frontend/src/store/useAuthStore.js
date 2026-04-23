@@ -193,7 +193,7 @@ const useAuthStore = create((set) => ({
                 set({ user: null, token: null });
                 localStorage.removeItem('user');
                 localStorage.removeItem('token');
-                navigate('/auth');
+                navigate('/');
                 toast.success('Account deleted successfully');
                 set({ isLoading: false });
             } else {

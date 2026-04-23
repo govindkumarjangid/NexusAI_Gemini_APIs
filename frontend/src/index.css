@@ -1,8 +1,14 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
 body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Chat pages need overflow hidden */
+body.chat-active {
   overflow: hidden;
 }
 
@@ -97,4 +103,89 @@ html.dark ::-webkit-scrollbar-thumb {
 
 html.dark ::-webkit-scrollbar-thumb:hover {
   background-color: #52555a;
+}
+
+/* ── Landing Page Keyframes ── */
+/* Planet orbit — full 360° rotation around center */
+@keyframes orbit-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes orb-float {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-30px) scale(1.05);
+  }
+}
+
+@keyframes orb-ring-spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes pulse-dot {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes particle-drift {
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 0.35;
+  }
+
+  25% {
+    transform: translate(10px, -20px);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: translate(-5px, -40px);
+    opacity: 0.25;
+  }
+
+  75% {
+    transform: translate(15px, -20px);
+    opacity: 0.6;
+  }
+}
+
+/* Gradient text utility */
+.gradient-accent-text {
+  background-image: linear-gradient(135deg, var(--accent-color), color-mix(in srgb, var(--accent-color) 55%, #ffffff));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Landing grid overlay */
+.landing-grid-bg {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--accent-color) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--accent-color) 4%, transparent) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black, transparent);
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black, transparent);
 }

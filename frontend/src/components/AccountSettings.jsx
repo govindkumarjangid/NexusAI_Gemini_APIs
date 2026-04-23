@@ -60,7 +60,7 @@ export default function AccountSettings() {
                             animate={{ y: 0, opacity: 1, scale: 1 }}
                             exit={{ y: 20, opacity: 0, scale: 0.9 }}
                             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                            className="rounded-t-3xl sm:rounded-2xl p-8 pb-10 sm:pb-8 shadow-2xl w-full w-full sm:max-w-sm text-center border"
+                            className="rounded-t-3xl sm:rounded-2xl p-8 pb-10 sm:pb-8 shadow-2xl w-full sm:max-w-sm text-center border"
                             style={{
                                 backgroundColor: 'var(--bg-panel)',
                                 borderColor: 'var(--border-color)',
