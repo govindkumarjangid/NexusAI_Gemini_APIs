@@ -35,7 +35,31 @@ export const registerUser = wrapAsync(async (req, res) => {
     });
 
     await newUser.save();
-    res.status(201).json({ success: true, message: 'User registered successfully' });
+
+    const token = genrateToken(newUser._id);
+
+    res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    console.log(token, newUser)
+
+    res.status(200).json({
+        success: true,
+        message: 'User registered successfully',
+        token,
+        user: {
+            id: newUser._id,
+            name: newUser.name,
+            email: newUser.email,
+            createdAt: newUser.createdAt,
+            UpdatedAt: newUser.updatedAt,
+            lastLogin: newUser.lastLogin
+        }
+    });
 });
 
 export const loginUser = wrapAsync(async (req, res) => {
@@ -86,3 +110,20 @@ export const logoutUser = wrapAsync(async (req, res) => {
     });
     res.status(200).json({ success: true, message: 'Logout successful' });
 });
+
+export const deleteAccount = wrapAsync(async (req, res) => {
+    const id = req.user._id;
+    const password = req.body.password;
+    if (!password)
+        res.status(400).json({ message: 'Password is required' })
+
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+
+    await User.findByIdAndDelete(id);
+    res.clearCookie('token');
+    res.status(200).json({ success: true, message: 'Account deleted successfully' });
+})

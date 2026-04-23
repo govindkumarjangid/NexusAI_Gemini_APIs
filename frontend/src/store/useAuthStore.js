@@ -3,8 +3,8 @@ import { create } from 'zustand';
 import { toast } from 'react-hot-toast';
 
 const ACCENT_COLORS = {
-    yellow: '#FFD600',
     blue: '#2196F3',
+    yellow: '#FFD600',
     green: '#4CAF50',
     purple: '#9C27B0',
     red: '#F44336',
@@ -15,11 +15,8 @@ const ACCENT_COLORS = {
 
 function applyTheme(theme) {
     const html = document.documentElement;
-    if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        html.classList.add('dark');
-    } else {
-        html.classList.remove('dark');
-    }
+    if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) html.classList.add('dark');
+    else html.classList.remove('dark');
 }
 
 const ACCENT_TEXT_COLORS = {
@@ -42,11 +39,8 @@ function applyAccentColor(accent) {
 
 function applyContrast(contrast) {
     const html = document.documentElement;
-    if (contrast === 'high' || (contrast === 'system' && window.matchMedia('(prefers-contrast: more)').matches)) {
-        html.classList.add('high-contrast');
-    } else {
-        html.classList.remove('high-contrast');
-    }
+    if (contrast === 'high' || (contrast === 'system' && window.matchMedia('(prefers-contrast: more)').matches)) html.classList.add('high-contrast');
+    else html.classList.remove('high-contrast');
 }
 
 function getActualTheme(theme) {
@@ -130,7 +124,8 @@ const useAuthStore = create((set) => ({
                 email,
                 password
             });
-            set({ isLoading: false });
+            const { user, token } = response.data;
+            // console.log(response.data)
             if (response.data.success) {
                 set({ user, token, isLoading: false });
                 localStorage.setItem('user', JSON.stringify(user));
@@ -185,6 +180,29 @@ const useAuthStore = create((set) => ({
             set({ error: error.response?.data?.message || 'Logout failed' });
             console.error('Logout error:', error);
             toast.error(error.response?.data?.message || 'Logout failed');
+        }
+    },
+
+    deleteAccount: async ({ password, navigate }) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axiosInstance.post('/users/delete', {
+                password
+            });
+            if (response.data.success) {
+                set({ user: null, token: null });
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                navigate('/auth');
+                toast.success('Account deleted successfully');
+                set({ isLoading: false });
+            } else {
+                set({ isLoading: false, error: response.data.message || 'Account deletion failed' });
+                toast.error(response.data.message || 'Account deletion failed');
+            }
+        } catch (error) {
+            set({ isLoading: false, error: error.response?.data?.message || 'Account deletion failed' });
+            toast.error(error.response?.data?.message || 'Account deletion failed');
         }
     }
 
