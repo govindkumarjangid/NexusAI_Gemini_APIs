@@ -82,15 +82,17 @@ const Sidebar = () => {
       >
         {/* Top Header */}
         <div className="h-14 flex items-center justify-between shrink-0">
-          {sidebarOpen && (sidebarOpen && isMobile ? isMobile : !isMobile) && (
+          {(isMobile || sidebarOpen) && (
             <div className="w-full flex items-center justify-between shrink-0 relative group px-3">
               <NavLink to="/chat" className="flex items-center gap-3">
                 <img
                   src={logo}
                   alt="NexusAI Logo"
-                  className="w-11 h-11 rounded-full shadow-lg cursor-pointer transition-all duration-200 hover:scale-105 "
+                  className="w-11 h-11 rounded-full shadow-lg cursor-pointer transition-all duration-200 hover:scale-105"
                 />
-                <h1 className="font-semibold text-lg dark:text-gray-200 text-gray-800">NexusAI</h1>
+                <h1 className="font-semibold text-lg dark:text-gray-200 text-gray-800">
+                  NexusAI
+                </h1>
               </NavLink>
               <button
                 onClick={() => setSidebarOpen(false)}
@@ -101,24 +103,22 @@ const Sidebar = () => {
               </button>
             </div>
           )}
-          {
-            (!sidebarOpen || !isMobile) && (
-              <div className="w-17.5 flex items-center justify-center shrink-0 relative group">
-                <img
-                  src={logo}
-                  alt="NexusAI Logo"
-                  className="w-11 h-11 rounded-full shadow-lg cursor-pointer transition-all duration-200 hover:scale-105 group-hover:hidden"
-                />
-                <button
-                  onClick={() => setSidebarOpen(true)}
-                  className="p-0 sm:p-3 dark:hover:bg-gray-800 hover:bg-gray-200 rounded-full hidden group-hover:block transition-all cursor-ew-resize duration-300 active:scale-95 dark:text-gray-400 text-gray-500 dark:hover:text-gray-200 hover:text-gray-800"
-                  title="Collapse Menu"
-                >
-                  <SquareChevronRight size={22} />
-                </button>
-              </div>
-            )
-          }
+          {!isMobile && !sidebarOpen && (
+            <div className="w-17.5 flex items-center justify-center shrink-0 relative group">
+              <img
+                src={logo}
+                alt="NexusAI Logo"
+                className="w-11 h-11 rounded-full shadow-lg cursor-pointer transition-all duration-200 hover:scale-105 group-hover:hidden"
+              />
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="p-0 sm:p-3 dark:hover:bg-gray-800 hover:bg-gray-200 rounded-full hidden group-hover:block transition-all cursor-ew-resize duration-300 active:scale-95 dark:text-gray-400 text-gray-500 dark:hover:text-gray-200 hover:text-gray-800"
+                title="Expand Menu"
+              >
+                <SquareChevronRight size={22} />
+              </button>
+            </div>
+          )}
         </div>
 
         {/*  Buttons */}

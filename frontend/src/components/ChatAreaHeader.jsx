@@ -9,11 +9,11 @@ const ChatAreaHeader = () => {
 
     return (
         <header
-            className="h-14 shrink-0 w-full flex items-center justify-between px-3 sm:px-4 border-b sticky top-0 z-20 backdrop-blur-sm"
+            className="h-14 shrink-0 w-full flex items-center justify-between px-3 sm:px-4 border-b sticky top-0 z-10 backdrop-blur-sm"
             style={{
                 borderColor: 'var(--border-color)',
                 backgroundColor:'var(--bg-surface)',
-                color: 'var(--text-primary)',
+               color: 'var(--text-primary)',
             }}
         >
             <div className="flex items-center gap-3">

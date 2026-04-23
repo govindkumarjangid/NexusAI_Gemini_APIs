@@ -61,7 +61,7 @@ export default function Modal({ open, onClose, children }) {
                     />
 
                     {/* Modal panel */}
-                    <div className={`fixed inset-0 z-50 flex ${isMobile ? "items-end" : "items-center"} justify-center ${isMobile ? "p-0" : "p-4"}`}>
+                    <div className={`fixed inset-0 z-100 flex ${isMobile ? "items-end" : "items-center"} justify-center ${isMobile ? "p-0" : "p-4"}`}>
                         <motion.div
                             key="modal-panel"
                             ref={modalRef}

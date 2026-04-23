@@ -6,7 +6,7 @@ const user = JSON.parse(localStorage.getItem("user")) || null;
 const mockUser = {
     name: user?.name || "Govind Kumar Jangid",
     email: user?.email || "govindkumarjangid17@gmail.com",
-    lastUpdated: "2026-04-21 14:32",
+    lastLogin: new Date().toLocaleString(),
 };
 
 export default function AccountSettings() {
@@ -31,7 +31,7 @@ export default function AccountSettings() {
             </div>
             <div className="flex items-center justify-between border-b pb-6" style={{ borderColor: 'var(--border-color)' }}>
                 <span style={{ color: 'var(--text-secondary)' }}>Last Updated</span>
-                <span style={{ color: 'var(--text-primary)' }}>{mockUser.lastUpdated}</span>
+                <span style={{ color: 'var(--text-primary)' }}>{mockUser.lastLogin}</span>
             </div>
             <div className="pt-4">
                 <button
