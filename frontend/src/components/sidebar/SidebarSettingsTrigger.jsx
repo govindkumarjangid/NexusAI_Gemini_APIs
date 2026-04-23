@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SettingsModal from "./SettingsModal";
+import SettingsModal from "../SettingsModal";
 import { Settings } from "lucide-react";
 
 export default function SidebarSettingsTrigger() {

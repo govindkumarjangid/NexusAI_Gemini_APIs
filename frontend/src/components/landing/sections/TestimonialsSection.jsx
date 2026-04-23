@@ -31,7 +31,7 @@ const TestimonialCard = ({ name, role, text, color, i }) => {
   return (
     <motion.div
       ref={ref}
-      className="[perspective:1000px]"
+      className="perspective-[1000px]"
       initial={{ opacity: 0, rotateY: i === 0 ? -15 : i === 2 ? 15 : 0, y: 50 }}
       animate={show ? { opacity: 1, rotateY: 0, y: 0 } : {}}
       transition={{ duration: 0.8, delay: i * 0.14, ease: [0.16, 1, 0.3, 1] }}

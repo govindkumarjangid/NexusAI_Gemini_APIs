@@ -42,14 +42,13 @@ const CTASection = () => (
           </p>
           <Link
             to="/register"
-            className="inline-flex items-center gap-2 px-7 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 hover:-translate-y-0.5 active:scale-95"
+            className="inline-flex items-center gap-2 px-7 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 hover:-translate-y-0.5 active:scale-95 group"
             style={{
               backgroundColor: 'var(--accent-color)',
               color: 'var(--accent-text-color)',
-              boxShadow: '0 8px 32px color-mix(in srgb, var(--accent-color) 35%, transparent)',
             }}
           >
-            Get Started Free <ArrowRight size={17} />
+            Get Started Free <ArrowRight size={17} className='group-hover:translate-x-1.5 transition-transform duration-300'/>
           </Link>
         </div>
       </div>

@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect } from 'react';
 import { LogOut, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import useAuthStore from '../store/useAuthStore';
-import SettingsModal from './SettingsModal';
+import useAuthStore from '../../store/useAuthStore';
+import SettingsModal from '../model/SettingsModal';
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 640);

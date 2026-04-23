@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useAuthStore from '../store/useAuthStore.js';
+import useAuthStore from '../../store/useAuthStore.js';
 
 const ACCENT_COLORS = [
   { name: "Blue", value: "blue", color: "#2196F3" },

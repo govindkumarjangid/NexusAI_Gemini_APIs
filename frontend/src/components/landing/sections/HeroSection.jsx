@@ -7,15 +7,12 @@ import SolarSystem from '../ui/SolarSystem';
 const HeroSection = ({ heroY, heroOpacity, heroScale, orbScale, orbOpacity }) => (
   <section className="min-h-screen flex flex-col items-center justify-center px-5 sm:px-8 pt-24 pb-16 relative overflow-hidden">
 
-    {/* Grid overlay */}
     <div className="landing-grid-bg absolute inset-0 pointer-events-none" />
 
-    {/* ── Solar System Background ── */}
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       <SolarSystem scale={orbScale} opacity={orbOpacity} />
     </div>
 
-    {/* Floating particles */}
     {[
       { top: '18%', left: '10%', w: 3, dur: '6s' },
       { top: '62%', right: '14%', left: undefined, w: 4, dur: '8s', del: '1s' },
@@ -35,19 +32,17 @@ const HeroSection = ({ heroY, heroOpacity, heroScale, orbScale, orbOpacity }) =>
       />
     ))}
 
-    {/* Hero text content */}
     <motion.div
       className="relative z-10 flex flex-col items-center mt-12 sm:mt-0"
       style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
     >
-      {/* Badge */}
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.2 }}
       >
         <div
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold border mb-8 bg-opacity-50 backdrop-blur-sm"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold border mb-8 backdrop-blur-3xl"
           style={{
             backgroundColor: 'color-mix(in srgb, var(--accent-color) 8%, transparent)',
             color: 'var(--accent-color)',
@@ -62,7 +57,6 @@ const HeroSection = ({ heroY, heroOpacity, heroScale, orbScale, orbOpacity }) =>
         </div>
       </motion.div>
 
-      {/* Heading */}
       <motion.h1
         className="text-[clamp(2.5rem,8vw,5rem)] font-black tracking-[-0.04em] text-center mb-4 sm:mb-6 leading-[1.08] max-w-4xl"
         style={headingFont}
@@ -88,32 +82,31 @@ const HeroSection = ({ heroY, heroOpacity, heroScale, orbScale, orbOpacity }) =>
 
       {/* CTA buttons */}
       <motion.div
-        className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto"
+        className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-xs sm:w-full sm:max-w-md"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.8 }}
       >
         <Link
           to="/register"
-          className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 hover:-translate-y-0.5 active:scale-95"
+          className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 hover:-translate-y-0.5 active:scale-95 group"
           style={{
             backgroundColor: 'var(--accent-color)',
             color: 'var(--accent-text-color)',
-            boxShadow: '0 8px 32px color-mix(in srgb, var(--accent-color) 35%, transparent)',
           }}
         >
-          Get Started Free <ArrowRight size={17} />
+          Get Started Free <ArrowRight size={17}  className='group-hover:translate-x-1.5 transition-transform duration-300'/>
         </Link>
         <Link
           to="/login"
-          className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base border transition-all duration-300 hover:-translate-y-0.5"
+          className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base border transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-sm group"
           style={{
             color: 'var(--text-secondary)',
             borderColor: 'var(--border-color)',
             backgroundColor: 'color-mix(in srgb, var(--bg-surface) 50%, transparent)',
           }}
         >
-          Sign In <ChevronRight size={17} />
+          Sign In <ChevronRight size={17} className='group-hover:translate-x-1.5 transition-transform duration-300' />
         </Link>
       </motion.div>
     </motion.div>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Modal from "./Modal";
-import GeneralSettings from "./GeneralSettings";
-import AccountSettings from "./AccountSettings";
+import Modal from "../model/Modal";
+import GeneralSettings from "../account/GeneralSettings";
+import AccountSettings from "../account/AccountSettings";
 import { Settings, User } from "lucide-react";
 
 const TABS = [
@@ -48,4 +48,4 @@ export default function SettingsModal({ open, onClose }) {
             </div>
         </Modal>
     );
-}       
+}

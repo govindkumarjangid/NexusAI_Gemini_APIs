@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
-import useAuthStore from '../store/useAuthStore';
-import useChatStore from '../store/useChatStore';
-import Spinner from './Spinner';
+import useAuthStore from '../../store/useAuthStore';
+import useChatStore from '../../store/useChatStore';
+import Spinner from '../model/Spinner';
 import { motion } from 'framer-motion';
-import { renderMessageContent } from '../configs/renderMessageContent';
+import { renderMessageContent } from '../../configs/renderMessageContent';
 
 const ChatMessages = ({ messages, isStreaming }) => {
 

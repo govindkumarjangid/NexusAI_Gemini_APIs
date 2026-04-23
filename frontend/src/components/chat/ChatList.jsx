@@ -1,5 +1,5 @@
 import { Edit2, Trash2, MessageCircle } from 'lucide-react';
-import useAuthStore from '../store/useAuthStore.js';
+import useAuthStore from '../../store/useAuthStore.js';
 
 const ChatList = ({ chats, currentChat, setCurrentChat, navigate, deleteChat, getChatsByUser }) => {
 

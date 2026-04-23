@@ -4,11 +4,11 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Image, Mic, Sparkles, User, Plus, ArrowUp, FolderUp, SquareChevronRight, Check } from 'lucide-react';
 import ChatAreaHeader from './ChatAreaHeader';
-import ChatMessages from './ChatMessages';
+import ChatMessages from '../chat/ChatMessages';
 import ChatInputArea from './ChatInputArea';
-import useAuthStore from '../store/useAuthStore';
-import useChatStore from '../store/useChatStore';
-import useMessageStore from '../store/useMessageStore';
+import useAuthStore from '../../store/useAuthStore';
+import useChatStore from '../../store/useChatStore';
+import useMessageStore from '../../store/useMessageStore';
 import { useParams } from 'react-router-dom';
 
 const ChatArea = () => {

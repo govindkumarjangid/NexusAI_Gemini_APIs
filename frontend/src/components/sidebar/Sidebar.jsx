@@ -1,23 +1,20 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Plus, Search, SquarePen,
+  Search, SquarePen,
   SquareChevronLeft,
   SquareChevronRight,
   MessageCircle,
-  ChevronDown,
   EllipsisVertical,
 } from 'lucide-react';
 
 import logo from '/nexusai-logo.svg';
-import useAuthStore from '../store/useAuthStore.js';
-import useChatStore from '../store/useChatStore.js';
-import { useEffect } from 'react';
+import useAuthStore from '../../store/useAuthStore.js';
+import useChatStore from '../../store/useChatStore.js';
 import { NavLink, useNavigate } from 'react-router-dom';
-import ChatList from './ChatList.jsx';
-import SidebarBottom from './SidebarBottom.jsx';
-import RecentChatsSidebar from './RecentChatsSidebar.jsx';
-
-import { useState } from 'react';
+import ChatList from '../chat/ChatList';
+import SidebarBottom from '../sidebar/SidebarBottom';
+import RecentChatsSidebar from '../sidebar/RecentChatsSidebar';
+import { useState , useEffect} from 'react';
 
 const Sidebar = () => {
 

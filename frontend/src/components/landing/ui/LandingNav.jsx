@@ -30,7 +30,6 @@ const LandingNav = () => (
         style={{
           backgroundColor: 'var(--accent-color)',
           color: 'var(--accent-text-color)',
-          boxShadow: '0 4px 16px color-mix(in srgb, var(--accent-color) 30%, transparent)',
         }}
       >
         Get Started

@@ -34,7 +34,7 @@ const FeatureCard = ({ icon, title, desc, iconBg, iconColor, i }) => {
   return (
     <motion.div
       ref={ref}
-      className="[perspective:1000px]"
+      className="perspective-[1000px]"
       initial={{ opacity: 0, rotateX: 20, rotateY: i === 0 ? -12 : i === 2 ? 12 : 0, y: 70 }}
       animate={show ? { opacity: 1, rotateX: 0, rotateY: 0, y: 0 } : {}}
       transition={{ duration: 0.85, delay: i * 0.14, ease: [0.16, 1, 0.3, 1] }}

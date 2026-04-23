@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import useAuthStore from './store/useAuthStore.js';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import Sidebar from './components/Sidebar';
-import ChatArea from './components/ChatArea';
+import Sidebar from './components/sidebar/Sidebar';
+import ChatArea from './components/chat/ChatArea';
 import SearchPage from './pages/SearchPage';
 import { Toaster } from 'react-hot-toast';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';

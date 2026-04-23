@@ -24,11 +24,11 @@ const RegisterPage = () => {
       <div className="absolute inset-0 pointer-events-none">
         <div
           className="absolute w-[350px] h-[350px] rounded-full -top-[8%] -right-[4%] animate-[orb-float_10s_ease-in-out_infinite]"
-          style={{ background: 'radial-gradient(circle, color-mix(in srgb, var(--accent-color) 14%, transparent), transparent 70%)', filter: 'blur(70px)' }}
+          style={{ background: 'radial-gradient(circle, color-mix(in srgb, var(--accent-color) 30%, transparent), transparent 70%)', filter: 'blur(70px)' }}
         />
         <div
           className="absolute w-[300px] h-[300px] rounded-full -bottom-[8%] -left-[4%] animate-[orb-float_12s_ease-in-out_infinite_2s]"
-          style={{ background: 'radial-gradient(circle, color-mix(in srgb, var(--accent-color) 10%, transparent), transparent 70%)', filter: 'blur(70px)' }}
+          style={{ background: 'radial-gradient(circle, color-mix(in srgb, var(--accent-color) 30%, transparent), transparent 70%)', filter: 'blur(70px)' }}
         />
       </div>
 
@@ -49,48 +49,69 @@ const RegisterPage = () => {
 
       {/* Card */}
       <motion.div
-        className="w-full max-w-md rounded-2xl p-7 sm:p-10 relative z-10 border backdrop-blur-xl"
-        style={{ backgroundColor: 'color-mix(in srgb, var(--bg-surface) 80%, transparent)', borderColor: 'var(--border-color)' }}
+        className="w-full sm:max-w-md sm:rounded-2xl px-2 sm:px-10 py-7 sm:py-10 relative z-10 border-0 sm:border backdrop-blur-none sm:backdrop-blur-xl bg-transparent sm:bg-[color-mix(in_srgb,var(--bg-surface)_80%,transparent)]"
+        style={{ borderColor: 'var(--border-color)' }}
         initial={{ opacity: 0, y: 36, rotateX: 8 }}
         animate={{ opacity: 1, y: 0, rotateX: 0 }}
         transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
       >
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-center mb-1.5 tracking-tight" style={{ color: 'var(--text-primary)', ...heading }}>Create an account</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-center mb-1.5 tracking-tight" style={{ color: 'var(--text-primary)', ...heading }}>Create an account</h1>
           <p className="text-center text-sm mb-8" style={{ color: 'var(--text-muted)' }}>Join NexusAI and start your AI journey</p>
         </motion.div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
-            <label className="block text-xs font-semibold mb-1.5 tracking-wide" style={{ color: 'var(--text-secondary)' }} htmlFor="reg-name">Full Name</label>
+            <label
+              className="block text-xs font-semibold mb-1.5 tracking-wide"
+              style={{ color: 'var(--text-secondary)' }}
+              htmlFor="reg-name">
+              Full Name
+            </label>
             <input
               id="reg-name"
+              type="text"
+              name="name"
+              placeholder="John Doe"
+              value={formData.name} onChange={handleChange} required autoComplete="name"
               className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200 border focus:ring-2"
               style={{ backgroundColor: 'var(--bg-elevated)', borderColor: 'var(--border-color)', color: 'var(--text-primary)', '--tw-ring-color': 'color-mix(in srgb, var(--accent-color) 30%, transparent)' }}
-              type="text" name="name" placeholder="John Doe"
-              value={formData.name} onChange={handleChange} required autoComplete="name"
             />
           </motion.div>
 
           <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
-            <label className="block text-xs font-semibold mb-1.5 tracking-wide" style={{ color: 'var(--text-secondary)' }} htmlFor="reg-email">Email</label>
+            <label
+              className="block text-xs font-semibold mb-1.5 tracking-wide"
+              style={{ color: 'var(--text-secondary)' }}
+              htmlFor="reg-email">
+              Email
+            </label>
             <input
               id="reg-email"
+              type="email"
+              name="email"
+              placeholder="you@example.com"
+              value={formData.email} onChange={handleChange} required autoComplete="email"
               className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200 border focus:ring-2"
               style={{ backgroundColor: 'var(--bg-elevated)', borderColor: 'var(--border-color)', color: 'var(--text-primary)', '--tw-ring-color': 'color-mix(in srgb, var(--accent-color) 30%, transparent)' }}
-              type="email" name="email" placeholder="you@example.com"
-              value={formData.email} onChange={handleChange} required autoComplete="email"
             />
           </motion.div>
 
           <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}>
-            <label className="block text-xs font-semibold mb-1.5 tracking-wide" style={{ color: 'var(--text-secondary)' }} htmlFor="reg-password">Password</label>
+            <label
+              className="block text-xs font-semibold mb-1.5 tracking-wide"
+              style={{ color: 'var(--text-secondary)' }}
+              htmlFor="reg-password">
+              Password
+            </label>
             <input
               id="reg-password"
+              type="password"
+              name="password"
+              placeholder="••••••••"
+              value={formData.password} onChange={handleChange} required autoComplete="new-password"
               className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200 border focus:ring-2"
               style={{ backgroundColor: 'var(--bg-elevated)', borderColor: 'var(--border-color)', color: 'var(--text-primary)', '--tw-ring-color': 'color-mix(in srgb, var(--accent-color) 30%, transparent)' }}
-              type="password" name="password" placeholder="••••••••"
-              value={formData.password} onChange={handleChange} required autoComplete="new-password"
             />
           </motion.div>
 
@@ -98,7 +119,7 @@ const RegisterPage = () => {
             <button
               type="submit" disabled={isLoading}
               className="w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all duration-300 hover:-translate-y-px active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
-              style={{ backgroundColor: 'var(--accent-color)', color: 'var(--accent-text-color)', boxShadow: '0 6px 24px color-mix(in srgb, var(--accent-color) 30%, transparent)' }}
+              style={{ backgroundColor: 'var(--accent-color)', color: 'var(--accent-text-color)' }}
             >
               {isLoading ? <><Loader2 size={17} className="animate-spin" /> Creating account...</> : <><UserPlus size={17} /> Create Account</>}
             </button>
@@ -106,7 +127,7 @@ const RegisterPage = () => {
         </form>
 
         <motion.p className="text-center mt-7 text-sm" style={{ color: 'var(--text-muted)' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
-          Already have an account?{' '}
+          Already have an account ?{' '}
           <Link to="/login" className="font-semibold transition-colors duration-200" style={{ color: 'var(--accent-color)' }}>Sign in</Link>
         </motion.p>
       </motion.div>
