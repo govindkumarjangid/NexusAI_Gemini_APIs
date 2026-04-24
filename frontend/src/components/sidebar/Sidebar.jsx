@@ -14,7 +14,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import ChatList from '../chat/ChatList';
 import SidebarBottom from '../sidebar/SidebarBottom';
 import RecentChatsSidebar from '../sidebar/RecentChatsSidebar';
-import { useState , useEffect} from 'react';
+import { useState, useEffect } from 'react';
 
 const Sidebar = () => {
 
@@ -74,8 +74,7 @@ const Sidebar = () => {
           x: isMobile ? (sidebarOpen ? 0 : -300) : 0
         }}
         transition={{ ease: "easeInOut", duration: 0.2 }}
-        className={`h-screen flex flex-col border-r whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl overflow-hidden' : 'relative overflow-visible z-20'}`}
-        style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-color)', color: 'var(--text-primary)' }}
+        className={`h-screen flex flex-col border-r whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl overflow-hidden' : 'relative overflow-visible z-20'} bg-(--bg-surface) border-(--border-color) text-(--text-primary)`}
       >
         {/* Top Header */}
         <div className="h-14 flex items-center justify-between shrink-0">

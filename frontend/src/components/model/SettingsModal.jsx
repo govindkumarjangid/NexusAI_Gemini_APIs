@@ -15,13 +15,12 @@ export default function SettingsModal({ open, onClose }) {
     return (
         <Modal open={open} onClose={onClose}>
             <div className="flex justify-center pt-3 pb-1 sm:hidden">
-                <div className="w-10 h-1 rounded-full opacity-30" style={{ backgroundColor: 'var(--text-primary)' }} />
+                <div className="w-10 h-1 rounded-full opacity-30 bg-(--text-primary)"/>
             </div>
 
             <div className="flex flex-col sm:flex-row sm:h-[480px]">
                 <nav
-                    className="flex flex-row sm:flex-col shrink-0 px-3 pt-2 pb-2 sm:py-6 sm:px-3 sm:w-44 gap-1 sm:gap-2 border-b sm:border-b-0 sm:border-r overflow-x-auto"
-                    style={{ borderColor: 'var(--border-color)' }}
+                    className="flex flex-row sm:flex-col shrink-0 px-3 pt-2 pb-2 sm:py-6 sm:px-3 sm:w-44 gap-1 sm:gap-2 border-b sm:border-b-0 sm:border-r overflow-x-auto border-(--border-color)"
                 >
                     {TABS.map(t => (
                         <button

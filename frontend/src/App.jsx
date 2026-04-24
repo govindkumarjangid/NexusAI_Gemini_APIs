@@ -12,7 +12,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 const ChatLayout = () => {
   return (
-    <div className="flex h-screen overflow-hidden relative" style={{ backgroundColor: 'var(--bg-base)', color: 'var(--text-primary)' }}>
+    <div className="flex h-screen overflow-hidden relative bg-base text-primary">
       <Sidebar />
       <ChatArea />
       <SearchPage />

@@ -1,23 +1,22 @@
 import { motion } from 'framer-motion';
 
-// Realistic planet colors
 const PLANETS = [
-  { name: 'Mercury', radius: 60,  size: 8,  duration: 6,  color: '#b5a7a7', delay: 0   },
-  { name: 'Venus',   radius: 90,  size: 14, duration: 10, color: '#e3bb76', delay: 1.5 },
-  { name: 'Earth',   radius: 125, size: 16, duration: 16, color: '#4b70dd', delay: 0.8 },
-  { name: 'Mars',    radius: 160, size: 12, duration: 24, color: '#c1440e', delay: 2.3 },
+  { name: 'Mercury', radius: 60, size: 8, duration: 6, color: '#b5a7a7', delay: 0 },
+  { name: 'Venus', radius: 90, size: 14, duration: 10, color: '#e3bb76', delay: 1.5 },
+  { name: 'Earth', radius: 125, size: 16, duration: 16, color: '#4b70dd', delay: 0.8 },
+  { name: 'Mars', radius: 160, size: 12, duration: 24, color: '#c1440e', delay: 2.3 },
   { name: 'Jupiter', radius: 210, size: 28, duration: 38, color: '#d39c7e', delay: 0.5 },
-  { name: 'Saturn',  radius: 260, size: 24, duration: 54, color: '#ead6b8', delay: 3.0 },
+  { name: 'Saturn', radius: 260, size: 24, duration: 54, color: '#ead6b8', delay: 3.0 },
 ];
 
 const ASTEROIDS = Array.from({ length: 24 }, (_, i) => ({
   id: i,
   angle: (i / 24) * 360,
-  r: 185 + Math.sin(i * 3) * 8, // Between Mars and Jupiter
+  r: 185 + Math.sin(i * 3) * 8,
   size: 1.5 + (i % 2),
 }));
 
-// Random background stars
+
 const STARS = Array.from({ length: 100 }, (_, i) => ({
   id: i,
   top: `${Math.random() * 100}%`,
@@ -44,14 +43,12 @@ const SolarSystem = ({ scale = 1, opacity = 1 }) => {
         {STARS.map((star) => (
           <div
             key={star.id}
-            className="absolute rounded-full bg-white"
+            className="absolute rounded-full bg-white animate-[pulse-dot_4s_ease-in-out_infinite] w-(--size) h-(--size) opacity-(--opacity) top-(--top) left-(--left)"
             style={{
-              top: star.top,
-              left: star.left,
-              width: star.size,
-              height: star.size,
-              opacity: star.opacity,
-              animation: `pulse-dot 4s ease-in-out infinite`,
+              '--top': star.top,
+              '--left': star.left,
+              '--size': `${star.size}px`,
+              '--opacity': star.opacity,
               animationDelay: star.delay,
             }}
           />
@@ -59,33 +56,19 @@ const SolarSystem = ({ scale = 1, opacity = 1 }) => {
       </div>
 
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[0.5] sm:scale-[0.65] md:scale-[0.8]" // Reduced overall size further
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[0.5] sm:scale-[0.65] md:scale-[0.8] w-(--total-size) h-(--total-size)"
         style={{
-          width: totalSize,
-          height: totalSize,
+          '--total-size': `${totalSize}px`,
         }}
       >
-        {/* Ambient glow behind the sun (Animation Removed) */}
+        {/* Ambient glow behind the sun */}
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
-          style={{
-            width: 140,
-            height: 140,
-            background: 'radial-gradient(circle, rgba(255, 204, 0, 0.4) 0%, transparent 70%)',
-            filter: 'blur(30px)',
-          }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full w-[140px] h-[140px] bg-[radial-gradient(circle,rgba(255,204,0,0.4)_0%,transparent_70%)] blur-2xl"
         />
 
-        {/* Realistic Sun (Animation Removed) */}
+        {/* Realistic Sun */}
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full z-10 flex items-center justify-center"
-          style={{
-            width: 48,
-            height: 48,
-            background: 'radial-gradient(circle at center, #ffffff 0%, #ffdf00 40%, #ff8c00 100%)',
-            boxShadow: `0 0 20px 8px rgba(255, 140, 0, 0.6),
-                        0 0 40px 15px rgba(255, 69, 0, 0.3)`,
-          }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full z-10 flex items-center justify-center w-12 h-12 bg-[radial-gradient(circle_at_center,#ffffff_0%,#ffdf00_40%,#ff8c00_100%)] shadow-[0_0_20px_8px_rgba(255,140,0,0.6),0_0_40px_15px_rgba(255,69,0,0.3)]"
         />
 
         {/* Orbit rings + Planets */}
@@ -96,58 +79,42 @@ const SolarSystem = ({ scale = 1, opacity = 1 }) => {
           return (
             <div
               key={i}
-              className="absolute"
+              className="absolute w-(--orbit-size) h-(--orbit-size) top-(--offset) left-(--offset)"
               style={{
-                width: orbitSize,
-                height: orbitSize,
-                top: offset,
-                left: offset,
+                '--orbit-size': `${orbitSize}px`,
+                '--offset': `${offset}px`,
               }}
             >
-              {/* Orbit Track (Fixed visibility) */}
+              {/* Orbit Track */}
               <div
-                className="absolute inset-0 rounded-full"
-                style={{
-                  border: '1.5px solid rgba(255, 255, 255, 0.15)',
-                }}
+                className="absolute inset-0 rounded-full border-[1.5px] border-white/15"
               />
 
               {/* Planet wrapper */}
               <div
-                className="absolute inset-0"
+                className="absolute inset-0 animate-[orbit-spin_var(--duration)_linear_infinite]"
                 style={{
-                  animation: `orbit-spin ${planet.duration}s linear infinite`,
+                  '--duration': `${planet.duration}s`,
                   animationDelay: `-${planet.delay}s`,
                 }}
               >
                 {/* Planet positioned at the top of its orbit */}
                 <div
+                  className="absolute left-1/2 -translate-x-1/2 rounded-full w-(--size) h-(--size) -top-(--half-size) bg-[radial-gradient(circle_at_30%_30%,color-mix(in_srgb,var(--color)_40%,white),var(--color)_80%,black)] shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.5)]"
                   style={{
-                    position: 'absolute',
-                    top: -(planet.size / 2),
-                    left: '50%',
-                    marginLeft: -(planet.size / 2),
-                    width: planet.size,
-                    height: planet.size,
-                    borderRadius: '50%',
-                    background: `radial-gradient(circle at 30% 30%, color-mix(in srgb, ${planet.color} 40%, white), ${planet.color} 80%, black)`,
-                    boxShadow: `inset -2px -2px 4px rgba(0,0,0,0.5)`,
+                    '--size': `${planet.size}px`,
+                    '--half-size': `${planet.size / 2}px`,
+                    '--color': planet.color,
                   }}
                 />
-                
+
                 {/* Special case for Saturn's ring */}
                 {planet.name === 'Saturn' && (
                   <div
+                    className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-(--ring-w) h-(--ring-h) border-[3px] border-[rgba(234,214,184,0.6)] rounded-full rotate-x-75 shadow-[0_0_2px_rgba(234,214,184,0.4)]"
                     style={{
-                      position: 'absolute',
-                      top: -(planet.size / 2) + (planet.size / 2), // vertically centered on planet
-                      left: '50%',
-                      width: planet.size * 2.2,
-                      height: planet.size * 0.8,
-                      border: '3px solid rgba(234, 214, 184, 0.6)',
-                      borderRadius: '50%',
-                      transform: 'translate(-50%, -50%) rotateX(75deg)',
-                      boxShadow: '0 0 2px rgba(234, 214, 184, 0.4)',
+                      '--ring-w': `${planet.size * 2.2}px`,
+                      '--ring-h': `${planet.size * 0.8}px`,
                     }}
                   />
                 )}
@@ -164,14 +131,12 @@ const SolarSystem = ({ scale = 1, opacity = 1 }) => {
           return (
             <div
               key={a.id}
-              className="absolute rounded-full"
+              className="absolute rounded-full bg-[#969696]/50 animate-[orbit-spin_var(--duration)_linear_infinite] w-(--size) h-(--size) top-(--top) left-(--left)"
               style={{
-                width: a.size,
-                height: a.size,
-                top: cy - a.size / 2,
-                left: cx - a.size / 2,
-                backgroundColor: 'rgba(150, 150, 150, 0.5)',
-                animation: `orbit-spin ${80 + a.id * 3}s linear infinite`,
+                '--size': `${a.size}px`,
+                '--top': `${cy - a.size / 2}px`,
+                '--left': `${cx - a.size / 2}px`,
+                '--duration': `${80 + a.id * 3}s`,
                 animationDelay: `-${a.id * 4}s`,
                 transformOrigin: `${totalSize / 2 - (cx - a.size / 2)}px ${totalSize / 2 - (cy - a.size / 2)}px`,
               }}

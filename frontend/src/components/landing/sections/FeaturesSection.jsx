@@ -1,8 +1,9 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Sparkles, Zap, Shield } from 'lucide-react';
-import { headingFont } from '../ui/constants';
 import Reveal from '../ui/Reveal';
+
+const headingFont = { fontFamily: "'Outfit', 'Inter', sans-serif" };
 
 const FEATURES = [
   {
@@ -41,17 +42,16 @@ const FeatureCard = ({ icon, title, desc, iconBg, iconColor, i }) => {
       whileHover={{ y: -6, scale: 1.02 }}
     >
       <div
-        className="rounded-2xl p-6 sm:p-8 border transition-all duration-300 hover:shadow-lg"
-        style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-color)' }}
+        className="rounded-2xl p-6 sm:p-8 border transition-all duration-300 hover:shadow-lg bg-(--bg-surface) border-(--border-color) hover:border-(--accent-color) h-50 aspect-video"
       >
         <div
-          className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
-          style={{ backgroundColor: iconBg, color: iconColor }}
+          className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 bg-(--icon-bg) text-(--icon-color)"
+          style={{ '--icon-bg': iconBg, '--icon-color': iconColor }}
         >
           {icon}
         </div>
-        <h3 className="text-lg font-bold mb-2 tracking-tight" style={{ color: 'var(--text-primary)', ...headingFont }}>{title}</h3>
-        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{desc}</p>
+        <h3 className="text-lg font-bold mb-2 tracking-tight text-(--text-primary)" style={headingFont}>{title}</h3>
+        <p className="text-sm leading-relaxed text-(--text-secondary)">{desc}</p>
       </div>
     </motion.div>
   );
@@ -60,9 +60,9 @@ const FeatureCard = ({ icon, title, desc, iconBg, iconColor, i }) => {
 const FeaturesSection = () => (
   <section className="px-5 sm:px-8 py-16 sm:py-24 max-w-6xl mx-auto" id="features">
     <Reveal>
-      <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.15em] text-center mb-3" style={{ color: 'var(--accent-color)' }}>Features</p>
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-center mb-3" style={{ color: 'var(--text-primary)', ...headingFont }}>Built for the future</h2>
-      <p className="text-sm sm:text-base text-center max-w-lg mx-auto mb-12 sm:mb-16 leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+      <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.15em] text-center mb-3 text-(--accent-color)">Features</p>
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-center mb-3 text-(--text-primary)" style={headingFont}>Built for the future</h2>
+      <p className="text-sm sm:text-base text-center max-w-lg mx-auto mb-12 sm:mb-16 leading-relaxed text-(--text-muted)">
         Every detail carefully crafted to deliver the best AI experience possible.
       </p>
     </Reveal>

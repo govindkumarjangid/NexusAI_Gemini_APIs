@@ -1,9 +1,6 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
-/**
- * Reveal — fade + slide-up when the element enters the viewport
- */
 const Reveal = ({ children, className = '', delay = 0 }) => {
   const ref = useRef(null);
   const show = useInView(ref, { once: true, margin: '-80px' });

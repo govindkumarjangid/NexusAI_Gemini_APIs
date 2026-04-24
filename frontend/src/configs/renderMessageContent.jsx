@@ -20,31 +20,16 @@ const CodeBlockComponent = ({ lang, code }) => {
   };
 
   return (
-    <div className="w-full max-w-full overflow-x-auto rounded-lg shadow-lg" style={{ margin: '1.5rem 0', WebkitOverflowScrolling: 'touch', textAlign: 'left' }}>
+    <div className="w-full max-w-full overflow-x-auto rounded-lg shadow-lg my-6 text-left">
       <div
-        className="flex items-center justify-between py-2 px-6 border-b min-w-max w-full"
-        style={{
-          background: isDark ? '#2d2d2d' : '#f0f0f0',
-          borderColor: isDark ? '#1e1e1e' : '#ddd',
-        }}
+        className={`flex items-center justify-between py-2 px-6 border-b min-w-max w-full bg-gray-100 dark:bg-neutral-800 border-gray-300 dark:border-neutral-900`}
       >
-        <span style={{ color: isDark ? '#cccccc' : '#555555', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", fontSize: '0.85rem' }}>
+        <span className={`font-mono text-xs text-gray-600 dark:text-gray-300`}>
           {lang}
         </span>
         <button
           onClick={handleCopy}
-          style={{
-            background: 'transparent',
-            color: isCopied ? '#4bb74a' : (isDark ? '#cccccc' : '#555555'),
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: '0.85rem',
-            transition: 'color 0.2s',
-            fontWeight: 500,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px'
-          }}
+          className={`flex items-center gap-1.5 font-medium text-xs transition-colors ${isCopied ? 'text-green-600' : 'text-gray-600 dark:text-gray-300'} bg-transparent border-0 cursor-pointer`}
         >
           {isCopied ? <Check size={16} /> : <Copy size={16} />}
           {isCopied ? 'Copied!' : 'Copy'}
@@ -86,14 +71,20 @@ export function renderMessageContent(content, isDark) {
     return parts.map((part) => {
       if (part.startsWith('`') && part.endsWith('`')) {
         return (
-          <code key={`ic-${inlineKeyCounter++}`} className="wrap-break-words" style={{ background: isDark ? '#2d3139' : '#e8eaed', color: isDark ? '#7dd3fc' : '#0369a1', borderRadius: '4px', padding: '0.15em 0.35em', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", fontSize: '0.8em', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
+          <code
+            key={`ic-${inlineKeyCounter++}`}
+            className="wrap-break-words bg-[#e8eaed] dark:bg-[#2d3139] text-[#0369a1] dark:text-[#7dd3fc] rounded-[4px] px-[0.35em] py-[0.15em] font-['JetBrains_Mono','Fira_Code',monospace] text-[0.8em] wrap-break-words whitespace-pre-wrap"
+          >
             {part.slice(1, -1)}
           </code>
         );
       }
       if (part.startsWith('**') && part.endsWith('**')) {
         return (
-          <strong key={`ib-${inlineKeyCounter++}`} style={{ fontWeight: 700, color: isDark ? '#ffffff' : '#111827' }}>
+          <strong
+            key={`ib-${inlineKeyCounter++}`}
+            className="font-bold text-[#111827] dark:text-white"
+          >
             {part.slice(2, -2)}
           </strong>
         );
@@ -123,12 +114,18 @@ export function renderMessageContent(content, isDark) {
           const header = tableRows[0].split('|').map((c) => c.trim()).filter(Boolean);
           const rows = tableRows.slice(2).map((r) => r.split('|').map((c) => c.trim()).filter(Boolean));
           textElements.push(
-            <div key={`table-${keyCounter++}`} className="w-full max-w-full overflow-x-auto" style={{ margin: '1.5em 0', WebkitOverflowScrolling: 'touch', textAlign: 'left' }}>
-              <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 'max-content', fontFamily: "'JetBrains Mono', 'Fira Code', monospace", background: isDark ? '#181a1b' : '#fafafa', color: isDark ? '#e6e6e6' : '#1a1a1a', borderRadius: '8px', overflow: 'hidden', fontSize: '0.92em', textAlign: 'left' }}>
+            <div
+              key={`table-${keyCounter++}`}
+              className="w-full max-w-full overflow-x-auto my-[1.5em] text-left touch-pan-x"
+            >
+              <table className="border-collapse w-full min-w-max font-['JetBrains_Mono','Fira_Code',monospace] bg-[#fafafa] dark:bg-[#181a1b] text-[#1a1a1a] dark:text-[#e6e6e6] rounded-[8px] overflow-hidden text-[0.92em] text-left">
                 <thead>
                   <tr>
                     {header.map((cell, idx) => (
-                      <th key={idx} style={{ border: isDark ? '1px solid #333' : '1px solid #e5e7eb', padding: '0.6em 1em', background: isDark ? '#23272f' : '#f3f4f6', fontWeight: 700, textAlign: 'left', fontSize: '1.05em', color: isDark ? '#fff' : '#111827' }}>
+                      <th
+                        key={idx}
+                        className="border border-[#e5e7eb] dark:border-[#333] px-[1em] py-[0.6em] bg-[#f3f4f6] dark:bg-[#23272f] font-bold text-left text-[1.05em] text-[#111827] dark:text-white"
+                      >
                         {parseInline(cell)}
                       </th>
                     ))}
@@ -138,7 +135,10 @@ export function renderMessageContent(content, isDark) {
                   {rows.map((row, ridx) => (
                     <tr key={ridx}>
                       {row.map((cell, cidx) => (
-                        <td key={cidx} style={{ border: isDark ? '1px solid #333' : '1px solid #e5e7eb', padding: '0.6em 1em', background: isDark ? (ridx % 2 === 0 ? '#23272f' : '#202124') : (ridx % 2 === 0 ? '#ffffff' : '#f9fafb'), verticalAlign: 'top', color: isDark ? '#e6e6e6' : '#374151', textAlign: 'left' }}>
+                        <td
+                          key={cidx}
+                          className={`border border-[#e5e7eb] dark:border-[#333] px-[1em] py-[0.6em] ${ridx % 2 === 0 ? 'bg-white dark:bg-[#23272f]' : 'bg-[#f9fafb] dark:bg-[#202124]'} align-top text-[#374151] dark:text-[#e6e6e6] text-left`}
+                        >
                           {parseInline(cell)}
                         </td>
                       ))}
@@ -157,7 +157,7 @@ export function renderMessageContent(content, isDark) {
       const headingMatch = line.match(/^(#{1,6})\s+(.*)/);
       if (headingMatch) {
         if (inList) {
-          textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.5em', margin: '0.5em 0', textAlign: 'left' }}>{listItems}</ul>);
+          textElements.push(<ul key={`ul-${keyCounter++}`} className="pl-[1.5em] my-[0.5em] text-left">{listItems}</ul>);
           inList = false;
           listItems = [];
         }
@@ -166,20 +166,24 @@ export function renderMessageContent(content, isDark) {
         const headingText = headingMatch[2];
 
         let Tag = 'h3';
-        let fontSize = '1.2em';
+        let tailwindFontSize = 'text-xl';
 
         if (hashCount === 2) {
           Tag = 'h1';
-          fontSize = '1.8em';
+          tailwindFontSize = 'text-3xl';
         } else if (hashCount === 3) {
           Tag = 'h2';
-          fontSize = '1.5em';
-        } else {
-          Tag = `h${Math.min(hashCount, 6)}`;
+          tailwindFontSize = 'text-2xl';
+        } else if (hashCount === 1) {
+          Tag = 'h1';
+          tailwindFontSize = 'text-4xl';
         }
 
         textElements.push(
-          <Tag key={`h-${keyCounter++}`} style={{ fontWeight: 700, fontSize: fontSize, marginTop: '1.2em', marginBottom: '0.5em', color: isDark ? '#ffffff' : '#111827', wordBreak: 'break-word', textAlign: 'left' }}>
+          <Tag
+            key={`h-${keyCounter++}`}
+            className={`font-bold ${tailwindFontSize} mt-[1.2em] mb-[0.5em] text-[#111827] dark:text-white wrap-break-words text-left`}
+          >
             {parseInline(headingText)}
           </Tag>
         );
@@ -187,7 +191,7 @@ export function renderMessageContent(content, isDark) {
       }
 
       if (/^\s*-{3,}\s*$/.test(line)) {
-        textElements.push(<hr key={`hr-${keyCounter++}`} style={{ border: 0, borderTop: isDark ? '1px solid #3a3f4b' : '1px solid #e5e7eb', margin: '1.5em 0' }} />);
+        textElements.push(<hr key={`hr-${keyCounter++}`} className="border-0 border-t border-[#e5e7eb] dark:border-[#3a3f4b] my-[1.5em]" />);
         continue;
       }
 
@@ -198,7 +202,10 @@ export function renderMessageContent(content, isDark) {
         inList = true;
         let cleanLine = isStandardBullet ? line.replace(/^\s*([*-])\s+/, '') : line.trim();
         listItems.push(
-          <li key={`li-${keyCounter++}`} className="wrap-break-words" style={{ marginBottom: '0.4em', color: isDark ? '#d1d5db' : '#4b5563', lineHeight: '1.6', marginLeft: '0.5em', wordBreak: 'break-word', textAlign: 'left' }}>
+          <li
+            key={`li-${keyCounter++}`}
+            className="wrap-break-words mb-[0.4em] text-[#4b5563] dark:text-[#d1d5db] leading-[1.6] ml-[0.5em] wrap-break-words text-left"
+          >
             {parseInline(cleanLine)}
           </li>
         );
@@ -206,21 +213,24 @@ export function renderMessageContent(content, isDark) {
       }
 
       if (inList && line.trim() !== '') {
-        textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.5em', marginBottom: '1.2em', textAlign: 'left' }}>{listItems}</ul>);
+        textElements.push(<ul key={`ul-${keyCounter++}`} className="pl-[1.5em] mb-[1.2em] text-left">{listItems}</ul>);
         inList = false;
         listItems = [];
       }
 
       if (line.trim() !== '') {
         textElements.push(
-          <p key={`p-${keyCounter++}`} className="wrap-break-words" style={{ margin: '0.6em 0', color: isDark ? '#d1d5db' : '#4b5563', lineHeight: '1.6', wordBreak: 'break-word', textAlign: 'left' }}>
+          <p
+            key={`p-${keyCounter++}`}
+            className="wrap-break-words my-[0.6em] text-[#4b5563] dark:text-[#d1d5db] leading-[1.6] wrap-break-words text-left"
+          >
             {parseInline(line)}
           </p>
         );
       }
     }
 
-    if (inList) textElements.push(<ul key={`ul-${keyCounter++}`} style={{ paddingLeft: '1.5em', marginBottom: '1.2em', textAlign: 'left' }}>{listItems}</ul>);
+    if (inList) textElements.push(<ul key={`ul-${keyCounter++}`} className="pl-[1.5em] mb-[1.2em] text-left">{listItems}</ul>);
     return textElements;
   };
 
@@ -245,5 +255,5 @@ export function renderMessageContent(content, isDark) {
   const textAfter = content.slice(lastIndex);
   if (textAfter.trim()) elements.push(...parseMarkdownText(textAfter));
 
-  return <div style={{ textAlign: 'left', width: '100%' }}>{elements}</div>;
+  return <div className="text-left w-full">{elements}</div>;
 }

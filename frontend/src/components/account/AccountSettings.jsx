@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Trash2 } from "lucide-react";
+import { Trash2, LoaderIcon } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import useAuthStore from "../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 export default function AccountSettings() {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -24,18 +25,18 @@ export default function AccountSettings() {
 
     return (
         <div className="space-y-6 rounded-2xl p-2">
-            <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Account</h2>
+            <h2 className="text-xl font-semibold mb-4 text-(--text-primary)">Account</h2>
             <div className="flex items-center justify-between">
-                <span style={{ color: 'var(--text-secondary)' }}>Name</span>
-                <span style={{ color: 'var(--text-primary)' }}>{mockUser.name}</span>
+                <span className="text-(--text-secondary)">Name</span>
+                <span className="text-(--text-primary)">{mockUser.name}</span>
             </div>
             <div className="flex items-center justify-between">
-                <span style={{ color: 'var(--text-secondary)' }}>Email</span>
-                <span style={{ color: 'var(--text-primary)' }}>{mockUser.email}</span>
+                <span className="text-(--text-secondary)">Email</span>
+                <span className="text-(--text-primary)">{mockUser.email}</span>
             </div>
-            <div className="flex items-center justify-between border-b pb-6" style={{ borderColor: 'var(--border-color)' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Last Login</span>
-                <span style={{ color: 'var(--text-primary)' }}>{mockUser.lastLogin}</span>
+            <div className="flex items-center justify-between border-b pb-6 border-(--border-color)">
+                <span className="text-(--text-secondary)">Last Login</span>
+                <span className="text-(--text-primary)">{mockUser.lastLogin}</span>
             </div>
             <div className="pt-4">
                 <button
@@ -60,16 +61,12 @@ export default function AccountSettings() {
                             animate={{ y: 0, opacity: 1, scale: 1 }}
                             exit={{ y: 20, opacity: 0, scale: 0.9 }}
                             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                            className="rounded-t-3xl sm:rounded-2xl p-8 pb-10 sm:pb-8 shadow-2xl w-full sm:max-w-sm text-center border"
-                            style={{
-                                backgroundColor: 'var(--bg-panel)',
-                                borderColor: 'var(--border-color)',
-                            }}
+                            className="rounded-t-3xl sm:rounded-2xl p-8 pb-10 sm:pb-8 shadow-2xl w-full sm:max-w-sm text-center border bg-(--bg-panel) border-(--border-color)"
                         >
-                            <h3 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
+                            <h3 className="text-lg font-semibold mb-3 text-(--text-primary)">
                                 Delete Account?
                             </h3>
-                            <p className="mb-6 text-sm wrap-break-word line-clamp-1" style={{ color: 'var(--text-secondary)' }}>
+                            <p className="mb-6 text-sm wrap-break-word line-clamp-1 text-(--text-secondary)">
                                 This action cannot be undone. All your chats will be permanently deleted.
                             </p>
                             <input
@@ -79,17 +76,11 @@ export default function AccountSettings() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="Enter your password"
-                                className="w-full peer dark:bg-[#131314] bg-gray-50 border dark:border-gray-100/20 border-gray-300 dark:focus:border-gray-100/50 focus:border-gray-400 focus:ring-3 dark:focus:ring-gray-100/20 focus:ring-gray-200 rounded-lg py-2 px-4 outline-none dark:placeholder-gray-400 placeholder-gray-400 transition-colors duration-200 dark:text-gray-100 text-gray-900 mb-4"
+                                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)] mb-6"
                             />
                             <div className="flex justify-center gap-3">
                                 <button
-                                    className="px-6 py-2 rounded-full transition-colors cursor-pointer"
-                                    style={{
-                                        backgroundColor: 'var(--bg-elevated)',
-                                        color: 'var(--text-primary)',
-                                    }}
-                                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--bg-hover)'}
-                                    onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--bg-elevated)'}
+                                    className="px-6 py-2 rounded-full transition-colors cursor-pointer bg-(--bg-elevated) text-(--text-primary) hover:bg-(--bg-hover)"
                                     onClick={() => setShowDeleteConfirm(false)}
                                 >
                                     Cancel
@@ -103,7 +94,7 @@ export default function AccountSettings() {
                                         <div className="flex items-center gap-2 justify-center">
                                             <LoaderIcon
                                                 size={20}
-                                                className="h-7 w-7 animate-spin text-white"
+                                                className="animate-spin text-white"
                                             />
                                             <span>Deleting...</span>
                                         </div>

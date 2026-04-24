@@ -1,6 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, MessageCircle, X } from 'lucide-react';
-import { useState } from 'react';
 
 const RecentChatsSidebar = ({
     open, onClose, chats, onChatClick, onLoadMore, hasMore
@@ -22,14 +21,12 @@ const RecentChatsSidebar = ({
                     animate={{ x: 0 }}
                     exit={{ x: '100%' }}
                     transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                    className="fixed top-0 right-0 h-full w-120 max-w-full border-l shadow-2xl flex flex-col z-70"
-                    style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-color)', color: 'var(--text-primary)' }}
+                    className="fixed top-0 right-0 h-full w-120 max-w-full border-l shadow-2xl flex flex-col z-70 bg-(--bg-surface) border-(--border-color) text-(--text-primary)"
                 >
                     <div className="flex items-center justify-between p-6 pb-4">
-                        <span className="font-semibold text-2xl" style={{ color: 'var(--text-primary)' }}>Recent Chats</span>
+                        <span className="font-semibold text-2xl text-(--text-primary)">Recent Chats</span>
                         <button
-                            className="p-2 cursor-pointer rounded-full transition-colors hover:opacity-80"
-                            style={{ color: 'var(--text-secondary)' }}
+                            className="p-2 cursor-pointer rounded-full transition-colors hover:opacity-80 text-(--text-secondary)"
                             onClick={onClose}
                             title="Close"
                         >
@@ -48,10 +45,7 @@ const RecentChatsSidebar = ({
                             return (
                                 <button
                                     key={chat._id}
-                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-full transition-colors text-left mb-1 shadow-sm group cursor-pointer hover:opacity-80"
-                                    style={{ color: 'var(--text-secondary)' }}
-                                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--bg-elevated)'}
-                                    onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
+                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-full transition-colors text-left mb-1 shadow-sm group cursor-pointer hover:opacity-80 text-(--text-secondary) hover:bg-(--bg-elevated)"
                                     onClick={() => onChatClick(chat)}
                                 >
                                     <div className="flex items-center justify-center w-9 h-9 rounded-full bg-accent text-white font-bold text-lg shrink-0">

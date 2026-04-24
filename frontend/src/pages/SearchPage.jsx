@@ -60,16 +60,14 @@ const SearchPage = () => {
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-          className="fixed top-0 right-0 h-full w-full sm:w-112.5 md:w-137.5 border-l z-70 flex flex-col shadow-2xl"
-          style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-color)', color: 'var(--text-primary)' }}
+          className="fixed top-0 right-0 h-full w-full sm:w-112.5 md:w-137.5 border-l z-70 flex flex-col shadow-2xl bg-(--bg-surface) border-(--border-color) text-(--text-primary)"
         >
           {/* Header */}
           <div className="p-6 flex items-center justify-between pb-2">
-            <h2 className="text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>Search</h2>
+            <h2 className="text-2xl font-semibold text-(--text-primary)">Search</h2>
             <button
               onClick={() => setIsSearchOpen(false)}
-              className="p-2 cursor-pointer rounded-full transition-colors hover:opacity-80"
-              style={{ color: 'var(--text-secondary)' }}
+              className="p-2 cursor-pointer rounded-full transition-colors hover:opacity-80 text-(--text-secondary)"
             >
               <X size={24} />
             </button>
@@ -78,19 +76,14 @@ const SearchPage = () => {
           {/* Search Input */}
           <div className="px-6 py-4">
             <div className="relative group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 transition-colors" style={{ color: 'var(--text-muted)' }} />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 transition-colors text-(--text-muted)" />
               <input
                 type="text"
                 placeholder="Search for chats"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 autoFocus
-                className="w-full text-[15px] rounded-full pl-12 pr-4 py-3.5 focus:outline-none border transition-colors"
-                style={{
-                  backgroundColor: 'var(--bg-elevated)',
-                  color: 'var(--text-primary)',
-                  borderColor: 'var(--border-color)',
-                }}
+                className="w-full text-[15px] rounded-full pl-12 pr-4 py-3.5 focus:outline-none border transition-colors bg-(--bg-elevated) text-(--text-primary) border-(--border-color)"
               />
             </div>
           </div>
@@ -98,21 +91,18 @@ const SearchPage = () => {
           {/* Results List */}
           <div className="flex-1 overflow-y-auto px-4 custom-scrollbar">
             <div className="px-2 py-3">
-              <p className="text-[15px] font-semibold mb-3 px-2" style={{ color: 'var(--text-primary)' }}>Chats</p>
+              <p className="text-[15px] font-semibold mb-3 px-2 text-(--text-primary)">Chats</p>
               <div className="space-y-1">
                 {isLoading ? (
-                  <div className="dark:text-gray-400 text-gray-500 px-4 py-3" style={{ color: 'var(--text-muted)' }}>Loading...</div>
+                  <div className="dark:text-gray-400  px-4 py-3 text-(--text-muted)">Loading...</div>
                 ) : filteredChats.length === 0 ? (
-                  <div className="px-4 py-3" style={{ color: 'var(--text-muted)' }}>No chats found.</div>
+                  <div className="px-4 py-3 text-(--text-muted)">No chats found.</div>
                 ) : (
                   <>
                     {paginatedChats.map((chat) => (
                       <div
                         key={chat._id}
-                        className="flex items-center justify-between px-4 py-3 rounded-full cursor-pointer transition-colors hover:opacity-80"
-                        style={{ color: 'var(--text-secondary)' }}
-                        onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--bg-elevated)'}
-                        onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
+                        className="flex items-center justify-between px-4 py-3 rounded-full cursor-pointer transition-colors hover:opacity-80 text-(--text-secondary) hover:bg-(--bg-elevated)"
                         onClick={() => {
                           setCurrentChat(chat);
                           setIsSearchOpen(false);

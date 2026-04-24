@@ -33,15 +33,15 @@ export default function Modal({ open, onClose, children }) {
     }, [open]);
 
     const mobileVariants = {
-        hidden:  { y: "100%", opacity: 0 },
-        visible: { y: 0,      opacity: 1, transition: { type: "spring", damping: 28, stiffness: 260 } },
-        exit:    { y: "100%", opacity: 0, transition: { duration: 0.22, ease: "easeIn" } },
+        hidden: { y: "100%", opacity: 0 },
+        visible: { y: 0, opacity: 1, transition: { type: "spring", damping: 28, stiffness: 260 } },
+        exit: { y: "100%", opacity: 0, transition: { duration: 0.22, ease: "easeIn" } },
     };
 
     const desktopVariants = {
-        hidden:  { opacity: 0, scale: 0.95, y: -8 },
-        visible: { opacity: 1, scale: 1,    y: 0,  transition: { type: "spring", damping: 24, stiffness: 300 } },
-        exit:    { opacity: 0, scale: 0.95, y: -8, transition: { duration: 0.18, ease: "easeIn" } },
+        hidden: { opacity: 0, scale: 0.95, y: -8 },
+        visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", damping: 24, stiffness: 300 } },
+        exit: { opacity: 0, scale: 0.95, y: -8, transition: { duration: 0.18, ease: "easeIn" } },
     };
 
     const variants = isMobile ? mobileVariants : desktopVariants;
@@ -69,18 +69,11 @@ export default function Modal({ open, onClose, children }) {
                             initial="hidden"
                             animate="visible"
                             exit="exit"
-                            className="relative w-full sm:max-w-2xl rounded-t-3xl sm:rounded-2xl shadow-2xl border overflow-hidden flex flex-col"
-                            style={{
-                                backgroundColor: "var(--bg-panel)",
-                                borderColor: "var(--border-color)",
-                                color: "var(--text-primary)",
-                                maxHeight: "92dvh",
-                            }}
+                            className="relative w-full sm:max-w-2xl rounded-t-3xl sm:rounded-2xl shadow-2xl border overflow-hidden flex flex-col bg-(--bg-panel) border-(--border-color) text-(--text-primary) max-h-[92dvh]"
                         >
                             {/* Close button */}
                             <button
-                                className="absolute top-3 right-3 z-10 cursor-pointer rounded-full transition-colors p-1.5"
-                                style={{ backgroundColor: "var(--bg-elevated)", color: "var(--text-secondary)" }}
+                                className="absolute top-3 right-3 z-10 cursor-pointer rounded-full transition-colors p-1.5 bg-(--bg-elevated) text-(--text-secondary)"
                                 onMouseEnter={e => e.currentTarget.style.backgroundColor = "var(--bg-hover)"}
                                 onMouseLeave={e => e.currentTarget.style.backgroundColor = "var(--bg-elevated)"}
                                 onClick={onClose}

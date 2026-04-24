@@ -80,22 +80,18 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
               animate="visible"
               exit="exit"
               className={
-                isMobile
-                  ? 'fixed bottom-0 left-0 right-0 z-50 rounded-t-3xl shadow-2xl border-t overflow-hidden'
+                `z-50 shadow-2xl border overflow-hidden bg-(--bg-panel) border-(--border-color) text-(--text-primary) ${isMobile
+                  ? 'fixed bottom-0 left-0 right-0 rounded-t-3xl border-t'
                   : sidebarOpen
-                    ? 'absolute bottom-full left-2 right-2 mb-2 z-50 rounded-2xl shadow-2xl border overflow-hidden'
-                    : 'absolute bottom-0 left-full ml-2 w-64 z-50 rounded-2xl shadow-2xl border overflow-hidden'
+                    ? 'absolute bottom-full left-2 right-2 mb-2 rounded-2xl'
+                    : 'absolute bottom-0 left-full ml-2 w-64 rounded-2xl'
+                }`
               }
-              style={{
-                backgroundColor: 'var(--bg-panel)',
-                borderColor: 'var(--border-color)',
-                color: 'var(--text-primary)',
-              }}
             >
-              {/* Mobile drag handle */}
+              {/* Mobile handle */}
               {isMobile && (
                 <div className="flex justify-center pt-3 pb-1">
-                  <div className="w-10 h-1 rounded-full opacity-30" style={{ backgroundColor: 'var(--text-primary)' }} />
+                  <div className="w-10 h-1 rounded-full opacity-30 bg-(--text-primary)" />
                 </div>
               )}
 
@@ -107,26 +103,23 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
                   {initial}
                 </div>
                 <div className="min-w-0">
-                  <p className="font-semibold text-sm truncate" style={{ color: 'var(--text-primary)' }}>
+                  <p className="font-semibold text-sm truncate text-(--text-primary)">
                     {user?.name || 'User'}
                   </p>
-                  <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>
+                  <p className="text-xs truncate text-(--text-muted)">
                     {user?.email || ''}
                   </p>
                 </div>
               </div>
 
               {/* Divider */}
-              <div className="mx-4 border-t" style={{ borderColor: 'var(--border-color)' }} />
+              <div className="mx-4 border-t border-(--border-color)" />
 
               {/* Actions */}
               <div className="p-2">
                 <button
                   onClick={() => { setPopupOpen(false); setShowSettings(true); }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-full text-sm transition-all cursor-pointer hover:opacity-80"
-                  style={{ color: 'var(--text-secondary)' }}
-                  onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--bg-elevated)'}
-                  onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-full text-sm transition-all cursor-pointer hover:opacity-80 text-(--text-secondary) hover:bg-(--bg-elevated)"
                 >
                   <Settings size={18} />
                   <span>Preferences</span>
@@ -134,27 +127,23 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
 
                 <button
                   onClick={() => { setPopupOpen(false); handleLogout(); }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-full text-sm transition-all cursor-pointer hover:text-red-400 hover:bg-red-500/10"
-                  style={{ color: 'var(--text-secondary)' }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-full text-sm transition-all cursor-pointer hover:text-red-400 hover:bg-red-500/10 text-(--text-secondary)"
                 >
                   <LogOut size={18} />
                   <span>Log out</span>
                 </button>
               </div>
-
-              {/* Safe area for mobile */}
               {isMobile && <div className="pb-safe h-4" />}
             </motion.div>
           </>
         )}
       </AnimatePresence>
 
-      {/* ── Profile Button (combined) ── */}
+      {/* Profile Button */}
       <button
         ref={buttonRef}
         onClick={() => setPopupOpen(v => !v)}
-        className="w-full flex items-center rounded-full cursor-pointer transition-all text-sm h-11 overflow-hidden hover:opacity-80"
-        style={{ color: 'var(--text-secondary)' }}
+        className="w-full flex items-center rounded-full cursor-pointer transition-all text-sm h-11 overflow-hidden hover:opacity-80 text-(--text-secondary)"
         title={!sidebarOpen ? 'Profile & Settings' : ''}
       >
         {/* Avatar circle */}
@@ -165,10 +154,10 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
         </div>
         {sidebarOpen && (
           <div className="min-w-0 flex flex-col items-start pr-3">
-            <span className="font-medium text-sm truncate w-full" style={{ color: 'var(--text-primary)' }}>
+            <span className="font-medium text-sm truncate w-full text-(--text-primary)">
               {user?.name || 'Profile'}
             </span>
-            <span className="text-xs truncate w-full" style={{ color: 'var(--text-muted)' }}>
+            <span className="text-xs truncate w-full text-(--text-muted)">
               {user?.email || ''}
             </span>
           </div>

@@ -19,18 +19,13 @@ export default function GeneralSettings() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>General Settings</h2>
+      <h2 className="text-xl font-semibold mb-4 text-(--text-primary)">General Settings</h2>
 
       {/* Appearance */}
       <div className="flex items-center justify-between">
-        <span style={{ color: 'var(--text-secondary)' }}>Appearance</span>
+        <span className="text-(--text-secondary)">Appearance</span>
         <select
-          className="rounded-full px-3 py-2 outline-none border text-sm cursor-pointer"
-          style={{
-            backgroundColor: 'var(--bg-elevated)',
-            color: 'var(--text-primary)',
-            borderColor: 'var(--border-color)',
-          }}
+          className="rounded-full px-3 py-2 outline-none border text-sm cursor-pointer bg-(--bg-elevated) text-(--text-primary) border-(--border-color)"
           value={theme}
           onChange={e => setTheme(e.target.value)}
         >
@@ -42,14 +37,9 @@ export default function GeneralSettings() {
 
       {/* Contrast */}
       <div className="flex items-center justify-between">
-        <span style={{ color: 'var(--text-secondary)' }}>Contrast</span>
+        <span className="text-(--text-secondary)">Contrast</span>
         <select
-          className="rounded-full px-3 py-2 outline-none border text-sm cursor-pointer"
-          style={{
-            backgroundColor: 'var(--bg-elevated)',
-            color: 'var(--text-primary)',
-            borderColor: 'var(--border-color)',
-          }}
+          className="rounded-full px-3 py-2 outline-none border text-sm cursor-pointer bg-(--bg-elevated) text-(--text-primary) border-(--border-color)"
           value={contrast}
           onChange={e => setContrast(e.target.value)}
         >
@@ -61,21 +51,18 @@ export default function GeneralSettings() {
 
       {/* Accent Color */}
       <div className="space-y-3">
-        <span style={{ color: 'var(--text-secondary)' }}>Accent Color</span>
+        <span className="text-(--text-secondary)">Accent Color</span>
         <div className="flex items-center gap-3 flex-wrap mt-4">
           {ACCENT_COLORS.map(c => (
             <button
               key={c.value}
               title={c.name}
               onClick={() => setAccentColor(c.value)}
-              className={`w-5 h-5 rounded-full border-2 transition-all duration-200 cursor-pointer hover:scale-110 ${accentColor === c.value
-                  ? 'scale-110 shadow-lg ring-2 ring-offset-2 ring-offset-(--bg-panel)'
+              className={`w-5 h-5 rounded-full border-2 transition-all duration-200 cursor-pointer hover:scale-110 bg-(--c) ${accentColor === c.value
+                  ? 'scale-110 shadow-lg ring-2 ring-offset-2 ring-offset-(--bg-panel) border-(--text-primary)'
                   : 'border-transparent hover:border-gray-400'
                 }`}
-              style={{
-                background: c.color,
-                borderColor: accentColor === c.value ? 'var(--text-primary)' : undefined,
-              }}
+              style={{ '--c': c.color }}
             />
           ))}
         </div>
@@ -83,14 +70,9 @@ export default function GeneralSettings() {
 
       {/* Language */}
       <div className="flex items-center justify-between">
-        <span style={{ color: 'var(--text-secondary)' }}>Language</span>
+        <span className="text-(--text-secondary)">Language</span>
         <select
-          className="rounded-full px-3 py-2 outline-none border text-sm cursor-pointer"
-          style={{
-            backgroundColor: 'var(--bg-elevated)',
-            color: 'var(--text-primary)',
-            borderColor: 'var(--border-color)',
-          }}
+          className="rounded-full px-3 py-2 outline-none border text-sm cursor-pointer bg-(--bg-elevated) text-(--text-primary) border-(--border-color)"
           value={language}
           onChange={e => setLanguage(e.target.value)}
         >

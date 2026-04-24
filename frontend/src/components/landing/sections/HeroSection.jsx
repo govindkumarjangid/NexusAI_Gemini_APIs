@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronRight } from 'lucide-react';
-import { headingFont } from '../ui/constants';
 import SolarSystem from '../ui/SolarSystem';
+
+const headingFont = { fontFamily: "'Outfit', 'Inter', sans-serif" };
 
 const HeroSection = ({ heroY, heroOpacity, heroScale, orbScale, orbOpacity }) => (
   <section className="min-h-screen flex flex-col items-center justify-center px-5 sm:px-8 pt-24 pb-16 relative overflow-hidden">
@@ -22,12 +23,14 @@ const HeroSection = ({ heroY, heroOpacity, heroScale, orbScale, orbOpacity }) =>
     ].map((p, j) => (
       <div
         key={j}
-        className="absolute rounded-full pointer-events-none"
+        className="absolute rounded-full pointer-events-none bg-color-mix(in_srgb,var(--accent-color)_40%,transparent) animate-[particle-drift_var(--dur)_ease-in-out_infinite_var(--del)] w-(--w) h-(--w) top-(--top) left-(--left) right-(--right)"
         style={{
-          top: p.top, left: p.left, right: p.right,
-          width: p.w, height: p.w,
-          backgroundColor: 'color-mix(in srgb, var(--accent-color) 40%, transparent)',
-          animation: `particle-drift ${p.dur} ease-in-out infinite ${p.del || '0s'}`,
+          '--top': p.top,
+          '--left': p.left,
+          '--right': p.right,
+          '--w': `${p.w}px`,
+          '--dur': p.dur,
+          '--del': p.del || '0s',
         }}
       />
     ))}
@@ -42,36 +45,29 @@ const HeroSection = ({ heroY, heroOpacity, heroScale, orbScale, orbOpacity }) =>
         transition={{ duration: 0.7, delay: 0.2 }}
       >
         <div
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold border mb-8 backdrop-blur-3xl"
-          style={{
-            backgroundColor: 'color-mix(in srgb, var(--accent-color) 8%, transparent)',
-            color: 'var(--accent-color)',
-            borderColor: 'color-mix(in srgb, var(--accent-color) 18%, transparent)',
-          }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold border mb-8 backdrop-blur-3xl bg-color-mix(in_srgb,var(--accent-color)_8%,transparent) text-(--accent-color) border-color-mix(in_srgb,var(--accent-color)_18%,transparent)"
         >
           <span
-            className="w-1.5 h-1.5 rounded-full animate-[pulse-dot_2s_ease-in-out_infinite]"
-            style={{ backgroundColor: '#22c55e' }}
+            className="w-1.5 h-1.5 rounded-full animate-[pulse-dot_2s_ease-in-out_infinite] bg-[#22c55e]"
           />
           Powered by Advanced AI
         </div>
       </motion.div>
 
       <motion.h1
-        className="text-[clamp(2.5rem,8vw,5rem)] font-black tracking-[-0.04em] text-center mb-4 sm:mb-6 leading-[1.08] max-w-4xl"
+        className="text-[clamp(2.5rem,8vw,5rem)] font-bold tracking-[-0.01em] text-center mb-4 sm:mb-6 leading-[1.1] max-w-4xl"
         style={headingFont}
         initial={{ opacity: 0, y: 35, rotateX: 12 }}
         animate={{ opacity: 1, y: 0, rotateX: 0 }}
         transition={{ duration: 0.9, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
       >
-        <span style={{ color: 'var(--text-primary)' }}>The Future of </span>
+        <span className="text-(--text-primary)">The Future of </span>
         <span className="gradient-accent-text">AI Conversation</span>
       </motion.h1>
 
       {/* Subtitle */}
       <motion.p
-        className="text-sm sm:text-base md:text-lg text-center max-w-xl mb-8 leading-relaxed"
-        style={{ color: 'var(--text-secondary)' }}
+        className="text-sm sm:text-base md:text-lg text-center max-w-xl mb-8 leading-relaxed text-(--text-secondary)"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.6 }}
@@ -89,22 +85,13 @@ const HeroSection = ({ heroY, heroOpacity, heroScale, orbScale, orbOpacity }) =>
       >
         <Link
           to="/register"
-          className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 hover:-translate-y-0.5 active:scale-95 group"
-          style={{
-            backgroundColor: 'var(--accent-color)',
-            color: 'var(--accent-text-color)',
-          }}
+          className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 hover:-translate-y-0.5 active:scale-95 group bg-(--accent-color) text-(--accent-text-color)"
         >
-          Get Started Free <ArrowRight size={17}  className='group-hover:translate-x-1.5 transition-transform duration-300'/>
+          Get Started Free <ArrowRight size={17} className='group-hover:translate-x-1.5 transition-transform duration-300' />
         </Link>
         <Link
           to="/login"
-          className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base border transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-sm group"
-          style={{
-            color: 'var(--text-secondary)',
-            borderColor: 'var(--border-color)',
-            backgroundColor: 'color-mix(in srgb, var(--bg-surface) 50%, transparent)',
-          }}
+          className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base border transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-sm group text-(--text-secondary) border-(--border-color) bg-color-mix(in_srgb,var(--bg-surface)_50%,transparent)"
         >
           Sign In <ChevronRight size={17} className='group-hover:translate-x-1.5 transition-transform duration-300' />
         </Link>

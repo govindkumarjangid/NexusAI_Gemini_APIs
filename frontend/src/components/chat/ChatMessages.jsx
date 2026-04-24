@@ -42,7 +42,7 @@ const ChatMessages = ({ messages, isStreaming }) => {
                                         : 'dark:text-gray-200 text-gray-800 px-1 py-2 sm:px-4 sm:py-3 leading-relaxed w-full'
                                         }`}
                                 >
-                                    <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words w-full overflow-hidden" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
+                                    <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words wrap:anywhere w-full overflow-hidden">
                                         {renderMessageContent(msg.content || msg.text, isDark)}
                                     </div>
                                 </div>
