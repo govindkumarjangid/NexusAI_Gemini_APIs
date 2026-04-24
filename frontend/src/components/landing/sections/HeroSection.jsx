@@ -1,18 +1,13 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronRight } from 'lucide-react';
-import SolarSystem from '../ui/SolarSystem';
 
 const headingFont = { fontFamily: "'Outfit', 'Inter', sans-serif" };
 
-const HeroSection = ({ heroY, heroOpacity, heroScale, orbScale, orbOpacity }) => (
+const HeroSection = ({ heroY, heroOpacity, heroScale }) => (
   <section className="min-h-screen flex flex-col items-center justify-center px-5 sm:px-8 pt-24 pb-16 relative overflow-hidden">
 
     <div className="landing-grid-bg absolute inset-0 pointer-events-none" />
-
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      <SolarSystem scale={orbScale} opacity={orbOpacity} />
-    </div>
 
     {[
       { top: '18%', left: '10%', w: 3, dur: '6s' },

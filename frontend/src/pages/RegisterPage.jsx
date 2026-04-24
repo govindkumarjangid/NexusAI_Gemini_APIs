@@ -67,7 +67,7 @@ const RegisterPage = () => {
               type="text"
               name="name"
               placeholder="John Doe"
-              value={formData.name} onChange={handleChange} required autoComplete="name"
+              value={formData.name} onChange={handleChange} autoComplete="name"
               className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)]"
             />
           </motion.div>
@@ -83,7 +83,7 @@ const RegisterPage = () => {
               type="email"
               name="email"
               placeholder="you@example.com"
-              value={formData.email} onChange={handleChange} required autoComplete="email"
+              value={formData.email} onChange={handleChange}  autoComplete="email"
               className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)]"
             />
           </motion.div>
@@ -99,7 +99,7 @@ const RegisterPage = () => {
               type="password"
               name="password"
               placeholder="••••••••"
-              value={formData.password} onChange={handleChange} required autoComplete="new-password"
+              value={formData.password} onChange={handleChange} autoComplete="new-password"
               className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)]"
             />
           </motion.div>

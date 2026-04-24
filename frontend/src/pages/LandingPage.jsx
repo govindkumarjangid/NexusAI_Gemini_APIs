@@ -6,6 +6,7 @@ import FeaturesSection from '../components/landing/sections/FeaturesSection';
 import HowItWorksSection from '../components/landing/sections/HowItWorksSection';
 import TestimonialsSection from '../components/landing/sections/TestimonialsSection';
 import CTASection from '../components/landing/sections/CTASection';
+import SolarSystem from '../components/landing/ui/SolarSystem';
 
 const LandingPage = () => {
 
@@ -13,10 +14,10 @@ const LandingPage = () => {
 
   const heroY = useTransform(scrollYProgress, [0, 0.3], [0, -100]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.22], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.22], [1, 0.92]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.92]);
 
-  const orbScale = useTransform(scrollYProgress, [0, 0.3], [1, 1.3]);
-  const orbOpacity = useTransform(scrollYProgress, [0, 0.28], [1, 0]);
+  const orbScale = useTransform(scrollYProgress, [0, 0.4], [1, 1.1]);
+  const orbOpacity = useTransform(scrollYProgress, [0, 0.28], [1, 1]);
 
   return (
     <div
@@ -24,24 +25,29 @@ const LandingPage = () => {
     >
       <LandingNav />
 
-      <HeroSection
-        heroY={heroY}
-        heroOpacity={heroOpacity}
-        heroScale={heroScale}
-        orbScale={orbScale}
-        orbOpacity={orbOpacity}
-      />
+      {/* Fixed Solar System Background */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <SolarSystem scale={orbScale} opacity={orbOpacity} scrollYProgress={scrollYProgress} />
+      </div>
 
-      <FeaturesSection />
-      <HowItWorksSection />
-      <TestimonialsSection />
-      <CTASection />
+      <div className="relative z-10">
+        <HeroSection
+          heroY={heroY}
+          heroOpacity={heroOpacity}
+          heroScale={heroScale}
+        />
 
-      <footer
-        className="py-8 text-center text-xs border-t text-(--text-muted) border-(--border-color)"
-      >
-        © {new Date().getFullYear()} NexusAI. All rights reserved.
-      </footer>
+        <FeaturesSection />
+        <HowItWorksSection />
+        <TestimonialsSection />
+        <CTASection />
+
+        <footer
+          className="py-8 text-center text-xs border-t text-(--text-muted) border-(--border-color)"
+        >
+          © {new Date().getFullYear()} NexusAI. All rights reserved.
+        </footer>
+      </div>
     </div>
   );
 };

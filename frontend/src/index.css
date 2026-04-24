@@ -172,6 +172,37 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   }
 }
 
+@keyframes star-drift {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(-15px, 10px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes shooting-star {
+  0% {
+    transform: translateX(0) translateY(0) rotate(-45deg) scale(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+    scale: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-600px) translateY(600px) rotate(-45deg) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes ship-fly {
+  0% { transform: translate(0, 0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)); opacity: 0; }
+}
+
 /* Gradient text utility */
 .gradient-accent-text {
   background-image: linear-gradient(135deg, var(--accent-color), color-mix(in srgb, var(--accent-color) 55%, #ffffff));
