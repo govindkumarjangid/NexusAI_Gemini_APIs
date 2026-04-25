@@ -1,25 +1,39 @@
 import Message from '../models/message.model.js';
 import Chat from '../models/chat.model.js';
-import User from '../models/user.model.js';
 import wrapAsync from '../utils/wrapAsync.js';
 import genAI from '../configs/genAI.js';
-
+import axios from 'axios';
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+const uploadImage = wrapAsync(async (req, res) => {
+    if (!req.file)
+        return res.status(400).json({ message: 'No image uploaded' });
+    // console.log(req.file.secure_url)
+    res.status(200).json({
+        message: 'Image uploaded successfully',
+        url: req.file.secure_url
+    });
+});
 
 // send message in a chat and get streaming response from Gemini
 const sendMessage = wrapAsync(async (req, res) => {
     const { chatId } = req.params;
-    const { content } = req.body;
+    const { content, imageUrl } = req.body;
+    // console.log("chatId", chatId)
+    // console.log("content", content)
+    // console.log("imageUrl", imageUrl)
 
     const chat = await Chat.findById(chatId);
     if (!chat) return res.status(404).json({ message: 'Chat not found' });
 
-    const newMessage = new Message({ chatId, role: 'user', content });
+    const newMessage = new Message({ chatId, role: 'user', content, imageUrl });
     await newMessage.save();
+    // console.log("New Message:", newMessage);
 
-    chat.messages.push({ messageId: newMessage._id, role: 'user', content });
+    chat.messages.push({ messageId: newMessage._id, role: 'user', content, imageUrl });
     await chat.save();
+
 
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
@@ -29,14 +43,61 @@ const sendMessage = wrapAsync(async (req, res) => {
 
     try {
         const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
-        const formattedMessages = chat.messages.map(msg => ({
-            role: msg.role === 'assistant' ? 'model' : 'user',
-            parts: [{ text: msg.content }]
+        const formattedMessages = await Promise.all(chat.messages.map(async (msg) => {
+            const parts = [{ text: msg.content }];
+            // console.log(msg);
+            if (msg.imageUrl) {
+                /// console.log("Fetching history image from:", msg.imageUrl);
+                try {
+                    const response = await axios.get(msg.imageUrl, { responseType: 'arraybuffer' });
+                    // console.log("Axios response received for history image", response);
+                    const base64Image = Buffer.from(response.data).toString('base64');
+                    // console.log("Base64 conversion complete for history image. Length:", base64Image);
+                    const mimeType = response.headers['content-type'] || 'image/jpeg';
+                    parts.push({
+                        inlineData: {
+                            data: base64Image,
+                            mimeType: mimeType
+                        }
+                    });
+                    // console.log(parts)
+                } catch (err) {
+                    console.error("Error fetching history image for Gemini:", err.message);
+                }
+            }
+            return {
+                role: msg.role === 'assistant' ? 'model' : 'user',
+                parts: parts
+            };
         }));
+
+        // console.log("Formatted messages:", formattedMessages);
 
         formattedMessages.pop();
         const chatSession = model.startChat({ history: formattedMessages });
-        const result = await chatSession.sendMessageStream(content);
+
+        // Final message parts including the current image if any
+        const currentParts = [{ text: content }];
+        if (imageUrl) {
+            //  console.log("Fetching current image from:", imageUrl);
+            try {
+                const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+                //  console.log("Axios response received for current image", response);
+                const base64Image = Buffer.from(response.data).toString('base64');
+                //  console.log("Base64 conversion complete for current image. Length:", base64Image);
+                const mimeType = response.headers['content-type'] || 'image/jpeg';
+                currentParts.push({
+                    inlineData: {
+                        data: base64Image,
+                        mimeType: mimeType
+                    }
+                });
+            } catch (err) {
+                console.error("Error fetching current image for Gemini:", err.message);
+            }
+        }
+
+        const result = await chatSession.sendMessageStream(currentParts);
 
         for await (const chunk of result.stream) {
             const chunkText = chunk.text();
@@ -44,7 +105,7 @@ const sendMessage = wrapAsync(async (req, res) => {
             if (chunkText) {
                 fullAssistantResponse += chunkText;
                 const words = chunkText.match(/\S+\s*|\s+/g) || [];
-                // console.log(words)
+                //  console.log(words)
                 for (let i = 0; i < words.length; i++) {
                     const singleWord = words[i];
                     res.write(`data: ${JSON.stringify({ text: singleWord })}\n\n`);
@@ -52,7 +113,7 @@ const sendMessage = wrapAsync(async (req, res) => {
                 }
             }
         }
-        // console.log(fullAssistantResponse)
+        //  console.log(fullAssistantResponse)
 
         const assistantMessage = new Message({ chatId, role: 'assistant', content: fullAssistantResponse });
         await assistantMessage.save();
@@ -85,4 +146,5 @@ const getMessagesByChat = wrapAsync(async (req, res) => {
 export default {
     sendMessage,
     getMessagesByChat,
+    uploadImage
 };

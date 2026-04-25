@@ -1,8 +1,4 @@
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark, vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Image, Mic, Sparkles, User, Plus, ArrowUp, FolderUp, SquareChevronRight, Check } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import ChatAreaHeader from './ChatAreaHeader';
 import ChatMessages from '../chat/ChatMessages';
 import ChatInputArea from './ChatInputArea';
@@ -16,8 +12,11 @@ const ChatArea = () => {
   const [messages, setMessages] = useState([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [inputText, setInputText] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
 
-  const { isMobile, sidebarOpen, setSidebarOpen, user } = useAuthStore();
+  const { user } = useAuthStore();
   const { currentChat, setCurrentChat, chats, createChat } = useChatStore();
   const { sendAndStreamMessage } = useMessageStore();
   const { chatId } = useParams();
@@ -32,10 +31,13 @@ const ChatArea = () => {
 
   useEffect(() => {
     if (currentChat && currentChat.messages) {
-      setMessages(currentChat.messages.map((msg, idx) => ({
-        ...msg,
-        id: msg._id || idx
-      })));
+      setMessages(currentChat.messages.map((msg, idx) => {
+        const msgData = typeof msg.toObject === 'function' ? msg.toObject() : msg;
+        return {
+          ...msgData,
+          id: msgData._id || idx
+        };
+      }));
       document.title = `${currentChat.messages?.currentChat || 'Chat'} - NexusAI`;
     } else {
       setMessages([]);
@@ -44,9 +46,9 @@ const ChatArea = () => {
 
 
 
-  const handleSendMessage = async (e) => {
+  const handleSendMessage = async (e, selectedImageUrl = null) => {
     e.preventDefault();
-    if (!inputText.trim()) return;
+    if (!inputText.trim() && !selectedImageUrl) return;
 
     let chat_id = currentChat?._id;
     let chatJustCreated = false;
@@ -63,8 +65,11 @@ const ChatArea = () => {
       chatJustCreated = true;
     }
 
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
-    setMessages(prev => [...prev, { role: 'assistant', content: "" }]);
+    setMessages(prev => [
+      ...prev,
+      { role: 'user', content: userMessage, imageUrl: selectedImageUrl },
+      { role: 'assistant', content: "" }
+    ]);
     setIsStreaming(true);
 
     if (currentChat) {
@@ -72,7 +77,7 @@ const ChatArea = () => {
         ...currentChat,
         messages: [
           ...(currentChat.messages || []),
-          { role: 'user', content: userMessage },
+          { role: 'user', content: userMessage, imageUrl: selectedImageUrl },
           { role: 'assistant', content: "" }
         ]
       });
@@ -81,6 +86,7 @@ const ChatArea = () => {
     await sendAndStreamMessage({
       chatId: chat_id,
       content: userMessage,
+      imageUrl: selectedImageUrl,
       onStream: (text) => {
         setMessages(prev => {
           const newMessages = [...prev];
@@ -115,6 +121,12 @@ const ChatArea = () => {
         setInputText={setInputText}
         isStreaming={isStreaming}
         handleSendMessage={handleSendMessage}
+        imagePreview={imagePreview}
+        setImagePreview={setImagePreview}
+        isUploading={isUploading}
+        setIsUploading={setIsUploading}
+        uploadedImageUrl={uploadedImageUrl}
+        setUploadedImageUrl={setUploadedImageUrl}
       />
 
     </div>

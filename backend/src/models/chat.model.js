@@ -7,7 +7,8 @@ const chatSchema = new mongoose.Schema({
         {
             messageId: { type: mongoose.Schema.Types.ObjectId, ref: 'Message', required: true },
             role: { type: String, enum: ['user', 'assistant'], required: true },
-            content: { type: String, required: true },
+            content: { type: String },
+            imageUrl: { type: String, default: '' },
         }
     ],
 }, { timestamps: true });

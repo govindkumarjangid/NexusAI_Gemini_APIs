@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useAuthStore from '../../store/useAuthStore';
 import useChatStore from '../../store/useChatStore';
 import Spinner from '../model/Spinner';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { renderMessageContent } from '../../configs/renderMessageContent';
+import { X, Download, ExternalLink, Copy, Check } from 'lucide-react';
 
 const ChatMessages = ({ messages, isStreaming }) => {
 
@@ -11,12 +12,39 @@ const ChatMessages = ({ messages, isStreaming }) => {
     const { currentChat } = useChatStore();
     const isDark = actualTheme === 'dark';
 
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [copiedId, setCopiedId] = useState(null);
+
     const messagesEndRef = useRef(null);
 
     useEffect(() => {
         if (messagesEndRef.current)
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
+
+    const handleCopy = (text, id) => {
+        navigator.clipboard.writeText(text);
+        setCopiedId(id);
+        setTimeout(() => setCopiedId(null), 2000);
+    };
+
+    const handleDownload = async (imageUrl) => {
+        try {
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `nexusai-image-${Date.now()}.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Download failed:', error);
+            window.open(imageUrl, '_blank');
+        }
+    };
 
     return (
         <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-6 w-full">
@@ -42,8 +70,43 @@ const ChatMessages = ({ messages, isStreaming }) => {
                                         : 'dark:text-gray-200 text-gray-800 px-1 py-2 sm:px-4 sm:py-3 leading-relaxed w-full'
                                         }`}
                                 >
-                                    <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words wrap:anywhere w-full overflow-hidden">
-                                        {renderMessageContent(msg.content || msg.text, isDark)}
+                                    <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words w-full overflow-hidden">
+                                        {(msg.imageUrl || msg.image) && (
+                                            <div className="mb-2 max-w-[280px] sm:max-w-[300px] overflow-hidden rounded-xl border border-gray-200/60 dark:border-gray-700/50 bg-black/5 dark:bg-white/5 p-1 group relative">
+                                                <img
+                                                    src={msg.imageUrl || msg.image}
+                                                    alt="Uploaded content"
+                                                    className="max-h-[260px] w-full rounded-lg object-cover cursor-pointer opacity-0 transition-all duration-300 ease-in hover:brightness-90"
+                                                    onClick={() => setSelectedImage(msg.imageUrl || msg.image)}
+                                                    onLoad={(e) => e.target.classList.replace('opacity-0', 'opacity-100')}
+                                                />
+                                            </div>
+                                        )}
+                                        <div className="mt-1">
+                                            {renderMessageContent(msg.content || msg.text, isDark)}
+                                        </div>
+
+                                        {msg.role === 'assistant' && msg.content && (
+                                            <div className="mt-2 flex items-center gap-2">
+                                                <button
+                                                    onClick={() => handleCopy(msg.content, msg._id || idx)}
+                                                    className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-gray-500 transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-medium"
+                                                    title="Copy response"
+                                                >
+                                                    {copiedId === (msg._id || idx) ? (
+                                                        <>
+                                                            <Check size={14} className="text-green-500" />
+                                                            <span className="text-green-500">Copied</span>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Copy size={14} />
+                                                            <span>Copy</span>
+                                                        </>
+                                                    )}
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </motion.div>
@@ -62,6 +125,66 @@ const ChatMessages = ({ messages, isStreaming }) => {
                 )}
                 <div ref={messagesEndRef} />
             </div>
+
+            {/* Image Preview Modal */}
+            <AnimatePresence>
+                {selectedImage && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-999 flex items-center justify-center backdrop-blur-sm p-4 sm:p-10"
+                        onClick={() => setSelectedImage(null)}
+                    >
+                        <motion.button
+                            initial={{ scale: 0.5, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            className="absolute top-5 right-5 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-[10000] cursor-pointer"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedImage(null);
+                            }}
+                        >
+                            <X size={24} />
+                        </motion.button>
+
+                        <div className="relative group max-w-full max-h-full flex flex-col items-center gap-4" onClick={(e) => e.stopPropagation()}>
+                            <motion.img
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                                src={selectedImage}
+                                alt="Full size preview"
+                                className="max-w-full max-h-[80vh] rounded-2xl shadow-2xl object-contain border border-white/10"
+                            />
+
+                            <motion.div
+                                initial={{ y: 20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 shadow-xl"
+                            >
+                                <button
+                                    onClick={() => handleDownload(selectedImage)}
+                                    className="flex items-center gap-2 text-white/90 hover:text-white transition-colors p-3 rounded-full hover:bg-white/5 cursor-pointer border border-white/10"
+                                    title="Download Image"
+                                >
+                                    <Download size={20} />
+                                    <span className="text-sm font-medium hidden sm:inline">Download</span>
+                                </button>
+                                <div className="w-px h-6 bg-white/20" />
+                                <button
+                                    onClick={() => window.open(selectedImage, '_blank')}
+                                    className="flex items-center gap-2 text-white/90 hover:text-white transition-colors p-3  rounded-full hover:bg-white/5 cursor-pointer border border-white/10"
+                                    title="Open Original"
+                                >
+                                    <ExternalLink size={20} />
+                                    <span className="text-sm font-medium hidden sm:inline">Live Link</span>
+                                </button>
+                            </motion.div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

@@ -23,7 +23,7 @@ const useMessageStore = create((set) => ({
     }
   },
 
-  sendAndStreamMessage: async ({ chatId, content, onStream, onDone }) => {
+  sendAndStreamMessage: async ({ chatId, content, imageUrl, onStream, onDone }) => {
     try {
       set({ isLoading: true, error: null });
       const BACKEND_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
@@ -35,7 +35,7 @@ const useMessageStore = create((set) => ({
           'Content-Type': 'application/json',
           'Authorization': token ? `Bearer ${token}` : ''
         },
-        body: JSON.stringify({ content })
+        body: JSON.stringify({ content, imageUrl })
       });
 
       if (!response.ok)
