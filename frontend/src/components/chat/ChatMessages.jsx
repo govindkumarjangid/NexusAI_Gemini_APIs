@@ -14,12 +14,18 @@ const ChatMessages = ({ messages, isStreaming }) => {
 
     const [selectedImage, setSelectedImage] = useState(null);
     const [copiedId, setCopiedId] = useState(null);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
 
     const messagesEndRef = useRef(null);
 
     useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 640);
+        window.addEventListener('resize', handleResize);
+
         if (messagesEndRef.current)
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+
+        return () => window.removeEventListener('resize', handleResize);
     }, [messages]);
 
     const handleCopy = (text, id) => {
@@ -133,55 +139,68 @@ const ChatMessages = ({ messages, isStreaming }) => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-999 flex items-center justify-center backdrop-blur-sm p-4 sm:p-10"
+                        className="fixed inset-0 z-999 flex items-end sm:items-center justify-center backdrop-blur-md p-0 sm:p-4"
                         onClick={() => setSelectedImage(null)}
                     >
-                        <motion.button
-                            initial={{ scale: 0.5, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            className="absolute top-5 right-5 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-[10000] cursor-pointer"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedImage(null);
+                        <motion.div
+                            initial={isMobile ? { y: "100%", opacity: 0 } : { opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ 
+                                y: 0, 
+                                scale: 1,
+                                opacity: 1,
+                                transition: isMobile 
+                                    ? { type: "spring", damping: 28, stiffness: 260 }
+                                    : { type: "spring", damping: 22, stiffness: 280 }
                             }}
+                            exit={isMobile 
+                                ? { y: "100%", opacity: 0, transition: { duration: 0.2, ease: "easeIn" } } 
+                                : { opacity: 0, y: 10, scale: 0.95, transition: { duration: 0.15, ease: "easeIn" } }
+                            }
+                            className="bg-(--bg-surface) border-t sm:border border-(--border-color) rounded-t-3xl sm:rounded-2xl p-4 sm:p-10 flex flex-col items-center gap-4 sm:gap-6 shadow-2xl max-w-4xl w-full mx-auto"
+                            onClick={(e) => e.stopPropagation()}
                         >
-                            <X size={24} />
-                        </motion.button>
+                            {/* Mobile Handle */}
+                            <div className="w-12 h-1.5 bg-(--border-color) rounded-full sm:hidden mb-2" />
 
-                        <div className="relative group max-w-full max-h-full flex flex-col items-center gap-4" onClick={(e) => e.stopPropagation()}>
-                            <motion.img
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                                src={selectedImage}
-                                alt="Full size preview"
-                                className="max-w-full max-h-[80vh] rounded-2xl shadow-2xl object-contain border border-white/10"
-                            />
-
-                            <motion.div
-                                initial={{ y: 20, opacity: 0 }}
-                                animate={{ y: 0, opacity: 1 }}
-                                className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 shadow-xl"
+                            <button
+                                className="absolute top-4 right-4 p-2 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 rounded-full transition-colors z-1000 cursor-pointer sm:flex hidden"
+                                onClick={() => setSelectedImage(null)}
                             >
-                                <button
-                                    onClick={() => handleDownload(selectedImage)}
-                                    className="flex items-center gap-2 text-white/90 hover:text-white transition-colors p-3 rounded-full hover:bg-white/5 cursor-pointer border border-white/10"
-                                    title="Download Image"
+                                <X size={20} />
+                            </button>
+
+                            <div className="relative group max-w-full max-h-[60vh] sm:max-h-[75vh] flex flex-col items-center gap-4">
+                                <motion.img
+                                    initial={{ scale: 0.95 }}
+                                    animate={{ scale: 1 }}
+                                    src={selectedImage}
+                                    alt="Full size preview"
+                                    className="max-w-full max-h-full rounded-xl sm:rounded-2xl shadow-xl object-contain border border-(--border-color)"
+                                />
+                                
+                                <motion.div 
+                                    className="flex items-center gap-3 bg-(--bg-elevated) backdrop-blur-md px-5 py-2.5 rounded-full border border-(--border-color) shadow-lg"
                                 >
-                                    <Download size={20} />
-                                    <span className="text-sm font-medium hidden sm:inline">Download</span>
-                                </button>
-                                <div className="w-px h-6 bg-white/20" />
-                                <button
-                                    onClick={() => window.open(selectedImage, '_blank')}
-                                    className="flex items-center gap-2 text-white/90 hover:text-white transition-colors p-3  rounded-full hover:bg-white/5 cursor-pointer border border-white/10"
-                                    title="Open Original"
-                                >
-                                    <ExternalLink size={20} />
-                                    <span className="text-sm font-medium hidden sm:inline">Live Link</span>
-                                </button>
-                            </motion.div>
-                        </div>
+                                    <button
+                                        onClick={() => handleDownload(selectedImage)}
+                                        className="flex items-center gap-2 text-(--text-primary) hover:text-accent transition-colors px-3 py-1 rounded-lg cursor-pointer"
+                                        title="Download Image"
+                                    >
+                                        <Download size={18} />
+                                        <span className="text-sm font-medium">Download</span>
+                                    </button>
+                                    <div className="w-px h-5 bg-(--border-color)" />
+                                    <button
+                                        onClick={() => window.open(selectedImage, '_blank')}
+                                        className="flex items-center gap-2 text-(--text-primary) hover:text-accent transition-colors px-3 py-1 rounded-lg cursor-pointer"
+                                        title="Open Original"
+                                    >
+                                        <ExternalLink size={18} />
+                                        <span className="text-sm font-medium">Live Link</span>
+                                    </button>
+                                </motion.div>
+                            </div>
+                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
