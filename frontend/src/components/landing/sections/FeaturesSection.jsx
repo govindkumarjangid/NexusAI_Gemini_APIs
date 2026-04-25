@@ -39,10 +39,10 @@ const FeatureCard = ({ icon, title, desc, iconBg, iconColor, i }) => {
       initial={{ opacity: 0, rotateX: 20, rotateY: i === 0 ? -12 : i === 2 ? 12 : 0, y: 70 }}
       animate={show ? { opacity: 1, rotateX: 0, rotateY: 0, y: 0 } : {}}
       transition={{ duration: 0.85, delay: i * 0.14, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={{ y: -6, scale: 1.02 }}
+      whileHover={{ y: -6, scale: 1.01 }}
     >
       <div
-        className="rounded-2xl p-6 sm:p-8 border transition-all duration-300 hover:shadow-lg bg-(--bg-surface) border-(--border-color) hover:border-(--accent-color) h-50 aspect-video"
+        className="rounded-2xl p-6 sm:p-8 border transition-all duration-300 hover:shadow-lg bg-(--bg-surface) border-(--border-color) hover:border-(--accent-color)"
       >
         <div
           className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 bg-(--icon-bg) text-(--icon-color)"
@@ -51,7 +51,7 @@ const FeatureCard = ({ icon, title, desc, iconBg, iconColor, i }) => {
           {icon}
         </div>
         <h3 className="text-lg font-bold mb-2 tracking-tight text-(--text-primary)" style={headingFont}>{title}</h3>
-        <p className="text-sm leading-relaxed text-(--text-secondary)">{desc}</p>
+        <p className="text-sm leading-relaxed text-(--text-secondary) line-clamp-2">{desc}</p>
       </div>
     </motion.div>
   );

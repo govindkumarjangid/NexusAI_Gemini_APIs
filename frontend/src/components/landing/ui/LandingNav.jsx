@@ -13,15 +13,15 @@ const LandingNav = () => (
     <div className="flex items-center gap-2">
       <Link
         to="/login"
-        className="px-3.5 sm:px-5 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 text-(--text-primary)"
+        className="p-2 sm:px-5 rounded-lg text-sm font-semibold transition-all duration-200 text-(--text-primary) active:scale-95 hover:text-(--accent-color)"
       >
         Login
       </Link>
       <Link
         to="/register"
-        className="px-3.5 sm:px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 hover:-translate-y-px active:scale-95 bg-(--accent-color) text-(--accent-text-color)"
+        className="p-2 sm:px-5  rounded-lg text-sm font-semibold transition-all duration-200 text-(--text-primary) active:scale-95 hover:text-(--accent-color)"
       >
-        Get Started
+        Register
       </Link>
     </div>
   </nav>

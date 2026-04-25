@@ -7,7 +7,6 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-/* Chat pages need overflow hidden */
 body.chat-active {
   overflow: hidden;
 }
@@ -65,7 +64,39 @@ html.high-contrast.dark {
   --text-muted: #cccccc;
 }
 
-/* Accent utility class */
+.animated-accent-btn {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: color 0.3s;
+}
+
+.animated-accent-btn::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--accent-color) !important;
+  z-index: -1;
+  border-radius: inherit;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animated-accent-btn:hover::before,
+.animated-accent-btn:focus::before {
+  transform-origin: left;
+  transform: scaleX(1);
+}
+
+.animated-accent-btn>* {
+  position: relative;
+  z-index: 1;
+}
+
 .accent {
   color: var(--accent-color) !important;
 }
@@ -105,11 +136,15 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   background-color: #52555a;
 }
 
-/* ── Landing Page Keyframes ── */
-/* Planet orbit — full 360° rotation around center */
+
 @keyframes orbit-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes orb-float {
@@ -173,9 +208,17 @@ html.dark ::-webkit-scrollbar-thumb:hover {
 }
 
 @keyframes star-drift {
-  0% { transform: translate(0, 0); }
-  50% { transform: translate(-15px, 10px); }
-  100% { transform: translate(0, 0); }
+  0% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(-15px, 10px);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
 }
 
 @keyframes shooting-star {
@@ -183,13 +226,16 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     transform: translateX(0) translateY(0) rotate(-45deg) scale(0);
     opacity: 0;
   }
+
   10% {
     opacity: 1;
     scale: 1;
   }
+
   90% {
     opacity: 1;
   }
+
   100% {
     transform: translateX(-600px) translateY(600px) rotate(-45deg) scale(1);
     opacity: 0;
@@ -197,13 +243,25 @@ html.dark ::-webkit-scrollbar-thumb:hover {
 }
 
 @keyframes ship-fly {
-  0% { transform: translate(0, 0); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translate(var(--tx), var(--ty)); opacity: 0; }
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(var(--tx), var(--ty));
+    opacity: 0;
+  }
 }
 
-/* Gradient text utility */
 .gradient-accent-text {
   background-image: linear-gradient(135deg, var(--accent-color), color-mix(in srgb, var(--accent-color) 55%, #ffffff));
   -webkit-background-clip: text;
@@ -211,7 +269,6 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   background-clip: text;
 }
 
-/* Landing grid overlay */
 .landing-grid-bg {
   background-image:
     linear-gradient(color-mix(in srgb, var(--accent-color) 4%, transparent) 1px, transparent 1px),
@@ -219,4 +276,19 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   background-size: 60px 60px;
   mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black, transparent);
   -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black, transparent);
-}@keyframes pulseDot { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.3; } 40% { transform: scale(1.2); opacity: 1; } }
+}
+
+@keyframes pulseDot {
+
+  0%,
+  80%,
+  100% {
+    transform: scale(0.6);
+    opacity: 0.3;
+  }
+
+  40% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}

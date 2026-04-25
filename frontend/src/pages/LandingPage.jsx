@@ -43,7 +43,7 @@ const LandingPage = () => {
         <CTASection />
 
         <footer
-          className="py-8 text-center text-xs border-t text-(--text-muted) border-(--border-color)"
+          className="z-50 py-4 text-center backdrop-blur-2xl border-t bg-color-mix(in_srgb,var(--bg-base)_65%,transparent) border-(--border-color) text-sm"
         >
           © {new Date().getFullYear()} NexusAI. All rights reserved.
         </footer>

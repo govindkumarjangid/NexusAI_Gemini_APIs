@@ -80,13 +80,13 @@ const HeroSection = ({ heroY, heroOpacity, heroScale }) => (
       >
         <Link
           to="/register"
-          className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 hover:-translate-y-0.5 active:scale-95 group bg-(--accent-color) text-(--accent-text-color)"
+          className="origin-left inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base border transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-sm group text-(--accent-text-color) border-(--border-color) bg-(--accent-color)/20  animated-accent-btn"
         >
           Get Started Free <ArrowRight size={17} className='group-hover:translate-x-1.5 transition-transform duration-300' />
         </Link>
         <Link
           to="/login"
-          className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base border transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-sm group text-(--text-secondary) border-(--border-color) bg-color-mix(in_srgb,var(--bg-surface)_50%,transparent)"
+          className="origin-left inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base border transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-sm group text-(--accent-text-color) border-(--border-color) bg-color-mix(in_srgb,var(--bg-surface)_50%,transparent) animated-accent-btn"
         >
           Sign In <ChevronRight size={17} className='group-hover:translate-x-1.5 transition-transform duration-300' />
         </Link>

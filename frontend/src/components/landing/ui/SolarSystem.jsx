@@ -37,7 +37,6 @@ const SolarSystem = ({ scale = 1, opacity = 1, scrollYProgress }) => {
   const [spaceShips, setSpaceShips] = useState([]);
 
   useEffect(() => {
-    // Shooting Stars Loop
     const ssInterval = setInterval(() => {
       const duration = 2.5 + Math.random() * 1.5;
       const newStar = {
@@ -51,7 +50,6 @@ const SolarSystem = ({ scale = 1, opacity = 1, scrollYProgress }) => {
       setTimeout(() => setShootingStars(prev => prev.filter(s => s.id !== newStar.id)), duration * 1000 + 100);
     }, 1500 + Math.random() * 3000);
 
-    // Space Ships Loop - More frequent
     const shipInterval = setInterval(() => {
       const duration = 10 + Math.random() * 10;
       const newShip = {
@@ -106,7 +104,7 @@ const SolarSystem = ({ scale = 1, opacity = 1, scrollYProgress }) => {
       {shootingStars.map(star => (
         <div
           key={star.id}
-          className="absolute w-[180px] h-[1.5px] bg-linear-to-l from-white via-white/80 to-transparent rounded-full animate-[shooting-star_var(--dur)_ease-out_forwards]"
+          className="absolute w-45 h-[1.5px] bg-linear-to-l from-white via-white/80 to-transparent rounded-full animate-[shooting-star_var(--dur)_ease-out_forwards]"
           style={{
             top: star.top,
             left: star.left,
@@ -147,8 +145,8 @@ const SolarSystem = ({ scale = 1, opacity = 1, scrollYProgress }) => {
       >
         {/* The Sun */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-           <div className="w-14 h-14 rounded-full bg-[radial-gradient(circle_at_35%_35%,#ffffff_0%,#ffdf00_40%,#ff8c00_100%)] shadow-[0_0_50px_20px_rgba(255,140,0,0.5),inset_-4px_-4px_10px_rgba(0,0,0,0.5)]" />
-           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] bg-[radial-gradient(circle,rgba(255,160,0,0.2)_0%,transparent_70%)] blur-3xl -z-10" />
+           <div className="w-14 h-14 rounded-full bg-[radial-gradient(circle_at_35%_35%,#ffffff_0%,#ffdf00_40%,#ff8c00_100%)] " />
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-70 h-70 bg-[radial-gradient(circle,rgba(255,160,0,0.2)_0%,transparent_70%)] blur-3xl -z-10" />
         </div>
 
         {/* Orbit rings + Planets */}
