@@ -3,6 +3,9 @@ import { vscDarkPlus, oneLight } from 'react-syntax-highlighter/dist/esm/styles/
 import React, { useState } from 'react';
 import { Check, Copy } from 'lucide-react';
 
+import 'katex/dist/katex.min.css';
+import { InlineMath, BlockMath } from 'react-katex';
+
 const CodeBlockComponent = ({ lang, code }) => {
   const [isCopied, setIsCopied] = useState(false);
   const isDark = document.documentElement.classList.contains('dark');
@@ -67,18 +70,42 @@ export function renderMessageContent(content, isDark) {
 
   const parseInline = (str) => {
     if (!str) return str;
-    const parts = str.split(/(`[^`]+`|\*\*[^*]+\*\*)/).filter(Boolean);
+
+    // \$[^$]+\$ for inline math and \$\$[\s\S]+?\$\$ for block math
+    const parts = str.split(/(\$\$[\s\S]+?\$\$|\$[^$]+\$|`[^`]+`|\*\*[^*]+\*\*)/).filter(Boolean);
+
     return parts.map((part) => {
+      // 1. Block Math ($$...$$)
+      if (part.startsWith('$$') && part.endsWith('$$')) {
+        return (
+          <span key={`im-${inlineKeyCounter++}`} className="my-4 block w-full overflow-x-auto text-[#111827] dark:text-[#e6e6e6]">
+            <BlockMath math={part.slice(2, -2)} />
+          </span>
+        );
+      }
+
+      // 2. Inline Math ($...$)
+      if (part.startsWith('$') && part.endsWith('$')) {
+        return (
+          <span key={`im-${inlineKeyCounter++}`} className="text-[#111827] dark:text-[#e6e6e6]">
+            <InlineMath math={part.slice(1, -1)} />
+          </span>
+        );
+      }
+
+      // 3. Inline Code (` ... `)
       if (part.startsWith('`') && part.endsWith('`')) {
         return (
           <code
             key={`ic-${inlineKeyCounter++}`}
-            className="wrap-break-words bg-[#e8eaed] dark:bg-[#2d3139] text-[#0369a1] dark:text-[#7dd3fc] rounded-[4px] px-[0.35em] py-[0.15em] font-['JetBrains_Mono','Fira_Code',monospace] text-[0.8em] wrap-break-words whitespace-pre-wrap"
+            className="wrap-break-words bg-[#e8eaed] dark:bg-[#2d3139] text-[#0369a1] dark:text-[#7dd3fc] rounded-sm px-[0.35em] py-[0.15em] font-['JetBrains_Mono','Fira_Code',monospace] text-[0.8em] wrap-break-words whitespace-pre-wrap"
           >
             {part.slice(1, -1)}
           </code>
         );
       }
+
+      // 4. Bold Text (** ... **)
       if (part.startsWith('**') && part.endsWith('**')) {
         return (
           <strong
@@ -89,6 +116,8 @@ export function renderMessageContent(content, isDark) {
           </strong>
         );
       }
+
+      // 5. Standard Text
       return <span key={`it-${inlineKeyCounter++}`} className="wrap-break-words">{part}</span>;
     });
   };
@@ -118,7 +147,7 @@ export function renderMessageContent(content, isDark) {
               key={`table-${keyCounter++}`}
               className="w-full max-w-full overflow-x-auto my-[1.5em] text-left touch-pan-x"
             >
-              <table className="border-collapse w-full min-w-max font-['JetBrains_Mono','Fira_Code',monospace] bg-[#fafafa] dark:bg-[#181a1b] text-[#1a1a1a] dark:text-[#e6e6e6] rounded-[8px] overflow-hidden text-[0.92em] text-left">
+              <table className="border-collapse w-full min-w-max font-['JetBrains_Mono','Fira_Code',monospace] bg-[#fafafa] dark:bg-[#181a1b] text-[#1a1a1a] dark:text-[#e6e6e6] rounded-lg overflow-hidden text-[0.92em] text-left">
                 <thead>
                   <tr>
                     {header.map((cell, idx) => (
@@ -154,6 +183,7 @@ export function renderMessageContent(content, isDark) {
       }
       if (inTable) continue;
 
+      // Heading Logic
       const headingMatch = line.match(/^(#{1,6})\s+(.*)/);
       if (headingMatch) {
         if (inList) {
@@ -190,21 +220,25 @@ export function renderMessageContent(content, isDark) {
         continue;
       }
 
+      // Horizontal Rule Logic
       if (/^\s*-{3,}\s*$/.test(line)) {
         textElements.push(<hr key={`hr-${keyCounter++}`} className="border-0 border-t border-[#e5e7eb] dark:border-[#3a3f4b] my-[1.5em]" />);
         continue;
       }
 
+      // List Logic
       const isStandardBullet = /^\s*([*-])\s+/.test(line);
       const isBoldBullet = /^\s*\*\*[^*]+\*\*/.test(line);
+      // Added regex for Numbered Lists 
+      const isNumberedList = /^\s*\d+\.\s+/.test(line);
 
-      if (isStandardBullet || isBoldBullet) {
+      if (isStandardBullet || isBoldBullet || isNumberedList) {
         inList = true;
-        let cleanLine = isStandardBullet ? line.replace(/^\s*([*-])\s+/, '') : line.trim();
+        let cleanLine = line.replace(/^\s*([*-]|\d+\.)\s+/, '').trim();
         listItems.push(
           <li
             key={`li-${keyCounter++}`}
-            className="wrap-break-words mb-[0.4em] text-[#4b5563] dark:text-[#d1d5db] leading-[1.6] ml-[0.5em] wrap-break-words text-left"
+            className="wrap-break-words mb-[0.4em] text-[#4b5563] dark:text-[#d1d5db] leading-[1.6] ml-[0.5em] wrap-break-words text-left list-decimal"
           >
             {parseInline(cleanLine)}
           </li>
@@ -218,6 +252,7 @@ export function renderMessageContent(content, isDark) {
         listItems = [];
       }
 
+      // Paragraph Logic
       if (line.trim() !== '') {
         textElements.push(
           <p
