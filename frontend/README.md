@@ -1,67 +1,74 @@
 
 # NexusAI Frontend
 
-This is the frontend for NexusAI, built with **React** and **Vite**. It provides a modern chat interface with authentication, chat management, and AI-powered messaging.
+The NexusAI frontend is a state-of-the-art Single Page Application (SPA) built with **React 19** and **Vite**. It features a high-performance chat interface designed for a premium user experience.
 
-## Features
+## 🚀 Features
 
-- **Authentication:** Login and registration with persistent user sessions.
-- **Chat System:** Create, view, search, and delete chats.
-- **Real-time Messaging:** Send and receive AI-powered messages with streaming responses.
-- **Responsive UI:** Mobile-friendly sidebar, chat area, and search.
-- **State Management:** Uses Zustand for global state (auth, chat, message).
-- **UI Libraries:** TailwindCSS for styling, Framer Motion for animation, Lucide for icons, PrismJS for code highlighting, and React Hot Toast for notifications.
+- **Modern UI:** Built with **Tailwind CSS 4** for lightning-fast styling and smaller bundles.
+- **Fluid Animations:** Powered by **Framer Motion** for a sleek, responsive feel.
+- **Real-time Streaming:** Smooth AI response rendering using streaming logic.
+- **Multimodal Input:** Support for image uploads and text queries.
+- **Persistent State:** Global state management with **Zustand** (Auth, Chat, and Message stores).
+- **Rich Formatting:** Full support for Markdown, Code syntax highlighting (PrismJS), and Math equations (KaTeX).
 
-## Folder Structure
+## 📁 Folder Structure
 
-```
+```text
 src/
-  App.jsx                # Main app and routing
-  index.css, main.jsx    # Entry point and global styles
-  components/            # UI components (Sidebar, ChatArea, ChatList, etc.)
-  configs/               # Axios instance, message rendering helpers
-  pages/                 # Auth (login/register), SearchPage
-  store/                 # Zustand stores for auth, chat, message
+├── components/            # Atomic & layout components
+│   ├── Sidebar/           # Navigation & Session management
+│   ├── Chat/              # ChatArea, Messages, & Input
+│   └── Shared/            # Buttons, Inputs, & Modals
+├── configs/               # Axios instance & global constants
+├── pages/                 # Auth (Login/Register) & Search
+├── store/                 # Zustand global state slices
+├── App.jsx                # Layout & Route definitions
+└── main.jsx               # App entry & global styles (Tailwind 4)
 ```
 
-## Main Components
+## 🧠 State Management (Zustand)
 
-- **App.jsx:** Handles routing, authentication state, and layout.
-- **Sidebar:** Navigation, new chat, search, recent chats, and logout.
-- **ChatArea:** Displays messages, input area, and chat header.
-- **ChatMessages:** Renders chat history with markdown/code formatting.
-- **ChatInputArea:** Text input, file/image/voice upload (UI only).
-- **SearchPage:** Search chats by message content.
-- **RecentChatsSidebar:** Quick access to recent chats.
+The app uses a modular store architecture:
+- **`useAuthStore`:** Manages user session, JWT persistence, and UI toggles (sidebar/search).
+- **`useChatStore`:** Handles session history, active chat selection, and CRUD operations for chats.
+- **`useMessageStore`:** Logic for sending messages, handling image attachments, and processing SSE streams.
 
-## State Management
+## 🎨 UI & UX
 
-- **useAuthStore:** Handles user authentication, UI state (sidebar, search), and session.
-- **useChatStore:** Manages chat list, current chat, create/delete chat.
-- **useMessageStore:** Handles sending and streaming messages.
+- **Glassmorphism:** Subtle background blurs and gradients for a modern look.
+- **Responsive Design:** Optimized for Mobile, Tablet, and Desktop viewports.
+- **Instant Feedback:** Integrated with `react-hot-toast` for real-time notifications.
 
-## API Integration
+## ⚙️ Setup & Installation
 
-- **axiosInstance.js:** Configured with base URL and token from localStorage.
-- **All API calls** are made to the backend for authentication, chat, and message operations.
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-## UI/UX
+2. **Configure Environment:**
+   Create a `.env` file:
+   ```env
+   VITE_API_URL=http://localhost:5000/api/v1
+   ```
 
-- **TailwindCSS** for utility-first styling.
-- **Framer Motion** for smooth animations.
-- **PrismJS** for code block syntax highlighting in messages.
-- **React Hot Toast** for notifications.
+3. **Start Development Server:**
+   ```bash
+   npm run dev
+   ```
 
-## How to Run
+4. **Build for Production:**
+   ```bash
+   npm run build
+   ```
 
-1. Install dependencies:
-	```
-	npm install
-	```
-2. Start the development server:
-	```
-	npm run dev
-	```
-3. The app runs at `http://localhost:5173` by default.
+## 🛠️ Key Technologies
+
+- **React 19** (Concurrent Rendering)
+- **Tailwind CSS 4** (Zero-runtime CSS)
+- **Vite 8** (Fast Bundling)
+- **Zustand** (Lightweight State)
+- **Framer Motion 12** (Advanced Animations)
 
 ---

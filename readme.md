@@ -1,35 +1,72 @@
 
 # NexusAI – Google Gemini APIs Fullstack Application
 
-NexusAI is a modern full-stack AI chat application powered by **Google Gemini APIs**. It features a robust backend (Node.js, Express, MongoDB) and a sleek, responsive frontend (React, Vite, Zustand, TailwindCSS). The app supports user authentication, chat history, and real-time AI-powered conversations.
+NexusAI is a premium, high-performance full-stack AI chat application built with the latest technologies. It leverages **Google Gemini 2.5 Flash Lite** for lightning-fast, intelligent conversations with support for multimodal inputs (text and images).
+
+![NexusAI Banner](https://img.shields.io/badge/NexusAI-Gemini%202.5%20Flash-blue?style=for-the-badge&logo=google-gemini)
+![Tech Stack](https://img.shields.io/badge/Stack-MERN-green?style=for-the-badge)
+
+---
+
+## 🚀 Features
+
+- **Multimodal Conversations:** Chat with Gemini using both text and images.
+- **Streaming Responses:** Experience real-time AI typing effects for a seamless UX.
+- **Dynamic UI/UX:** Built with **Tailwind CSS 4** and **Framer Motion** for smooth, premium animations.
+- **Smart History:** Persistence of chat sessions and messages with automatic title generation.
+- **Global Search:** Find any message across all your conversations instantly.
+- **Secure Authentication:** Robust user login and registration powered by **JWT**.
+- **Cloud Integration:** Image uploads handled via **Cloudinary**.
+- **Modern State Management:** Fast and lightweight state handling using **Zustand**.
 
 ---
 
 ## 📁 Project Structure
 
-```
+```text
 NexusAI_Gemini_APIs/
 ├── backend/                  # Node.js + Express REST API
 │   ├── src/
-│   │   ├── configs/          # DB & Gemini API config
-│   │   ├── controllers/      # Route logic & Gemini API calls
-│   │   ├── middleware/       # JWT authentication
+│   │   ├── configs/          # MongoDB, Gemini, & Cloudinary Configs
+│   │   ├── controllers/      # Route logic & AI processing
+│   │   ├── middleware/       # JWT Authentication
 │   │   ├── models/           # Mongoose schemas (User, Chat, Message)
-│   │   ├── routes/           # API endpoints
-│   │   └── utils/            # Helpers (token, error handling)
+│   │   ├── routes/           # API Endpoints
+│   │   └── utils/            # Async wrappers & Token helpers
 │   ├── index.js              # Server entry point
 │   └── package.json          # Backend dependencies
-├── frontend/                 # React + Vite SPA
+├── frontend/                 # React + Vite + Tailwind CSS 4
 │   ├── src/
-│   │   ├── components/       # UI components (Sidebar, ChatArea, etc.)
-│   │   ├── configs/          # Axios instance, render helpers
-│   │   ├── pages/            # Views (Auth, SearchPage)
-│   │   ├── store/            # Zustand stores
-│   │   ├── App.jsx           # Main app
-│   │   └── main.jsx          # Entry point
+│   │   ├── components/       # Reusable UI components
+│   │   ├── configs/          # API & Helper configurations
+│   │   ├── pages/            # View-level components
+│   │   ├── store/            # Zustand global stores
+│   │   ├── App.jsx           # Routing & Layout
+│   │   └── main.jsx          # App entry point
 │   └── package.json          # Frontend dependencies
 └── README.md                 # Project documentation
 ```
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Framework:** React 19 + Vite
+- **Styling:** Tailwind CSS 4 (Native Vite Plugin)
+- **Animations:** Framer Motion
+- **State:** Zustand
+- **Icons:** Lucide React
+- **Notifications:** React Hot Toast
+- **Formatting:** PrismJS (Code) & KaTeX (Math)
+
+### Backend
+- **Runtime:** Node.js (ES Modules)
+- **Framework:** Express 5
+- **Database:** MongoDB + Mongoose
+- **AI Integration:** @google/generative-ai (Gemini 2.5 Flash Lite)
+- **File Uploads:** Multer + Cloudinary
+- **Auth:** JWT + BcryptJS
 
 ---
 
@@ -37,9 +74,10 @@ NexusAI_Gemini_APIs/
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v18+ recommended)
-- [MongoDB](https://www.mongodb.com/) database
+- [Node.js](https://nodejs.org/) (v18+)
+- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) or Local Instance
 - [Google Gemini API Key](https://aistudio.google.com/app/apikey)
+- [Cloudinary Account](https://cloudinary.com/)
 
 ### 1. Clone the Repository
 
@@ -55,98 +93,59 @@ cd backend
 npm install
 ```
 
-Create a `.env` file in `backend/`:
+Create a `.env` file in the `backend/` directory:
 
 ```env
 PORT=5000
-MONGODB_URI=your_mongodb_connection_string
+MONGODB_URI=your_mongodb_uri
 GEMINI_API_KEY=your_gemini_api_key
 JWT_SECRET=your_jwt_secret
-```
-
-Start the backend server:
-
-```bash
-npm run dev
-# or
-npm start
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 ```
 
 ### 3. Frontend Setup
 
 ```bash
-cd frontend
+cd ../frontend
 npm install
 ```
 
-Create a `.env` file in `frontend/` (optional):
+Create a `.env` file in the `frontend/` directory:
 
 ```env
 VITE_API_URL=http://localhost:5000/api/v1
 ```
 
-Start the React dev server:
+### 4. Run Locally
 
+**Start Backend:**
 ```bash
+cd backend
+npm run dev
+```
+
+**Start Frontend:**
+```bash
+cd frontend
 npm run dev
 ```
 
 ---
 
-## 🛠️ Key Libraries
+## 📚 API Endpoints
 
-- **Backend:** express, mongoose, @google/generative-ai, dotenv, cors, jsonwebtoken, bcryptjs, nodemon
-- **Frontend:** react, vite, axios, zustand, tailwindcss, framer-motion, lucide-react, react-hot-toast, react-router-dom, prismjs
-
----
-
-## 💡 How It Works
-
-1. **Frontend:** User interacts with the chat UI. Requests are sent to the backend via Axios.
-2. **Backend:** Express authenticates the user, processes chat/message requests, and interacts with Gemini AI.
-3. **Gemini API:** Generates advanced AI responses.
-4. **Database:** MongoDB stores users, chats, and messages.
-5. **Result:** The frontend updates in real-time with AI responses and chat history.
-
----
-
-## 📚 API Overview
-
-### User
-
-- `POST /api/v1/users/register` — Register
-- `POST /api/v1/users/login` — Login
-- `POST /api/v1/users/logout` — Logout
-
-### Chat
-
-- `POST /api/v1/chats/create` — Create chat (auth required)
-- `GET /api/v1/chats/user-chats/:userId` — Get user chats (auth required)
-- `DELETE /api/v1/chats/:chatId` — Delete chat (auth required)
-
-### Message
-
-- `POST /api/v1/messages/send/:chatId` — Send message, stream Gemini AI response
-- `GET /api/v1/messages/chat/:chatId` — Get chat messages
-- `GET /api/v1/messages/:messageId` — Get message by ID
-- `DELETE /api/v1/messages/:messageId` — Delete message
-- `PUT /api/v1/messages/:messageId` — Edit message
-- `GET /api/v1/messages/user/:userId` — Get all messages by user
-
----
-
-## ✨ Features
-
-- Modern, responsive UI (React + TailwindCSS)
-- Secure JWT authentication
-- Real-time AI chat with Gemini API
-- Chat history and search
-- Modular, scalable codebase
+| Category | Endpoint | Method | Description |
+| :--- | :--- | :--- | :--- |
+| **Auth** | `/api/v1/users/register` | POST | Register a new user |
+| **Auth** | `/api/v1/users/login` | POST | User login |
+| **Chat** | `/api/v1/chats/create` | POST | Create a new session |
+| **Message**| `/api/v1/messages/send/:chatId` | POST | Send message (Streams AI response) |
+| **Storage**| `/api/v1/messages/upload` | POST | Upload image to Cloudinary |
 
 ---
 
 ## 📝 License
 
-This project is for educational and demonstration purposes.
-
----
+This project is licensed under the ISC License. Built for educational and demonstration purposes.
