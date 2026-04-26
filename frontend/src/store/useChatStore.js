@@ -71,6 +71,40 @@ const useChatStore = create((set) => ({
 
     },
 
+    shareChat: async (chatId, isShared) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axiosInstance.post(`/chats/share/${chatId}`, { isShared });
+            set({ isLoading: false });
+            if (response.data.success) {
+                const updatedChat = response.data.chat;
+                set((state) => ({
+                    currentChat: state.currentChat?._id === chatId ? updatedChat : state.currentChat,
+                    chats: state.chats.map(c => c._id === chatId ? updatedChat : c)
+                }));
+                toast.success(isShared ? 'Chat link generated!' : 'Public access disabled');
+                return updatedChat;
+            }
+        } catch (error) {
+            set({ isLoading: false, error: error.response?.data?.message || 'Failed to share chat' });
+            toast.error(error.response?.data?.message || 'Failed to share chat');
+        }
+    },
+
+    getSharedChat: async (shareId) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axiosInstance.get(`/chats/shared/${shareId}`);
+            set({ isLoading: false });
+            if (response.data.success) {
+                return response.data.chat;
+            }
+        } catch (error) {
+            set({ isLoading: false, error: error.response?.data?.message || 'Failed to fetch shared chat' });
+            toast.error(error.response?.data?.message || 'Failed to fetch shared chat');
+        }
+    },
+
 }), {
     name: 'chat-storage',
     getStorage: () => localStorage,

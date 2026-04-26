@@ -7,6 +7,7 @@ import RegisterPage from './pages/RegisterPage';
 import Sidebar from './components/sidebar/Sidebar';
 import ChatArea from './components/chat/ChatArea';
 import SearchPage from './pages/SearchPage';
+import SharedChatPage from './pages/SharedChatPage';
 import { Toaster } from 'react-hot-toast';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
@@ -115,6 +116,7 @@ const App = () => {
           <Route path="/register" element={
             user ? <Navigate to="/chat" replace /> : <RegisterPage />
           } />
+          <Route path="/share/:shareId" element={<SharedChatPage />} />
 
           {/* Protected routes */}
           <Route path="/chat" element={

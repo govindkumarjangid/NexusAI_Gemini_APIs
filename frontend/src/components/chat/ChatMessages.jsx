@@ -9,7 +9,6 @@ import { X, Download, ExternalLink, Copy, Check } from 'lucide-react';
 const ChatMessages = ({ messages, isStreaming }) => {
 
     const { user, actualTheme } = useAuthStore();
-    const { currentChat } = useChatStore();
     const isDark = actualTheme === 'dark';
 
     const [selectedImage, setSelectedImage] = useState(null);
@@ -55,9 +54,9 @@ const ChatMessages = ({ messages, isStreaming }) => {
     return (
         <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-6 w-full">
             <div className="max-w-xl md:max-w-4xl mx-auto space-y-6 h-full">
-                {(!currentChat || messages.length === 0) ? (
+                {(messages.length === 0) ? (
                     <div className="flex flex-col items-strat justify-end-safe h-full dark:text-gray-400 text-gray-500 select-none px-4">
-                        <div className="text-2xl font-semibold mb-2">Hi, {user?.name || user?.username || 'Govind'}</div>
+                        <div className="text-2xl font-semibold mb-2">Hi, {user?.name || user?.username || 'Guest'}</div>
                         <div className="text-3xl">Where should we start?</div>
                     </div>
                 ) : (
@@ -144,16 +143,16 @@ const ChatMessages = ({ messages, isStreaming }) => {
                     >
                         <motion.div
                             initial={isMobile ? { y: "100%", opacity: 0 } : { opacity: 0, y: 10, scale: 0.95 }}
-                            animate={{ 
-                                y: 0, 
+                            animate={{
+                                y: 0,
                                 scale: 1,
                                 opacity: 1,
-                                transition: isMobile 
+                                transition: isMobile
                                     ? { type: "spring", damping: 28, stiffness: 260 }
                                     : { type: "spring", damping: 22, stiffness: 280 }
                             }}
-                            exit={isMobile 
-                                ? { y: "100%", opacity: 0, transition: { duration: 0.2, ease: "easeIn" } } 
+                            exit={isMobile
+                                ? { y: "100%", opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }
                                 : { opacity: 0, y: 10, scale: 0.95, transition: { duration: 0.15, ease: "easeIn" } }
                             }
                             className="bg-(--bg-surface) border-t sm:border border-(--border-color) rounded-t-3xl sm:rounded-2xl p-4 sm:p-10 flex flex-col items-center gap-4 sm:gap-6 shadow-2xl max-w-4xl w-full mx-auto"
@@ -177,8 +176,8 @@ const ChatMessages = ({ messages, isStreaming }) => {
                                     alt="Full size preview"
                                     className="max-w-full max-h-full rounded-xl sm:rounded-2xl shadow-xl object-contain border border-(--border-color)"
                                 />
-                                
-                                <motion.div 
+
+                                <motion.div
                                     className="flex items-center gap-3 bg-(--bg-elevated) backdrop-blur-md px-5 py-2.5 rounded-full border border-(--border-color) shadow-lg"
                                 >
                                     <button

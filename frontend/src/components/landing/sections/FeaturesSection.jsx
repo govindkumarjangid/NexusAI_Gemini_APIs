@@ -45,7 +45,7 @@ const FeatureCard = ({ icon, title, desc, iconBg, iconColor, i }) => {
         className="rounded-2xl p-6 sm:p-8 border transition-all duration-300 hover:shadow-lg bg-(--bg-surface) border-(--border-color) hover:border-(--accent-color)"
       >
         <div
-          className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 bg-(--icon-bg) text-(--icon-color)"
+          className="w-12 h-12 rounded-full flex items-center justify-center mb-5 bg-(--icon-bg) text-(--icon-color)"
           style={{ '--icon-bg': iconBg, '--icon-color': iconColor }}
         >
           {icon}

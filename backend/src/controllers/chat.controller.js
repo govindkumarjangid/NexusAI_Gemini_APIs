@@ -3,6 +3,8 @@ import User from '../models/user.model.js';
 import wrapAsync from '../utils/wrapAsync.js';
 import Message from '../models/message.model.js';
 
+import crypto from 'crypto';
+
 // create new chat
 const createChat = wrapAsync(async (req, res) => {
     const { userId } = req.body;
@@ -46,8 +48,39 @@ const deleteChat = wrapAsync(async (req, res) => {
     res.status(200).json({ success: true, message: 'Chat and its messages deleted successfully' });
 });
 
+// share/unshare chat
+const shareChat = wrapAsync(async (req, res) => {
+    const { chatId } = req.params;
+    const { isShared } = req.body;
+
+    const chat = await Chat.findById(chatId);
+    if (!chat)
+        return res.status(404).json({ message: 'Chat not found' });
+
+    chat.isShared = isShared;
+    if (isShared && !chat.shareId) {
+        chat.shareId = crypto.randomBytes(16).toString('hex');
+    }
+
+    await chat.save();
+    res.status(200).json({ success: true, message: isShared ? 'Chat shared successfully' : 'Chat unshared successfully', chat });
+});
+
+// get shared chat
+const getSharedChat = wrapAsync(async (req, res) => {
+    const { shareId } = req.params;
+    const chat = await Chat.findOne({ shareId, isShared: true });
+
+    if (!chat)
+        return res.status(404).json({ message: 'Shared chat not found or link has expired' });
+
+    res.status(200).json({ success: true, message: 'Shared chat fetched successfully', chat });
+});
+
 export {
     createChat,
     getChatsByUser,
-    deleteChat
+    deleteChat,
+    shareChat,
+    getSharedChat
 };

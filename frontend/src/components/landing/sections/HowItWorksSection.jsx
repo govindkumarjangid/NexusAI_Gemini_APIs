@@ -22,7 +22,7 @@ const StepItem = ({ num, title, desc, i }) => {
       transition={{ duration: 0.7, delay: i * 0.18, ease: [0.16, 1, 0.3, 1] }}
     >
       <div
-        className="w-12 h-12 min-w-12 rounded-xl flex items-center justify-center font-extrabold text-base border bg-color-mix(in_srgb,var(--accent-color)_12%,transparent) text-(--accent-color) border-color-mix(in_srgb,var(--accent-color)_20%,transparent)"
+        className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center font-extrabold text-base border bg-color-mix(in_srgb,var(--accent-color)_12%,transparent) text-(--accent-color) border-color-mix(in_srgb,var(--accent-color)_20%,transparent)"
       >
         {num}
       </div>

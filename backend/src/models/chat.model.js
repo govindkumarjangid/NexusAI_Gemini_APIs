@@ -11,6 +11,9 @@ const chatSchema = new mongoose.Schema({
             imageUrl: { type: String, default: '' },
         }
     ],
+    isShared: { type: Boolean, default: false },
+    shareId: { type: String, unique: true, sparse: true },
+    isPinned: { type: Boolean, default: false },
 }, { timestamps: true });
 
 const Chat = mongoose.model('Chat', chatSchema);

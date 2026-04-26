@@ -54,7 +54,7 @@ export default function AccountSettings() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-60 flex items-end sm:items-center justify-center backdrop-blur-sm"
+                        className="fixed inset-0 z-60 flex items-end sm:items-center justify-center bg-black/40"
                     >
                         <motion.div
                             initial={{ y: 20, opacity: 0, scale: 0.9 }}

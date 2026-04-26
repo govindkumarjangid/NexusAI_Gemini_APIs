@@ -58,7 +58,7 @@ const RegisterPage = () => {
         <form onSubmit={handleSubmit} className="space-y-5">
           <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
             <label
-              className="block text-xs font-semibold mb-1.5 tracking-wide text-(--text-secondary)"
+              className="block text-xs font-semibold mb-1.5 ml-2 tracking-wide text-(--text-secondary)"
               htmlFor="reg-name">
               Full Name
             </label>
@@ -68,13 +68,13 @@ const RegisterPage = () => {
               name="name"
               placeholder="John Doe"
               value={formData.name} onChange={handleChange} autoComplete="name"
-              className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)]"
+              className="w-full p-4 rounded-full text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)]"
             />
           </motion.div>
 
           <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
             <label
-              className="block text-xs font-semibold mb-1.5 tracking-wide text-(--text-secondary)"
+              className="block text-xs font-semibold mb-1.5 ml-2 tracking-wide text-(--text-secondary)"
               htmlFor="reg-email">
               Email
             </label>
@@ -84,13 +84,13 @@ const RegisterPage = () => {
               name="email"
               placeholder="you@example.com"
               value={formData.email} onChange={handleChange}  autoComplete="email"
-              className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)]"
+              className="w-full p-4 rounded-full text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)]"
             />
           </motion.div>
 
           <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}>
             <label
-              className="block text-xs font-semibold mb-1.5 tracking-wide text-(--text-secondary)"
+              className="block text-xs font-semibold mb-1.5 ml-2 tracking-wide text-(--text-secondary)"
               htmlFor="reg-password">
               Password
             </label>
@@ -100,14 +100,14 @@ const RegisterPage = () => {
               name="password"
               placeholder="••••••••"
               value={formData.password} onChange={handleChange} autoComplete="new-password"
-              className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)]"
+              className="w-full p-4 rounded-full text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)] mb-3"
             />
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
             <button
               type="submit" disabled={isLoading}
-              className="w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all duration-300 hover:-translate-y-px active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer bg-(--accent-color) text-(--accent-text-color)"
+              className="w-full py-3 rounded-full font-bold text-sm flex items-center justify-center gap-2 transition-all duration-300 hover:-translate-y-px active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer bg-(--accent-color) text-(--accent-text-color) "
             >
               {isLoading ? <><Loader2 size={17} className="animate-spin" /> Creating account...</> : <><UserPlus size={17} /> Create Account</>}
             </button>

@@ -73,20 +73,20 @@ const HeroSection = ({ heroY, heroOpacity, heroScale }) => (
 
       {/* CTA buttons */}
       <motion.div
-        className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-xs sm:w-full sm:max-w-md"
+        className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-xs sm:w-full sm:max-w-md items-center justify-center"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.8 }}
       >
         <Link
           to="/register"
-          className="origin-left inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base border transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-sm group text-(--accent-text-color) border-(--border-color) bg-(--accent-color)/20  animated-accent-btn"
+          className="py-4 px-8 text-sm rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer w-full max-w-fit shadow-lg flex items-center gap-2 justify-center active:scale-95 hover:opacity-90"
         >
           Get Started Free <ArrowRight size={17} className='group-hover:translate-x-1.5 transition-transform duration-300' />
         </Link>
         <Link
           to="/login"
-          className="origin-left inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base border transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-sm group text-(--accent-text-color) border-(--border-color) bg-color-mix(in_srgb,var(--bg-surface)_50%,transparent) animated-accent-btn"
+          className="py-4 px-8 text-sm rounded-full  text-accent-contrast font-semibold transition-all cursor-pointer w-full max-w-fit  shadow-lg flex items-center gap-2 justify-center active:scale-95 hover:opacity-90 border border-(--accent-color)/50 bg-(--accent-color)/20"
         >
           Sign In <ChevronRight size={17} className='group-hover:translate-x-1.5 transition-transform duration-300' />
         </Link>

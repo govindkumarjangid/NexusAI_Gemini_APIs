@@ -23,39 +23,62 @@ const CodeBlockComponent = ({ lang, code }) => {
   };
 
   return (
-    <div className="w-full max-w-full overflow-x-auto rounded-lg shadow-lg my-6 text-left">
+    <div className="group w-full max-w-full overflow-hidden rounded-xl shadow-2xl my-8 border border-gray-200 dark:border-[#2d3238] transition-all duration-300 hover:shadow-accent/5">
+      {/* Code Header */}
       <div
-        className={`flex items-center justify-between py-2 px-6 border-b min-w-max w-full bg-gray-100 dark:bg-neutral-800 border-gray-300 dark:border-neutral-900`}
+        className={`flex items-center justify-between py-2.5 px-5 border-b min-w-max w-full backdrop-blur-md bg-gray-50/80 dark:bg-[#1E2225]/90 border-gray-200 dark:border-[#2d3238]`}
       >
-        <span className={`font-mono text-xs text-gray-600 dark:text-gray-300`}>
-          {lang}
-        </span>
+        <div className="flex items-center gap-2">
+          <div className="flex gap-1.5 mr-2">
+            <div className="w-3 h-3 rounded-full bg-red-400/80 shadow-sm" />
+            <div className="w-3 h-3 rounded-full bg-amber-400/80 shadow-sm" />
+            <div className="w-3 h-3 rounded-full bg-green-400/80 shadow-sm" />
+          </div>
+          <span className={`font-mono text-sm font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 select-none`}>
+            {lang || 'text'}
+          </span>
+        </div>
         <button
           onClick={handleCopy}
-          className={`flex items-center gap-1.5 font-medium text-xs transition-colors ${isCopied ? 'text-green-600' : 'text-gray-600 dark:text-gray-300'} bg-transparent border-0 cursor-pointer`}
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg font-semibold text-xs transition-all duration-300 transform active:scale-95 ${isCopied
+              ? 'bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20'
+              : 'bg-white dark:bg-[#2d3238] text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 border border-gray-200 dark:border-neutral-700 shadow-sm'
+            } cursor-pointer`}
         >
-          {isCopied ? <Check size={16} /> : <Copy size={16} />}
-          {isCopied ? 'Copied!' : 'Copy'}
+          {isCopied ? <Check size={14} className="animate-in fade-in zoom-in duration-300" /> : <Copy size={14} />}
+          {isCopied ? 'Copied' : 'Copy'}
         </button>
       </div>
 
-      <SyntaxHighlighter
-        language={lang === 'text' ? null : lang}
-        style={isDark ? vscDarkPlus : oneLight}
-        customStyle={{
-          margin: 0,
-          padding: '1rem 1.5rem',
-          backgroundColor: isDark ? '#1e1e1e' : '#fafafa',
-          fontSize: '0.9rem',
-          lineHeight: '1.5',
-          overflowX: 'auto',
-          fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
-          textAlign: 'left'
-        }}
-        codeTagProps={{ style: { fontFamily: "'JetBrains Mono', 'Fira Code', monospace" } }}
-      >
-        {code.trim()}
-      </SyntaxHighlighter>
+      {/* Code Content */}
+      <div className="relative">
+        <SyntaxHighlighter
+          language={lang === 'text' ? null : lang}
+          style={vscDarkPlus}
+          showLineNumbers={true}
+          lineNumberStyle={{
+            minWidth: '2.5em',
+            paddingRight: '1em',
+            color: '#24A5FF',
+            textAlign: 'right',
+            userSelect: 'none',
+            fontSize: '0.8rem'
+          }}
+          customStyle={{
+            margin: 0,
+            padding: '1.5rem 1rem',
+            backgroundColor: '#1E2225',
+            fontSize: '0.875rem',
+            lineHeight: '1.7',
+            overflowX: 'auto',
+            fontFamily: "'JetBrains Mono', 'Fira Code', 'Menlo', monospace",
+            textAlign: 'left',
+          }}
+          codeTagProps={{ style: { fontFamily: "'JetBrains Mono', 'Fira Code', 'Menlo', monospace" } }}
+        >
+          {code.trim()}
+        </SyntaxHighlighter>
+      </div>
     </div>
   );
 };
@@ -229,7 +252,7 @@ export function renderMessageContent(content, isDark) {
       // List Logic
       const isStandardBullet = /^\s*([*-])\s+/.test(line);
       const isBoldBullet = /^\s*\*\*[^*]+\*\*/.test(line);
-      // Added regex for Numbered Lists 
+      // Added regex for Numbered Lists
       const isNumberedList = /^\s*\d+\.\s+/.test(line);
 
       if (isStandardBullet || isBoldBullet || isNumberedList) {

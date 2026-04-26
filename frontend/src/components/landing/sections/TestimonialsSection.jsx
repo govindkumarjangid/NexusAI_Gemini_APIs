@@ -46,7 +46,7 @@ const TestimonialCard = ({ name, role, text, color, i }) => {
         <p className="text-sm leading-relaxed mb-5 italic text-(--text-secondary)">"{text}"</p>
         <div className="flex items-center gap-3">
           <div
-            className="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-xs text-white bg-(--color)"
+            className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs text-white bg-(--color)"
             style={{ '--color': color }}
           >
             {name[0]}
