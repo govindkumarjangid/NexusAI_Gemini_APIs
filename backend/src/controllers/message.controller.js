@@ -33,6 +33,12 @@ const sendMessage = wrapAsync(async (req, res) => {
     // console.log("New Message:", newMessage);
 
     chat.messages.push({ messageId: newMessage._id, role: 'user', content, imageUrl });
+
+    // Auto-update title if it's still "New Chat" and this is the first message with content
+    if (chat.title === 'New Chat' && content) {
+        chat.title = content.substring(0, 40) + (content.length > 40 ? '...' : '');
+    }
+
     await chat.save();
 
 

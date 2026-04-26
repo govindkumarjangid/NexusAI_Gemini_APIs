@@ -24,8 +24,16 @@ const Sidebar = () => {
   const [recentSidebarOpen, setRecentSidebarOpen] = useState(false);
   const [recentPage, setRecentPage] = useState(1);
 
-  const paginatedChats = chats.slice(0, recentPage * 6);
+  // Sort chats: pinned first, then by date
+  const sortedChats = [...chats].sort((a, b) => {
+    if (a.isPinned && !b.isPinned) return -1;
+    if (!a.isPinned && b.isPinned) return 1;
+    return new Date(b.createdAt) - new Date(a.createdAt);
+  });
+
+  const paginatedChats = sortedChats.slice(0, recentPage * 6);
   const hasMoreRecent = chats.length > paginatedChats.length;
+
 
   const navigate = useNavigate();
 

@@ -4,14 +4,34 @@ import useAuthStore from '../../store/useAuthStore';
 import useChatStore from '../../store/useChatStore';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const ChatAreaHeader = () => {
 
     const [showMore, setShowMore] = useState(false);
     const [showShareModal, setShowShareModal] = useState(false);
+    const [editedTitle, setEditedTitle] = useState('');
     const [copied, setCopied] = useState(false);
+
     const { isMobile, sidebarOpen, setSidebarOpen, user } = useAuthStore();
-    const { currentChat, shareChat } = useChatStore();
+    const {
+        currentChat, shareChat, updateChatTitle, togglePinChat, deleteChat,
+        showEditModal, setShowEditModal, chatToEdit, setChatToEdit,
+        showDeleteModal, setShowDeleteModal, chatToDelete, setChatToDelete
+    } = useChatStore();
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (chatToEdit) {
+            let titleToSet = chatToEdit.title;
+            if (!titleToSet || titleToSet === 'New Chat') {
+                const firstUserMsg = chatToEdit.messages?.find(m => m.role === 'user' && m.content);
+                titleToSet = firstUserMsg ? (firstUserMsg.content.length > 60 ? firstUserMsg.content.substring(0, 60) : firstUserMsg.content) : 'New Chat';
+            }
+            setEditedTitle(titleToSet);
+        }
+    }, [chatToEdit]);
 
     const handleShare = () => {
         setShowShareModal(!showShareModal);
@@ -29,27 +49,59 @@ const ChatAreaHeader = () => {
         setTimeout(() => setCopied(false), 2000);
     }
 
-    const handlePin = () => {
-        console.log('Pin');
+    const handlePin = async () => {
+        await togglePinChat(currentChat._id);
+        setShowMore(false);
     }
 
     const handleEdit = () => {
-        console.log('Edit');
+        setChatToEdit(currentChat);
+        setShowEditModal(true);
+        setShowMore(false);
     }
 
-    const handleDelete = () => {
-        console.log('Delete');
+
+
+    const handleSaveTitle = async (e) => {
+        if (e) e.preventDefault();
+        if (editedTitle.trim() && (editedTitle !== chatToEdit.title)) {
+            await updateChatTitle(chatToEdit._id, editedTitle.trim());
+        }
+        setShowEditModal(false);
     }
+
+
+
+    const handleDelete = async () => {
+        setChatToDelete(currentChat);
+        setShowDeleteModal(true);
+        setShowMore(false);
+    }
+
+    const confirmDelete = async () => {
+        if (chatToDelete) {
+            await deleteChat(chatToDelete._id);
+            if (currentChat?._id === chatToDelete._id) {
+                navigate('/chat');
+            }
+        }
+        setShowDeleteModal(false);
+    }
+
+
 
     const handleMore = () => {
         setShowMore(!showMore);
     }
 
+
     return (
         <>
+            {/* header  */}
             <header
                 className="h-14 shrink-0 w-full flex items-center justify-between px-3 sm:px-4 border-b sticky top-0 z-10 backdrop-blur-sm border-(--border-color) bg-(--bg-surface) text-(--text-primary)"
             >
+
                 <div className="flex items-center gap-3">
                     {isMobile && !sidebarOpen && (
                         <button
@@ -59,8 +111,10 @@ const ChatAreaHeader = () => {
                             <SquareChevronRight size={22} />
                         </button>
                     )}
-                    <h1 className="font-semibold text-lg text-(--text-primary)">NexusAI</h1>
+                    <span className="font-semibold text-lg ">NexusAI</span>
                 </div>
+
+
                 {
                     currentChat ? (
                         <div className="flex items-center gap-3">
@@ -99,7 +153,7 @@ const ChatAreaHeader = () => {
                 }
             </header>
 
-            {/* More Menu Popover / Bottom Sheet */}
+            {/* More Menu Popup */}
             <AnimatePresence>
                 {showMore && (
                     <>
@@ -131,18 +185,25 @@ const ChatAreaHeader = () => {
                                 </div>
                             )}
 
-                            <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer hover:bg-(--bg-accent) transition-all duration-300 active:scale-95 text-sm hover:text-(--text-primary) w-full font-medium" >
-                                <Pin size={18} className="text-(--text-secondary)" />
-                                <span>Pin Chat</span>
+                            <button
+                                onClick={handlePin}
+                                className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer hover:bg-(--bg-accent) transition-all duration-300 active:scale-95 text-sm hover:text-(--text-primary) w-full font-medium" >
+                                <Pin size={18} className={`${currentChat?.isPinned ? 'text-(--accent-color) fill-(--accent-color)' : 'text-(--text-secondary)'}`} />
+                                <span>{currentChat?.isPinned ? 'Unpin Chat' : 'Pin Chat'}</span>
                             </button>
-                            <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer hover:bg-(--bg-accent) transition-all duration-300 active:scale-95 text-sm hover:text-(--text-primary) w-full font-medium" >
+                            <button
+                                onClick={handleEdit}
+                                className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer hover:bg-(--bg-accent) transition-all duration-300 active:scale-95 text-sm hover:text-(--text-primary) w-full font-medium" >
                                 <Pencil size={18} className="text-(--text-secondary)" />
                                 <span>Edit Title</span>
                             </button>
-                            <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer hover:bg-red-500/10 text-red-500 transition-all duration-300 active:scale-95 text-sm w-full font-medium" >
+                            <button
+                                onClick={handleDelete}
+                                className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer hover:bg-red-500/10 text-red-500 transition-all duration-300 active:scale-95 text-sm w-full font-medium" >
                                 <Trash size={18} />
                                 <span>Delete Chat</span>
                             </button>
+
 
                             {isMobile && (
                                 <button
@@ -157,7 +218,7 @@ const ChatAreaHeader = () => {
                 )}
             </AnimatePresence>
 
-            {/* Share Modal / Bottom Sheet */}
+            {/* Share Modal */}
             <AnimatePresence>
                 {showShareModal && (
                     <>
@@ -199,10 +260,11 @@ const ChatAreaHeader = () => {
 
                                 <button
                                     onClick={() => setShowShareModal(false)}
-                                    className="block sm:hidden absolute top-2 right-2 p-2 rounded-full bg-accent transition-colors text-(--text-contrast) cursor-pointer"
+                                    className="absolute block sm:hidden top-2 right-2 p-2 rounded-full text-sm bg-accent cursor-pointer transition-colors text-(--text-primary)"
                                 >
-                                    <X size={20} />
+                                    <X size={18} />
                                 </button>
+
 
                                 <div className="space-y-6">
                                     <div className="flex items-start gap-4 p-4 rounded-xl bg-(--bg-accent)/50 border border-(--border-color)">
@@ -259,8 +321,192 @@ const ChatAreaHeader = () => {
                     </>
                 )}
             </AnimatePresence>
+
+            {/* Edit Title Modal */}
+            <AnimatePresence>
+                {showEditModal && (
+                    <>
+                        {/* Backdrop for mobile */}
+                        {isMobile && (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                onClick={() => setShowEditModal(false)}
+                                className="fixed inset-0 bg-black/40 z-40"
+                            />
+                        )}
+
+                        <motion.div
+                            initial={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
+                            animate={isMobile ? { y: 0 } : { opacity: 1, y: 0 }}
+                            exit={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            className={`${isMobile
+                                ? "fixed bottom-0 left-0 right-0 rounded-t-3xl border-t"
+                                : "absolute top-16 right-4 w-full max-w-md rounded-xl border shadow-lg"
+                                } bg-(--bg-surface) border-(--border-color) z-50 overflow-hidden`}
+                        >
+                            {/* Mobile Handle */}
+                            {isMobile && (
+                                <div className="flex justify-center pt-3 pb-1">
+                                    <div className="w-10 h-1 rounded-full opacity-30 bg-(--text-primary)" />
+                                </div>
+                            )}
+
+                            <div className="p-6">
+                                <div className="flex items-center justify-between mb-6">
+                                    <h2 className="text-xl font-bold text-(--text-primary) flex items-center gap-2">
+                                        <Pencil size={24} className="text-(--accent-color)" />
+                                        Rename Chat
+                                    </h2>
+                                    <button
+                                        onClick={() => setShowEditModal(false)}
+                                        className="hidden sm:block p-2 rounded-full hover:bg-(--bg-accent) transition-colors text-(--text-secondary) cursor-pointer"
+                                    >
+                                        <X size={20} />
+                                    </button>
+                                    <button
+                                        onClick={() => setShowEditModal(false)}
+                                        className="absolute block sm:hidden top-2 right-2 p-2 rounded-full text-sm bg-accent cursor-pointer transition-colors text-(--text-primary)"
+                                    >
+                                        <X size={18} />
+                                    </button>
+                                </div>
+
+
+                                <form onSubmit={handleSaveTitle} className="space-y-6">
+                                    <div className="space-y-3">
+                                        <label className="text-xs font-medium uppercase tracking-wider text-(--text-secondary) ml-2">
+                                            Chat Title
+                                        </label>
+                                        <input
+                                            autoFocus
+                                            type="text"
+                                            value={editedTitle}
+                                            onChange={(e) => setEditedTitle(e.target.value)}
+                                            placeholder="Enter chat title..."
+                                            className="w-full px-4 py-3 rounded-full text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)]"
+                                        />
+                                    </div>
+
+                                    <div className="flex gap-3 pt-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowEditModal(false)}
+                                            className="flex-1 px-4 py-3 rounded-full border border-(--border-color) text-(--text-primary) hover:bg-(--bg-accent) transition-all font-semibold cursor-pointer"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="flex-1 px-4 py-3 rounded-full bg-(--accent-color) text-white hover:brightness-110 shadow-lg shadow-(--accent-color)/20 transition-all font-semibold cursor-pointer"
+                                        >
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
+
+            {/* Delete Confirmation Modal */}
+            <AnimatePresence>
+                {showDeleteModal && (
+                    <>
+                        {/* Backdrop for mobile */}
+                        {isMobile && (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                onClick={() => setShowDeleteModal(false)}
+                                className="fixed inset-0 bg-black/40 z-40"
+                            />
+                        )}
+
+                        <motion.div
+                            initial={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
+                            animate={isMobile ? { y: 0 } : { opacity: 1, y: 0 }}
+                            exit={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            className={`${isMobile
+                                ? "fixed bottom-0 left-0 right-0 rounded-t-3xl border-t"
+                                : "absolute top-16 right-4 w-full max-w-md rounded-xl border shadow-lg"
+                                } bg-(--bg-surface) border-(--border-color) z-50 overflow-hidden`}
+                        >
+                            {/* Mobile Handle */}
+                            {isMobile && (
+                                <div className="flex justify-center pt-3 pb-1">
+                                    <div className="w-10 h-1 rounded-full opacity-30 bg-(--text-primary)" />
+                                </div>
+                            )}
+
+                            <div className="p-6">
+                                <div className="flex items-center justify-between mb-6">
+                                    <h2 className="text-xl font-bold text-(--text-primary) flex items-center gap-2">
+                                        <Trash size={24} className="text-red-500" />
+                                        Delete Chat
+                                    </h2>
+                                    <button
+                                        onClick={() => setShowDeleteModal(false)}
+                                        className="hidden sm:block p-2 rounded-full hover:bg-(--bg-accent) transition-colors text-(--text-secondary) cursor-pointer"
+                                    >
+                                        <X size={20} />
+                                    </button>
+                                    <button
+                                        onClick={() => setShowDeleteModal(false)}
+                                        className="absolute block sm:hidden top-2 right-2 p-2 rounded-full text-sm bg-accent cursor-pointer transition-colors text-(--text-primary)"
+                                    >
+                                        <X size={18} />
+                                    </button>
+                                </div>
+
+
+                                <div className="space-y-6">
+                                    <p className="text-(--text-secondary) px-1">
+                                        Are you sure you want to delete <span className="font-semibold text-(--text-primary)">
+                                            "{(() => {
+                                                if (!chatToDelete) return 'this chat';
+                                                if (chatToDelete.title && chatToDelete.title !== 'New Chat') return chatToDelete.title;
+                                                if (chatToDelete.messages && chatToDelete.messages.length > 0) {
+                                                    const firstUserMsg = chatToDelete.messages.find(m => m.role === 'user' && m.content);
+                                                    if (firstUserMsg) return firstUserMsg.content.length > 40 ? firstUserMsg.content.substring(0, 40) + '...' : firstUserMsg.content;
+                                                }
+                                                return chatToDelete.title || 'this chat';
+                                            })()}"
+                                        </span>? This action cannot be undone.
+                                    </p>
+
+
+                                    <div className="flex gap-3 pt-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowDeleteModal(false)}
+                                            className="flex-1 px-4 py-3 rounded-full border border-(--border-color) text-(--text-primary) hover:bg-(--bg-accent) transition-all font-semibold cursor-pointer"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            onClick={confirmDelete}
+                                            className="flex-1 px-4 py-3 rounded-full bg-red-500 text-white hover:bg-red-600 shadow-lg shadow-red-500/20 transition-all font-semibold cursor-pointer"
+                                        >
+                                            Delete Chat
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
         </>
     );
 };
+
+
 
 export default ChatAreaHeader;

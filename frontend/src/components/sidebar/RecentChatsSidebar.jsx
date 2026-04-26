@@ -1,9 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, MessageCircle, X } from 'lucide-react';
 
-const RecentChatsSidebar = ({
-    open, onClose, chats, onChatClick, onLoadMore, hasMore
-}) => {
+const RecentChatsSidebar = ({ open, onClose, chats, onChatClick, onLoadMore, hasMore }) => {
     return (
         <AnimatePresence>
             {open && (
@@ -38,11 +36,17 @@ const RecentChatsSidebar = ({
                             <div className="dark:text-gray-500 text-gray-400 text-center mt-10">No recent chats.</div>
                         )}
                         {chats.map(chat => {
-                            let firstMsg = '';
-                            if (chat.messages && chat.messages.length > 0)
-                                firstMsg = chat.messages[0].content || chat.messages[0].text || '';
-                            const displayTitle = firstMsg || chat.title || chat._id;
+                            const displayTitle = (() => {
+                                if (chat.title && chat.title !== 'New Chat') return chat.title;
+                                if (chat.messages && chat.messages.length > 0) {
+                                    const firstUserMsg = chat.messages.find(m => m.role === 'user' && m.content);
+                                    if (firstUserMsg)
+                                        return firstUserMsg.content.length > 40 ? firstUserMsg.content.substring(0, 40) + '...' : firstUserMsg.content;
+                                }
+                                return 'New Chat';
+                            })();
                             return (
+
                                 <button
                                     key={chat._id}
                                     className="w-full flex items-center gap-3 px-4 py-3 rounded-full transition-colors text-left mb-1 shadow-sm group cursor-pointer hover:opacity-80 text-(--text-secondary) hover:bg-(--bg-elevated)"

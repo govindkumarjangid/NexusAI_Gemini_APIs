@@ -75,10 +75,42 @@ const getSharedChat = wrapAsync(async (req, res) => {
     res.status(200).json({ success: true, message: 'Shared chat fetched successfully', chat });
 });
 
+// update chat title
+const updateChatTitle = wrapAsync(async (req, res) => {
+    const { chatId } = req.params;
+    const { title } = req.body;
+
+    const chat = await Chat.findById(chatId);
+    if (!chat)
+        return res.status(404).json({ message: 'Chat not found' });
+
+    chat.title = title;
+    await chat.save();
+
+    res.status(200).json({ success: true, message: 'Chat title updated successfully', chat });
+});
+
+// toggle pin chat
+const togglePinChat = wrapAsync(async (req, res) => {
+    const { chatId } = req.params;
+
+    const chat = await Chat.findById(chatId);
+    if (!chat)
+        return res.status(404).json({ message: 'Chat not found' });
+
+    chat.isPinned = !chat.isPinned;
+    await chat.save();
+
+    res.status(200).json({ success: true, message: chat.isPinned ? 'Chat pinned' : 'Chat unpinned', chat });
+});
+
+
 export {
     createChat,
     getChatsByUser,
     deleteChat,
     shareChat,
-    getSharedChat
+    getSharedChat,
+    updateChatTitle,
+    togglePinChat
 };

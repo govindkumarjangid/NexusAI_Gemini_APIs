@@ -1,6 +1,5 @@
 import axiosInstance from '../configs/axiosInstance.js';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import { toast } from 'react-hot-toast';
 
 const useChatStore = create((set) => ({
@@ -8,7 +7,17 @@ const useChatStore = create((set) => ({
     error: null,
     isLoading: false,
     currentChat: null,
+    showEditModal: false,
+    chatToEdit: null,
+    showDeleteModal: false,
+    chatToDelete: null,
     setCurrentChat: (chat) => set({ currentChat: chat }),
+    setShowEditModal: (show) => set({ showEditModal: show }),
+    setChatToEdit: (chat) => set({ chatToEdit: chat }),
+    setShowDeleteModal: (show) => set({ showDeleteModal: show }),
+    setChatToDelete: (chat) => set({ chatToDelete: chat }),
+
+
 
     createChat: async ({ userId, navigate, firstMessage }) => {
         set({ isLoading: true, error: null });
@@ -104,6 +113,45 @@ const useChatStore = create((set) => ({
             toast.error(error.response?.data?.message || 'Failed to fetch shared chat');
         }
     },
+
+    updateChatTitle: async (chatId, title) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axiosInstance.put(`/chats/update-title/${chatId}`, { title });
+            set({ isLoading: false });
+            if (response.data.success) {
+                const updatedChat = response.data.chat;
+                set((state) => ({
+                    currentChat: state.currentChat?._id === chatId ? updatedChat : state.currentChat,
+                    chats: state.chats.map(c => c._id === chatId ? updatedChat : c)
+                }));
+                toast.success('Title updated');
+            }
+        } catch (error) {
+            set({ isLoading: false, error: error.response?.data?.message || 'Failed to update title' });
+            toast.error(error.response?.data?.message || 'Failed to update title');
+        }
+    },
+
+    togglePinChat: async (chatId) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axiosInstance.put(`/chats/toggle-pin/${chatId}`);
+            set({ isLoading: false });
+            if (response.data.success) {
+                const updatedChat = response.data.chat;
+                set((state) => ({
+                    currentChat: state.currentChat?._id === chatId ? updatedChat : state.currentChat,
+                    chats: state.chats.map(c => c._id === chatId ? updatedChat : c)
+                }));
+                toast.success(updatedChat.isPinned ? 'Chat pinned' : 'Chat unpinned');
+            }
+        } catch (error) {
+            set({ isLoading: false, error: error.response?.data?.message || 'Failed to pin chat' });
+            toast.error(error.response?.data?.message || 'Failed to pin chat');
+        }
+    },
+
 
 }), {
     name: 'chat-storage',
