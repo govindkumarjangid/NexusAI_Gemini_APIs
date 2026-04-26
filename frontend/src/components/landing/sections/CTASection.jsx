@@ -31,7 +31,7 @@ const CTASection = () => (
           </p>
           <Link
             to="/register"
-            className="py-3 px-6 text-sm rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer w-full max-w-fit mx-auto shadow-lg flex items-center gap-2 justify-center active:scale-95 hover:opacity-90"
+            className="py-3 px-6 text-sm rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer w-full max-w-fit mx-auto shadow-lg flex items-center gap-2 justify-center active:scale-95 hover:opacity-90 group"
           >
             Get Started Free <ArrowRight size={17} className='group-hover:translate-x-1.5 transition-transform duration-300'/>
           </Link>

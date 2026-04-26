@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import { LogOut, Settings } from 'lucide-react';
+import { LogOut, Settings, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useAuthStore from '../../store/useAuthStore';
 import SettingsModal from '../model/SettingsModal';
@@ -63,7 +63,7 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
             {isMobile && (
               <motion.div
                 key="profile-backdrop"
-                className="fixed inset-0 z-40 backdrop-blur-sm"
+                className="fixed inset-0 z-40 bg-black/30"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -110,6 +110,14 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
                     {user?.email || ''}
                   </p>
                 </div>
+              </div>
+
+              <div className='block sm:hidden absolute top-2 right-2 bg-accent rounded-full z-50'>
+                <button
+                  onClick={() => setPopupOpen(false)}
+                  className='p-2 rounded-full cursor-pointer hover:bg-(--bg-accent) transition-all duration-300 active:scale-95'>
+                  <X size={18} />
+                </button>
               </div>
 
               {/* Divider */}

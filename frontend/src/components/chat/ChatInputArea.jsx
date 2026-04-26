@@ -219,7 +219,7 @@ const ChatInputArea = ({
                                                 initial={{ opacity: 0 }}
                                                 animate={{ opacity: 1 }}
                                                 exit={{ opacity: 0 }}
-                                                className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-40 sm:hidden"
+                                                className="fixed inset-0 bg-black/30  z-40 sm:hidden"
                                                 onClick={() => setIsAddMenuOpen(false)}
                                             />
 
@@ -240,7 +240,13 @@ const ChatInputArea = ({
                                                 className="fixed bottom-0 left-0 right-0 sm:absolute sm:bottom-full sm:left-0 mb-0 sm:mb-3 w-full sm:w-48 rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden z-50 p-4 sm:p-2 text-sm font-semibold border-t sm:border bg-(--bg-elevated) border-(--border-color)"
                                             >
                                                 {/* Mobile Handle */}
-                                                <div className="w-12 h-1.5 bg-(--border-color) rounded-full mx-auto mb-4 sm:hidden" />
+                                                {
+                                                    isMobile && (
+                                                        <div className="flex justify-center -mt-1.5 pb-1">
+                                                            <div className="w-10 h-1 rounded-full opacity-30 bg-(--text-primary)" />
+                                                        </div>
+                                                    )
+                                                }
 
                                                 <button
                                                     type="button"
@@ -253,7 +259,7 @@ const ChatInputArea = ({
                                                 <button
                                                     type="button"
                                                     onClick={toggleListening}
-                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-3 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-[#3f4145] hover:bg-gray-100 transition-colors text-left rounded-xl cursor-pointe"
+                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-3 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-[#3f4145] hover:bg-gray-100 transition-colors text-left rounded-xl cursor-pointer"
                                                 >
                                                     <Mic size={18} className="dark:text-gray-400 text-gray-500" />
                                                     <span>Voice Input</span>
@@ -289,7 +295,7 @@ const ChatInputArea = ({
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-10000 flex items-end sm:items-center justify-center backdrop-blur-md p-0 sm:p-4"
+                        className="fixed inset-0 z-10000 flex items-end sm:items-center justify-center bg-black/30 p-0 sm:p-4"
                         onClick={toggleListening}
                     >
                         <motion.div
@@ -310,8 +316,13 @@ const ChatInputArea = ({
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Mobile Handle */}
-                            <div className="w-12 h-1.5 bg-(--border-color) rounded-full sm:hidden -mt-4 mb-2" />
-
+                            {
+                                !isMobile && (
+                                    <div className="flex justify-center -mt-3 pb-1">
+                                        <div className="w-10 h-1 rounded-full opacity-30 bg-(--text-primary)" />
+                                    </div>
+                                )
+                            }
                             {/* Pulsing Mic Animation */}
                             <div className="relative">
                                 <motion.div

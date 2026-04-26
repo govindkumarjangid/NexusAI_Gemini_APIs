@@ -14,7 +14,7 @@ const ChatAreaHeader = () => {
     const { currentChat, shareChat } = useChatStore();
 
     const handleShare = () => {
-        setShowShareModal(true);
+        setShowShareModal(!showShareModal);
     }
 
     const handleShareToggle = async (isShared) => {
@@ -110,7 +110,7 @@ const ChatAreaHeader = () => {
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 onClick={() => setShowMore(false)}
-                                className="fixed inset-0 backdrop-blur-sm z-40"
+                                className="fixed inset-0 bg-black/40 z-40"
                             />
                         )}
 
@@ -120,14 +120,14 @@ const ChatAreaHeader = () => {
                             exit={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
                             transition={{ type: "spring", damping: 25, stiffness: 200 }}
                             className={`${isMobile
-                                    ? "fixed bottom-0 left-0 right-0 rounded-t-3xl border-t p-6 pb-10"
-                                    : "absolute top-16 right-4 w-40 p-3 rounded-lg border shadow-lg"
+                                ? "fixed bottom-0 left-0 right-0 rounded-t-3xl border-t p-6"
+                                : "absolute top-16 right-4 w-40 p-3 rounded-lg border shadow-lg"
                                 } bg-(--bg-surface) border-(--border-color) z-50 space-y-1`}
                         >
                             {/* Mobile Handle */}
                             {isMobile && (
-                                <div className="flex justify-center mb-6 -mt-3">
-                                    <div className="w-12 h-1.5 bg-(--border-color) rounded-full opacity-50" />
+                                <div className="flex justify-center -mt-3 pb-1">
+                                    <div className="w-10 h-1 rounded-full opacity-30 bg-(--text-primary)" />
                                 </div>
                             )}
 
@@ -147,9 +147,9 @@ const ChatAreaHeader = () => {
                             {isMobile && (
                                 <button
                                     onClick={() => setShowMore(false)}
-                                    className="mt-4 w-full py-3 bg-(--bg-accent) rounded-xl font-bold text-sm"
+                                    className="absolute block sm:hidden top-2 right-2 p-2 rounded-full text-sm bg-accent cursor-pointer"
                                 >
-                                    Cancel
+                                    <X size={18} className='text-(--text-primary)' />
                                 </button>
                             )}
                         </motion.div>
@@ -168,7 +168,7 @@ const ChatAreaHeader = () => {
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 onClick={() => setShowShareModal(false)}
-                                className="fixed inset-0 backdrop-blur-sm z-40"
+                                className="fixed inset-0 bg-black/40 z-40"
                             />
                         )}
 
@@ -178,14 +178,14 @@ const ChatAreaHeader = () => {
                             exit={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
                             transition={{ type: "spring", damping: 25, stiffness: 200 }}
                             className={`${isMobile
-                                    ? "fixed bottom-0 left-0 right-0 rounded-t-3xl border-t pb-10"
-                                    : "absolute top-16 right-4 w-full max-w-md rounded-xl border shadow-lg"
+                                ? "fixed bottom-0 left-0 right-0 rounded-t-3xl border-t"
+                                : "absolute top-16 right-4 w-full max-w-md rounded-xl border shadow-lg"
                                 } bg-(--bg-surface) border-(--border-color) z-50 overflow-hidden`}
                         >
                             {/* Mobile Handle */}
                             {isMobile && (
-                                <div className="flex justify-center pt-3">
-                                    <div className="w-12 h-1.5 bg-(--border-color) rounded-full opacity-50" />
+                                <div className="flex justify-center pt-3 pb-1">
+                                    <div className="w-10 h-1 rounded-full opacity-30 bg-(--text-primary)" />
                                 </div>
                             )}
 
@@ -195,17 +195,18 @@ const ChatAreaHeader = () => {
                                         <Share2 size={24} className="text-(--accent-color)" />
                                         Share Chat
                                     </h2>
-                                    <button
-                                        onClick={() => setShowShareModal(false)}
-                                        className="p-2 rounded-full hover:bg-(--bg-accent) transition-colors text-(--text-secondary) cursor-pointer"
-                                    >
-                                        <X size={20} />
-                                    </button>
                                 </div>
+
+                                <button
+                                    onClick={() => setShowShareModal(false)}
+                                    className="block sm:hidden absolute top-2 right-2 p-2 rounded-full bg-accent transition-colors text-(--text-contrast) cursor-pointer"
+                                >
+                                    <X size={20} />
+                                </button>
 
                                 <div className="space-y-6">
                                     <div className="flex items-start gap-4 p-4 rounded-xl bg-(--bg-accent)/50 border border-(--border-color)">
-                                        <div className="p-2 rounded-lg bg-(--accent-color)/10 text-(--accent-color)">
+                                        <div className="p-2 rounded-full bg-(--accent-color)/10 text-(--accent-color)">
                                             <Globe size={20} />
                                         </div>
                                         <div className="flex-1">
@@ -253,15 +254,6 @@ const ChatAreaHeader = () => {
                                         </motion.div>
                                     )}
                                 </div>
-                            </div>
-
-                            <div className={`p-4 bg-(--bg-accent)/30 border-t border-(--border-color) flex justify-end ${isMobile ? 'pb-8' : ''}`}>
-                                <button
-                                    onClick={() => setShowShareModal(false)}
-                                    className="px-4 py-2 text-sm font-medium text-(--text-primary) hover:bg-(--bg-accent) rounded-lg transition-colors cursor-pointer"
-                                >
-                                    Done
-                                </button>
                             </div>
                         </motion.div>
                     </>

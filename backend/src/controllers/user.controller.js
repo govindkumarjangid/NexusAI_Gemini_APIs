@@ -1,4 +1,6 @@
 import User from '../models/user.model.js';
+import Chat from '../models/chat.model.js';
+import Message from '../models/message.model.js';
 import bcrypt from 'bcryptjs';
 import wrapAsync from '../utils/wrapAsync.js';
 import genrateToken from '../utils/generateToken.js';
@@ -114,8 +116,10 @@ export const logoutUser = wrapAsync(async (req, res) => {
 export const deleteAccount = wrapAsync(async (req, res) => {
     const id = req.user._id;
     const password = req.body.password;
-    if (!password)
-        res.status(400).json({ message: 'Password is required' })
+
+    if (!password) {
+        return res.status(400).json({ message: 'Password is required' });
+    }
 
     const user = await User.findById(id);
     if (!user) return res.status(404).json({ message: 'User not found' });
@@ -123,7 +127,11 @@ export const deleteAccount = wrapAsync(async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
-    await User.findByIdAndDelete(id);
+    await User.findByIdAndUpdate(id, { $set: { password: null } });
+
+    await Chat.updateMany({ userId: id }, { $set: { userId: null } });
+    await Message.updateMany({ userId: id }, { $set: { userId: null } });
+
     res.clearCookie('token');
-    res.status(200).json({ success: true, message: 'Account deleted successfully' });
-})
+    res.status(200).json({ success: true, message: 'Account deactivated successfully' });
+});

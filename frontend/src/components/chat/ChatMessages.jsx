@@ -52,8 +52,8 @@ const ChatMessages = ({ messages, isStreaming }) => {
     };
 
     return (
-        <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-6 w-full">
-            <div className="max-w-xl md:max-w-4xl mx-auto space-y-6 h-full">
+        <div className="w-full">
+            <div className="max-w-4xl mx-auto space-y-6">
                 {(messages.length === 0) ? (
                     <div className="flex flex-col items-strat justify-end-safe h-full dark:text-gray-400 text-gray-500 select-none px-4">
                         <div className="text-2xl font-semibold mb-2">Hi, {user?.name || user?.username || 'Guest'}</div>
@@ -72,7 +72,7 @@ const ChatMessages = ({ messages, isStreaming }) => {
                                 <div
                                     className={`min-w-0 ${msg.role === 'user'
                                         ? 'bg-accent text-accent-contrast rounded-3xl rounded-tr-sm px-4 py-1 sm:px-5 shadow-xl max-w-[95%] sm:max-w-[85%] md:max-w-[70%] w-fit'
-                                        : 'dark:text-gray-200 text-gray-800 px-1 py-2 sm:px-4 sm:py-3 leading-relaxed w-full'
+                                        : 'dark:text-gray-200 text-gray-800 px-2 py-2 sm:px-4 sm:py-3 leading-relaxed w-full'
                                         }`}
                                 >
                                     <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words w-full overflow-hidden">
@@ -138,67 +138,64 @@ const ChatMessages = ({ messages, isStreaming }) => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-999 flex items-end sm:items-center justify-center backdrop-blur-md p-0 sm:p-4"
+                        className="fixed inset-0 z-9999 flex items-end sm:items-center justify-center bg-black/30 sm:bg-black/50 backdrop-blur-md  p-0 sm:p-8"
                         onClick={() => setSelectedImage(null)}
                     >
                         <motion.div
-                            initial={isMobile ? { y: "100%", opacity: 0 } : { opacity: 0, y: 10, scale: 0.95 }}
+                            initial={isMobile ? { y: "100%" } : { opacity: 0, scale: 0.9 }}
                             animate={{
                                 y: 0,
                                 scale: 1,
                                 opacity: 1,
-                                transition: isMobile
-                                    ? { type: "spring", damping: 28, stiffness: 260 }
-                                    : { type: "spring", damping: 22, stiffness: 280 }
                             }}
-                            exit={isMobile
-                                ? { y: "100%", opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }
-                                : { opacity: 0, y: 10, scale: 0.95, transition: { duration: 0.15, ease: "easeIn" } }
-                            }
-                            className="bg-(--bg-surface) border-t sm:border border-(--border-color) rounded-t-3xl sm:rounded-2xl p-4 sm:p-10 flex flex-col items-center gap-4 sm:gap-6 shadow-2xl max-w-4xl w-full mx-auto"
+                            exit={isMobile ? { y: "100%" } : { opacity: 0, scale: 0.9 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            className="relative max-w-full sm:max-w-4xl w-full max-h-[90vh] flex flex-col items-center justify-center gap-4 sm:gap-6 bg-(--bg-surface) sm:bg-transparent rounded-t-3xl sm:rounded-none p-6 sm:p-0 shadow-2xl sm:shadow-none"
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Mobile Handle */}
-                            <div className="w-12 h-1.5 bg-(--border-color) rounded-full sm:hidden mb-2" />
+                            <div className="w-12 h-1.5 bg-(--border-color) rounded-full sm:hidden mb-4 shrink-0" />
 
+                            {/* Close Button */}
                             <button
-                                className="absolute top-4 right-4 p-2 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 rounded-full transition-colors z-1000 cursor-pointer sm:flex hidden"
+                                className="absolute top-4 right-4 sm:-top-10 sm:-right-50 p-2.5 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all duration-200 cursor-pointer"
                                 onClick={() => setSelectedImage(null)}
                             >
-                                <X size={20} />
+                                <X size={24} />
                             </button>
 
-                            <div className="relative group max-w-full max-h-[60vh] sm:max-h-[75vh] flex flex-col items-center gap-4">
+                            <div className="relative group overflow-hidden rounded-2xl shadow-2xl border border-white/10">
                                 <motion.img
-                                    initial={{ scale: 0.95 }}
-                                    animate={{ scale: 1 }}
                                     src={selectedImage}
                                     alt="Full size preview"
-                                    className="max-w-full max-h-full rounded-xl sm:rounded-2xl shadow-xl object-contain border border-(--border-color)"
+                                    className="max-w-full max-h-[60vh] sm:max-h-[70vh] object-contain"
                                 />
-
-                                <motion.div
-                                    className="flex items-center gap-3 bg-(--bg-elevated) backdrop-blur-md px-5 py-2.5 rounded-full border border-(--border-color) shadow-lg"
-                                >
-                                    <button
-                                        onClick={() => handleDownload(selectedImage)}
-                                        className="flex items-center gap-2 text-(--text-primary) hover:text-accent transition-colors px-3 py-1 rounded-lg cursor-pointer"
-                                        title="Download Image"
-                                    >
-                                        <Download size={18} />
-                                        <span className="text-sm font-medium">Download</span>
-                                    </button>
-                                    <div className="w-px h-5 bg-(--border-color)" />
-                                    <button
-                                        onClick={() => window.open(selectedImage, '_blank')}
-                                        className="flex items-center gap-2 text-(--text-primary) hover:text-accent transition-colors px-3 py-1 rounded-lg cursor-pointer"
-                                        title="Open Original"
-                                    >
-                                        <ExternalLink size={18} />
-                                        <span className="text-sm font-medium">Live Link</span>
-                                    </button>
-                                </motion.div>
                             </div>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 }}
+                                className="flex items-center gap-3 bg-white/10 backdrop-blur-xl px-3 py-1.5 rounded-full border border-white/10 shadow-xl"
+                            >
+                                <button
+                                    onClick={() => handleDownload(selectedImage)}
+                                    className="flex items-center gap-2 text-white hover:text-accent transition-colors px-4 py-1.5 cursor-pointer hover:bg-(--accent-color)/30 rounded-full"
+                                    title="Download Image"
+                                >
+                                    <Download size={20} />
+                                    <span className="text-sm font-semibold">Download</span>
+                                </button>
+                                <div className="w-px h-6 bg-white/20" />
+                                <button
+                                    onClick={() => window.open(selectedImage, '_blank')}
+                                    className="flex items-center gap-2 text-white hover:text-accent transition-colors px-4 py-1.5 rounded-full cursor-pointer hover:bg-(--accent-color)/30"
+                                    title="Open Original"
+                                >
+                                    <ExternalLink size={20} />
+                                    <span className="text-sm font-semibold">Original</span>
+                                </button>
+                            </motion.div>
                         </motion.div>
                     </motion.div>
                 )}

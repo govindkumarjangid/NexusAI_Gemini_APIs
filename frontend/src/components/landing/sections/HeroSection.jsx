@@ -80,13 +80,13 @@ const HeroSection = ({ heroY, heroOpacity, heroScale }) => (
       >
         <Link
           to="/register"
-          className="py-4 px-8 text-sm rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer w-full max-w-fit shadow-lg flex items-center gap-2 justify-center active:scale-95 hover:opacity-90"
+          className="py-4 px-8 text-sm rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer w-full max-w-fit shadow-lg flex items-center gap-2 justify-center active:scale-95 hover:opacity-90 group"
         >
           Get Started Free <ArrowRight size={17} className='group-hover:translate-x-1.5 transition-transform duration-300' />
         </Link>
         <Link
           to="/login"
-          className="py-4 px-8 text-sm rounded-full  text-accent-contrast font-semibold transition-all cursor-pointer w-full max-w-fit  shadow-lg flex items-center gap-2 justify-center active:scale-95 hover:opacity-90 border border-(--accent-color)/50 bg-(--accent-color)/20"
+          className="py-4 px-8 text-sm rounded-full  text-accent-contrast font-semibold transition-all cursor-pointer w-full max-w-fit  shadow-lg flex items-center gap-2 justify-center active:scale-95 hover:opacity-90 border border-(--accent-color)/50 bg-(--accent-color)/20 group"
         >
           Sign In <ChevronRight size={17} className='group-hover:translate-x-1.5 transition-transform duration-300' />
         </Link>

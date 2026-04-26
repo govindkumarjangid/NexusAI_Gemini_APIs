@@ -63,7 +63,7 @@ const Sidebar = () => {
     <>
       {isMobile && sidebarOpen && (
         <div
-          className="fixed inset-0 backdrop-blur-sm z-30"
+          className="fixed inset-0 z-30 bg-black/30"
           onClick={() => setSidebarOpen(false)}
         />
       )}

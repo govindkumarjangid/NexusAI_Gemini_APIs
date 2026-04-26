@@ -6,6 +6,7 @@ import axios from 'axios';
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+// upload image to Cloudinary
 const uploadImage = wrapAsync(async (req, res) => {
     if (!req.file)
         return res.status(400).json({ message: 'No image uploaded' });

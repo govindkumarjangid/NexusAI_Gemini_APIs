@@ -11,7 +11,7 @@ const RecentChatsSidebar = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 backdrop-blur-sm z-60"
+                    className="fixed inset-0 bg-black/30 z-60"
                     onClick={() => onClose(false)}
                 />
             )}

@@ -73,13 +73,9 @@ export default function Modal({ open, onClose, children }) {
                         >
                             {/* Close button */}
                             <button
-                                className="absolute top-3 right-3 z-10 cursor-pointer rounded-full transition-colors p-1.5 bg-(--bg-elevated) text-(--text-secondary)"
-                                onMouseEnter={e => e.currentTarget.style.backgroundColor = "var(--bg-hover)"}
-                                onMouseLeave={e => e.currentTarget.style.backgroundColor = "var(--bg-elevated)"}
-                                onClick={onClose}
-                                aria-label="Close"
-                            >
-                                <X size={20} />
+                                onClick={() => onClose()}
+                                className='block  absolute top-2 right-2 p-2 rounded-full cursor-pointer hover:bg-(--bg-accent) transition-all duration-300 active:scale-95 bg-accent'>
+                                <X size={18} />
                             </button>
 
                             <div className="overflow-y-auto flex-1">

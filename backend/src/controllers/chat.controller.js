@@ -2,7 +2,6 @@ import Chat from '../models/chat.model.js';
 import User from '../models/user.model.js';
 import wrapAsync from '../utils/wrapAsync.js';
 import Message from '../models/message.model.js';
-
 import crypto from 'crypto';
 
 // create new chat
@@ -58,9 +57,8 @@ const shareChat = wrapAsync(async (req, res) => {
         return res.status(404).json({ message: 'Chat not found' });
 
     chat.isShared = isShared;
-    if (isShared && !chat.shareId) {
+    if (isShared && !chat.shareId)
         chat.shareId = crypto.randomBytes(16).toString('hex');
-    }
 
     await chat.save();
     res.status(200).json({ success: true, message: isShared ? 'Chat shared successfully' : 'Chat unshared successfully', chat });
