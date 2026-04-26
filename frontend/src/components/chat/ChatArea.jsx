@@ -112,9 +112,10 @@ const ChatArea = () => {
       <ChatAreaHeader />
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto scroll-smooth custom-scrollbar p-3 sm:p-6">
+      <div className="flex-1 overflow-y-auto scroll-smooth custom-scrollbar p-3 sm:p-6 flex flex-col">
         <ChatMessages messages={messages} isStreaming={isStreaming} />
       </div>
+
 
 
       {/* Input Area */}

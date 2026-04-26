@@ -23,7 +23,7 @@ const CodeBlockComponent = ({ lang, code }) => {
   };
 
   return (
-    <div className="group w-full max-w-full overflow-hidden rounded-xl shadow-2xl my-8 border border-gray-200 dark:border-[#2d3238] transition-all duration-300 hover:shadow-accent/5">
+    <div className="group w-full max-w-full overflow-hidden rounded-xl shadow-2xl my-6 border border-gray-200 dark:border-[#2d3238] transition-all duration-300 hover:shadow-accent/5">
       {/* Code Header */}
       <div
         className={`flex items-center justify-between py-2.5 px-5 border-b min-w-max w-full backdrop-blur-md bg-gray-50/80 dark:bg-[#1E2225]/90 border-gray-200 dark:border-[#2d3238]`}
@@ -67,21 +67,22 @@ const CodeBlockComponent = ({ lang, code }) => {
           }}
           customStyle={{
             margin: 0,
-            padding: '1.5rem 1.5rem',
+            padding: '1.25rem 1.25rem',
             backgroundColor: '#1E2225',
             fontSize: '0.875rem',
-            lineHeight: '1.5',
+            lineHeight: '1.4',
             overflowX: 'auto',
             fontFamily: "'JetBrains Mono', 'Fira Code', 'Menlo', monospace",
             textAlign: 'left',
           }}
 
-          codeTagProps={{ style: { fontFamily: "'JetBrains Mono', 'Fira Code', 'Menlo', monospace" } }}
+          codeTagProps={{ style: { fontFamily: "'JetBrains Mono', 'Fira Code', 'Menlo', monospace", lineHeight: '1.4' } }}
         >
           {code.trim()}
         </SyntaxHighlighter>
       </div>
     </div>
+
   );
 };
 
