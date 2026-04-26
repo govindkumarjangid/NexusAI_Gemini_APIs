@@ -7,10 +7,11 @@ import {
   EllipsisVertical,
 } from 'lucide-react';
 
-import logo from '/nexusai-logo.svg';
 import useAuthStore from '../../store/useAuthStore.js';
 import useChatStore from '../../store/useChatStore.js';
 import { NavLink, useNavigate } from 'react-router-dom';
+import Logo from '../common/Logo';
+
 import ChatList from '../chat/ChatList';
 import SidebarBottom from '../sidebar/SidebarBottom';
 import RecentChatsSidebar from '../sidebar/RecentChatsSidebar';
@@ -81,19 +82,16 @@ const Sidebar = () => {
           width: isMobile ? 300 : (sidebarOpen ? 300 : 70),
           x: isMobile ? (sidebarOpen ? 0 : -300) : 0
         }}
-        transition={{ ease: "easeInOut", duration: 0.2 }}
+        transition={{ type: "spring", damping: 30, stiffness: 300 }}
+
         className={`h-screen flex flex-col border-r whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl overflow-hidden' : 'relative overflow-visible z-20'} bg-(--bg-surface) border-(--border-color) text-(--text-primary)`}
       >
         {/* Top Header */}
         <div className="h-14 flex items-center justify-between shrink-0">
           {(isMobile || sidebarOpen) && (
             <div className="w-full flex items-center justify-between shrink-0 relative group px-3">
-              <NavLink to="/chat" className="flex items-center gap-3">
-                <img
-                  src={logo}
-                  alt="NexusAI Logo"
-                  className="w-11 h-11 rounded-full shadow-lg cursor-pointer transition-all duration-200 hover:scale-105"
-                />
+              <NavLink to="/chat" className="flex items-center gap-1">
+                <Logo size={36} className="text-(--accent-color) drop-shadow-sm transition-all duration-200 hover:scale-105" />
                 <h1 className="font-semibold text-lg dark:text-gray-200 text-gray-800">
                   NexusAI
                 </h1>
@@ -109,11 +107,9 @@ const Sidebar = () => {
           )}
           {!isMobile && !sidebarOpen && (
             <div className="w-17.5 flex items-center justify-center shrink-0 relative group">
-              <img
-                src={logo}
-                alt="NexusAI Logo"
-                className="w-11 h-11 rounded-full shadow-lg cursor-pointer transition-all duration-200 hover:scale-105 group-hover:hidden"
-              />
+              <Logo size={36} className="text-(--accent-color) drop-shadow-sm transition-all duration-200 hover:scale-105 group-hover:hidden" />
+
+
               <button
                 onClick={() => setSidebarOpen(true)}
                 className="p-0 sm:p-3 dark:hover:bg-gray-800 hover:bg-gray-200 rounded-full hidden group-hover:block transition-all cursor-ew-resize duration-300 active:scale-95 dark:text-gray-400 text-gray-500 dark:hover:text-gray-200 hover:text-gray-800"

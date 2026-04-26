@@ -1,4 +1,5 @@
-import { useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
+
 
 import LandingNav from '../components/landing/ui/LandingNav';
 import HeroSection from '../components/landing/sections/HeroSection';
@@ -9,34 +10,20 @@ import CTASection from '../components/landing/sections/CTASection';
 import SolarSystem from '../components/landing/ui/SolarSystem';
 
 const LandingPage = () => {
-
-  const { scrollYProgress } = useScroll();
-
-  const heroY = useTransform(scrollYProgress, [0, 0.3], [0, -100]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.22], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.92]);
-
-  const orbScale = useTransform(scrollYProgress, [0, 0.4], [1, 1.1]);
-  const orbOpacity = useTransform(scrollYProgress, [0, 0.28], [1, 1]);
-
   return (
     <div
       className="min-h-screen overflow-x-hidden overflow-y-auto scroll-smooth bg-(--bg-base) text-(--text-primary)"
     >
       <LandingNav />
 
-      {/* Fixed Solar System Background */}
+      {/* Fixed Background */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <SolarSystem scale={orbScale} opacity={orbOpacity} scrollYProgress={scrollYProgress} />
+        <SolarSystem />
       </div>
 
-      <div className="relative z-10">
-        <HeroSection
-          heroY={heroY}
-          heroOpacity={heroOpacity}
-          heroScale={heroScale}
-        />
 
+      <div className="relative z-10">
+        <HeroSection />
         <FeaturesSection />
         <HowItWorksSection />
         <TestimonialsSection />

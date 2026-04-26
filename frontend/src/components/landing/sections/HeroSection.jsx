@@ -4,7 +4,7 @@ import { ArrowRight, ChevronRight } from 'lucide-react';
 
 const headingFont = { fontFamily: "'Outfit', 'Inter', sans-serif" };
 
-const HeroSection = ({ heroY, heroOpacity, heroScale }) => (
+const HeroSection = () => (
   <section className="min-h-screen flex flex-col items-center justify-center px-5 sm:px-8 pt-24 pb-16 relative overflow-hidden">
 
     <div className="landing-grid-bg absolute inset-0 pointer-events-none" />
@@ -32,8 +32,8 @@ const HeroSection = ({ heroY, heroOpacity, heroScale }) => (
 
     <motion.div
       className="relative z-10 flex flex-col items-center mt-12 sm:mt-0"
-      style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
     >
+
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}

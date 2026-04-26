@@ -112,13 +112,13 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
                 </div>
               </div>
 
-              <div className='block sm:hidden absolute top-2 right-2 bg-accent rounded-full z-50'>
-                <button
-                  onClick={() => setPopupOpen(false)}
-                  className='p-2 rounded-full cursor-pointer hover:bg-(--bg-accent) transition-all duration-300 active:scale-95'>
-                  <X size={18} />
-                </button>
-              </div>
+              <button
+                onClick={() => setPopupOpen(false)}
+                className="absolute block sm:hidden top-2 right-2 p-2 rounded-full text-sm bg-accent cursor-pointer transition-colors text-(--text-primary)"
+              >
+                <X size={18} />
+              </button>
+
 
               {/* Divider */}
               <div className="mx-4 border-t border-(--border-color)" />

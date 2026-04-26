@@ -41,8 +41,9 @@ export default function Modal({ open, onClose, children }) {
     const desktopVariants = {
         hidden: { opacity: 0, scale: 0.95, y: -8 },
         visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", damping: 24, stiffness: 300 } },
-        exit: { opacity: 0, scale: 0.95, y: -8, transition: { duration: 0.18, ease: "easeIn" } },
+        exit: { opacity: 0, scale: 0.95, y: -8, transition: { type: "spring", damping: 24, stiffness: 300 } },
     };
+
 
     const variants = isMobile ? mobileVariants : desktopVariants;
 
@@ -74,9 +75,15 @@ export default function Modal({ open, onClose, children }) {
                             {/* Close button */}
                             <button
                                 onClick={() => onClose()}
-                                className='block  absolute top-2 right-2 p-2 rounded-full cursor-pointer hover:bg-(--bg-accent) transition-all duration-300 active:scale-95 bg-accent'>
+                                className='absolute block sm:hidden top-2 right-2 p-2 rounded-full text-sm bg-accent cursor-pointer transition-colors text-(--text-primary)'>
                                 <X size={18} />
                             </button>
+                            <button
+                                onClick={() => onClose()}
+                                className='hidden sm:block absolute top-2 right-2 p-2 rounded-full cursor-pointer hover:bg-(--bg-accent) transition-all duration-300 active:scale-95'>
+                                <X size={18} />
+                            </button>
+
 
                             <div className="overflow-y-auto flex-1">
                                 {children}

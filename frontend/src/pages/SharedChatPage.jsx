@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import useChatStore from '../store/useChatStore';
 import ChatMessages from '../components/chat/ChatMessages';
-import { Globe, MessageSquare, ArrowRight, Code2 } from 'lucide-react';
+import { Globe, MessageSquare, ArrowRight, Code2, MessageCircle } from 'lucide-react';
 import Spinner from '../components/model/Spinner';
 import { motion } from 'framer-motion';
 
@@ -50,7 +50,7 @@ const SharedChatPage = () => {
                 </p>
                 <Link
                     to="/login"
-                    className="flex items-center gap-2 px-4 py-2.5 sm:px-6 sm:py-3 bg-(--accent-color) text-white rounded-xl text-sm sm:text-base font-semibold hover:brightness-110 transition-all shadow-lg shadow-(--accent-color)/20 group active:scale-99"
+                    className="flex items-center gap-2 px-4 py-2.5 sm:px-6 sm:py-3 bg-(--accent-color) text-white rounded-full text-sm sm:text-base font-semibold hover:brightness-110 transition-all shadow-lg shadow-(--accent-color)/20 group active:scale-99"
                 >
                     Go to NexusAI
                     <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
@@ -69,11 +69,13 @@ const SharedChatPage = () => {
             {/* Header */}
             <header className="h-16 shrink-0 w-full flex items-center justify-between px-4 sm:px-8 border-b border-(--border-color) bg-(--bg-surface)/10 backdrop-blur-sm sticky top-0 z-10">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-(--accent-color) flex items-center justify-center text-white shadow-lg shadow-(--accent-color)/30 transform transition-transform hover:rotate-3">
-                        <MessageSquare size={24} />
+                    <div className="w-10 h-10 rounded-full bg-(--accent-color)/10 flex items-center justify-center text-(--accent-color) shadow-lg shadow-(--accent-color)/30 transform transition-transform hover:rotate-3">
+                        <MessageCircle size={20} />
                     </div>
                     <div>
-                        <h1 className="font-bold text-lg text-(--text-primary) leading-tight tracking-tight">NexusAI</h1>
+                        <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-linear-to-r from-(--text-primary) via-(--text-primary) to-(--accent-color)">
+                            NexusAI
+                        </span>
                         <div className="flex items-center gap-1.5">
                             <span className="flex h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
                             <span className="text-[10px] font-extrabold uppercase tracking-widest text-(--text-secondary) opacity-80">Shared Session</span>
@@ -90,7 +92,7 @@ const SharedChatPage = () => {
                     </Link>
                     <Link
                         to="/register"
-                        className="flex items-center gap-2 px-4 py-1.5 sm:px-5 sm:py-2 bg-(--accent-color) text-white rounded-xl text-sm sm:text-base font-semibold hover:brightness-110 transition-all shadow-lg shadow-(--accent-color)/20 group active:scale-99"
+                        className="flex items-center gap-2 px-4 py-1.5 sm:px-5 sm:py-2 bg-(--accent-color) text-white rounded-full text-sm sm:text-base font-semibold hover:brightness-110 transition-all shadow-lg shadow-(--accent-color)/20 group active:scale-99"
                     >
                         Try NexusAI
                         <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
@@ -148,9 +150,9 @@ const SharedChatPage = () => {
                 <div className="p-4 sm:p-6 bg-(--bg-surface)/80 border-t border-(--border-color) backdrop-blur-2xl mt-auto">
                     <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
                         <div className="flex items-center gap-4 w-full sm:w-auto">
-                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-(--accent-color) flex items-center justify-center text-white shadow-lg shrink-0">
-                                <MessageSquare size={20} className="sm:hidden" />
-                                <MessageSquare size={24} className="hidden sm:block" />
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-(--accent-color) flex items-center justify-center text-white shadow-lg shrink-0">
+                                <MessageCircle size={20} className="sm:hidden" />
+                                <MessageCircle size={24} className="hidden sm:block" />
                             </div>
                             <div>
                                 <p className="text-sm font-bold text-(--text-primary)">Enjoying this conversation?</p>
@@ -159,7 +161,7 @@ const SharedChatPage = () => {
                         </div>
                         <Link
                             to="/register"
-                            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 sm:px-6 sm:py-3 bg-(--accent-color) text-white rounded-xl text-sm sm:text-base font-semibold hover:brightness-110 transition-all shadow-lg shadow-(--accent-color)/20 group active:scale-99"
+                            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 sm:px-6 sm:py-3 bg-(--accent-color) text-white rounded-full text-sm sm:text-base font-semibold hover:brightness-110 transition-all shadow-lg shadow-(--accent-color)/20 group active:scale-99"
                         >
                             Create Your Free Account
                             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />

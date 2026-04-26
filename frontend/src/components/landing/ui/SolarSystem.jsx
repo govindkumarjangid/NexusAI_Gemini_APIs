@@ -1,22 +1,5 @@
-import { motion, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-
-const PLANETS = [
-  { name: 'Mercury', radius: 60, size: 8, color: '#b5a7a7', initialAngle: 0, duration: 25 },
-  { name: 'Venus', radius: 90, size: 14, color: '#e3bb76', initialAngle: 45, duration: 35 },
-  { name: 'Earth', radius: 125, size: 16, color: '#4b70dd', initialAngle: 90, duration: 50 },
-  { name: 'Mars', radius: 160, size: 12, color: '#c1440e', initialAngle: 135, duration: 70 },
-  { name: 'Jupiter', radius: 210, size: 28, color: '#d39c7e', initialAngle: 180, duration: 100 },
-  { name: 'Saturn', radius: 260, size: 24, color: '#ead6b8', initialAngle: 225, duration: 140 },
-];
-
-const ASTEROIDS = Array.from({ length: 24 }, (_, i) => ({
-  id: i,
-  angle: (i / 24) * 360,
-  r: 185 + Math.sin(i * 3) * 8,
-  size: 1.5 + (i % 2),
-}));
-
 
 const STARS = Array.from({ length: 400 }, (_, i) => ({
   id: i,
@@ -29,10 +12,7 @@ const STARS = Array.from({ length: 400 }, (_, i) => ({
   driftDel: `${Math.random() * 10}s`,
 }));
 
-const SolarSystem = ({ scale = 1, opacity = 1, scrollYProgress }) => {
-  const maxR = 260;
-  const totalSize = (maxR + 40) * 2;
-
+const SolarSystem = ({ scale = 1, opacity = 1 }) => {
   const [shootingStars, setShootingStars] = useState([]);
   const [spaceShips, setSpaceShips] = useState([]);
 
@@ -70,8 +50,6 @@ const SolarSystem = ({ scale = 1, opacity = 1, scrollYProgress }) => {
       clearInterval(shipInterval);
     };
   }, []);
-
-  const rotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
 
   return (
     <motion.div
@@ -134,86 +112,6 @@ const SolarSystem = ({ scale = 1, opacity = 1, scrollYProgress }) => {
           />
         </div>
       ))}
-
-      {/* Solar System Container */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[0.5] sm:scale-[0.65] md:scale-[0.8] w-(--total-size) h-(--total-size)"
-        style={{
-          '--total-size': `${totalSize}px`,
-          rotate: rotate,
-        }}
-      >
-        {/* The Sun */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-           <div className="w-14 h-14 rounded-full bg-[radial-gradient(circle_at_35%_35%,#ffffff_0%,#ffdf00_40%,#ff8c00_100%)] " />
-           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-70 h-70 bg-[radial-gradient(circle,rgba(255,160,0,0.2)_0%,transparent_70%)] blur-3xl -z-10" />
-        </div>
-
-        {/* Orbit rings + Planets */}
-        {PLANETS.map((planet, i) => {
-          const orbitSize = planet.radius * 2;
-          const offset = (totalSize - orbitSize) / 2;
-
-          return (
-            <div
-              key={i}
-              className="absolute w-(--orbit-size) h-(--orbit-size) top-(--offset) left-(--offset)"
-              style={{
-                '--orbit-size': `${orbitSize}px`,
-                '--offset': `${offset}px`,
-              }}
-            >
-              <div className="absolute inset-0 rounded-full border border-white/10" />
-
-              <div
-                className="absolute inset-0"
-                style={{
-                  transform: `rotate(${planet.initialAngle}deg)`,
-                }}
-              >
-                <div
-                  className="absolute left-1/2 -translate-x-1/2 rounded-full w-(--size) h-(--size) -top-(--half-size) shadow-[0_0_15px_rgba(255,255,255,0.1),inset_-3px_-3px_6px_rgba(0,0,0,0.7)]"
-                  style={{
-                    '--size': `${planet.size}px`,
-                    '--half-size': `${planet.size / 2}px`,
-                    backgroundColor: planet.color,
-                    backgroundImage: `radial-gradient(circle at 35% 35%, color-mix(in srgb, ${planet.color} 60%, white), ${planet.color} 80%, black)`,
-                  }}
-                />
-
-                {planet.name === 'Saturn' && (
-                  <div
-                    className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-(--ring-w) h-(--ring-h) border-[3px] border-[rgba(234,214,184,0.3)] rounded-full rotate-x-75 shadow-[0_0_2px_rgba(234,214,184,0.2)]"
-                    style={{
-                      '--ring-w': `${planet.size * 2.2}px`,
-                      '--ring-h': `${planet.size * 0.8}px`,
-                    }}
-                  />
-                )}
-              </div>
-            </div>
-          );
-        })}
-
-        {/* Asteroid Belt */}
-        {ASTEROIDS.map((a) => {
-          const rad = (a.angle * Math.PI) / 180;
-          const cx = totalSize / 2 + a.r * Math.cos(rad);
-          const cy = totalSize / 2 + a.r * Math.sin(rad);
-          return (
-            <div
-              key={a.id}
-              className="absolute rounded-full bg-[#969696]/20 w-(--size) h-(--size) top-(--top) left-(--left)"
-              style={{
-                '--size': `${a.size}px`,
-                '--top': `${cy - a.size / 2}px`,
-                '--left': `${cx - a.size / 2}px`,
-                transformOrigin: `${totalSize / 2 - (cx - a.size / 2)}px ${totalSize / 2 - (cy - a.size / 2)}px`,
-              }}
-            />
-          );
-        })}
-      </motion.div>
     </motion.div>
   );
 };

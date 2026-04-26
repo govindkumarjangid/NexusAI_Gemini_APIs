@@ -55,7 +55,8 @@ const CodeBlockComponent = ({ lang, code }) => {
         <SyntaxHighlighter
           language={lang === 'text' ? null : lang}
           style={vscDarkPlus}
-          showLineNumbers={true}
+          showLineNumbers={false}
+
           lineNumberStyle={{
             minWidth: '2.5em',
             paddingRight: '1em',
@@ -66,14 +67,15 @@ const CodeBlockComponent = ({ lang, code }) => {
           }}
           customStyle={{
             margin: 0,
-            padding: '1.5rem 1rem',
+            padding: '1.5rem 1.5rem',
             backgroundColor: '#1E2225',
             fontSize: '0.875rem',
-            lineHeight: '1.7',
+            lineHeight: '1.5',
             overflowX: 'auto',
             fontFamily: "'JetBrains Mono', 'Fira Code', 'Menlo', monospace",
             textAlign: 'left',
           }}
+
           codeTagProps={{ style: { fontFamily: "'JetBrains Mono', 'Fira Code', 'Menlo', monospace" } }}
         >
           {code.trim()}
@@ -152,6 +154,8 @@ export function renderMessageContent(content, isDark) {
     let listItems = [];
     let inTable = false;
     let tableRows = [];
+    let listType = 'ul'; // 'ul' or 'ol'
+
 
     for (let i = 0; i < lines.length; i++) {
       let line = lines[i];
@@ -210,10 +214,14 @@ export function renderMessageContent(content, isDark) {
       const headingMatch = line.match(/^(#{1,6})\s+(.*)/);
       if (headingMatch) {
         if (inList) {
-          textElements.push(<ul key={`ul-${keyCounter++}`} className="pl-[1.5em] my-[0.5em] text-left">{listItems}</ul>);
+          const Tag = listType === 'ol' ? 'ol' : 'ul';
+          const listClass = listType === 'ol' ? 'list-decimal' : 'list-disc';
+          textElements.push(<Tag key={`list-${keyCounter++}`} className={`pl-[1.5em] my-[0.5em] text-left ${listClass}`}>{listItems}</Tag>);
+
           inList = false;
           listItems = [];
         }
+
 
         const hashCount = headingMatch[1].length;
         const headingText = headingMatch[2];
@@ -251,17 +259,28 @@ export function renderMessageContent(content, isDark) {
 
       // List Logic
       const isStandardBullet = /^\s*([*-])\s+/.test(line);
-      const isBoldBullet = /^\s*\*\*[^*]+\*\*/.test(line);
-      // Added regex for Numbered Lists
       const isNumberedList = /^\s*\d+\.\s+/.test(line);
+      if (isStandardBullet || isNumberedList) {
 
-      if (isStandardBullet || isBoldBullet || isNumberedList) {
+
+        const currentType = isNumberedList ? 'ol' : 'ul';
+        
+        if (inList && listType !== currentType) {
+          const Tag = listType === 'ol' ? 'ol' : 'ul';
+          const listClass = listType === 'ol' ? 'list-decimal' : 'list-disc';
+          textElements.push(<Tag key={`list-${keyCounter++}`} className={`pl-[1.5em] mb-[1.2em] text-left ${listClass}`}>{listItems}</Tag>);
+
+          listItems = [];
+        }
+
         inList = true;
+        listType = currentType;
         let cleanLine = line.replace(/^\s*([*-]|\d+\.)\s+/, '').trim();
+
         listItems.push(
           <li
             key={`li-${keyCounter++}`}
-            className="wrap-break-words mb-[0.4em] text-[#4b5563] dark:text-[#d1d5db] leading-[1.6] ml-[0.5em] wrap-break-words text-left list-decimal"
+            className="wrap-break-words mb-[0.4em] text-[#4b5563] dark:text-[#d1d5db] leading-[1.6] ml-[0.5em] wrap-break-words text-left"
           >
             {parseInline(cleanLine)}
           </li>
@@ -270,10 +289,14 @@ export function renderMessageContent(content, isDark) {
       }
 
       if (inList && line.trim() !== '') {
-        textElements.push(<ul key={`ul-${keyCounter++}`} className="pl-[1.5em] mb-[1.2em] text-left">{listItems}</ul>);
+        const Tag = listType === 'ol' ? 'ol' : 'ul';
+        const listClass = listType === 'ol' ? 'list-decimal' : 'list-disc';
+        textElements.push(<Tag key={`list-${keyCounter++}`} className={`pl-[1.5em] mb-[1.2em] text-left ${listClass}`}>{listItems}</Tag>);
+
         inList = false;
         listItems = [];
       }
+
 
       // Paragraph Logic
       if (line.trim() !== '') {
@@ -288,7 +311,13 @@ export function renderMessageContent(content, isDark) {
       }
     }
 
-    if (inList) textElements.push(<ul key={`ul-${keyCounter++}`} className="pl-[1.5em] mb-[1.2em] text-left">{listItems}</ul>);
+    if (inList) {
+      const Tag = listType === 'ol' ? 'ol' : 'ul';
+      const listClass = listType === 'ol' ? 'list-decimal' : 'list-disc';
+      textElements.push(<Tag key={`list-${keyCounter++}`} className={`pl-[1.5em] mb-[1.2em] text-left ${listClass}`}>{listItems}</Tag>);
+    }
+
+
     return textElements;
   };
 

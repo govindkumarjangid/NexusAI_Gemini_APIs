@@ -59,7 +59,8 @@ const SearchPage = () => {
           initial={{ x: '100%' }}
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
-          transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+          transition={{ type: 'spring', damping: 28, stiffness: 260 }}
+
           className="fixed top-0 right-0 h-full w-full sm:w-112.5 md:w-137.5 border-l z-70 flex flex-col shadow-2xl bg-(--bg-surface) border-(--border-color) text-(--text-primary)"
         >
           {/* Header */}

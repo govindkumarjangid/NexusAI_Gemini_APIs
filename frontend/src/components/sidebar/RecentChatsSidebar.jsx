@@ -18,7 +18,8 @@ const RecentChatsSidebar = ({ open, onClose, chats, onChatClick, onLoadMore, has
                     initial={{ x: '100%' }}
                     animate={{ x: 0 }}
                     exit={{ x: '100%' }}
-                    transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                    transition={{ type: 'spring', damping: 28, stiffness: 260 }}
+
                     className="fixed top-0 right-0 h-full w-120 max-w-full border-l shadow-2xl flex flex-col z-70 bg-(--bg-surface) border-(--border-color) text-(--text-primary)"
                 >
                     <div className="flex items-center justify-between p-6 pb-4">

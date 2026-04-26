@@ -1,15 +1,33 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import useAuthStore from './store/useAuthStore.js';
-import { AnimatePresence } from 'framer-motion';
-import LandingPage from './pages/LandingPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import Sidebar from './components/sidebar/Sidebar';
-import ChatArea from './components/chat/ChatArea';
-import SearchPage from './pages/SearchPage';
-import SharedChatPage from './pages/SharedChatPage';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+
+// Lazy load components for performance
+const LandingPage = lazy(() => import('./pages/LandingPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+const SearchPage = lazy(() => import('./pages/SearchPage'));
+const SharedChatPage = lazy(() => import('./pages/SharedChatPage'));
+const Sidebar = lazy(() => import('./components/sidebar/Sidebar'));
+const ChatArea = lazy(() => import('./components/chat/ChatArea'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+
+
+const PageLoader = () => (
+  <div className="flex h-screen w-full items-center justify-center bg-base">
+    <motion.div
+      animate={{ scale: [1, 1.1, 1], opacity: [0.5, 1, 0.5] }}
+      transition={{ repeat: Infinity, duration: 1.5 }}
+      className="flex flex-col items-center gap-4"
+    >
+      <div className="w-16 h-16 rounded-full border-4 border-accent border-t-transparent animate-spin" />
+      <p className="text-sm font-semibold text-muted tracking-widest uppercase">NexusAI</p>
+    </motion.div>
+  </div>
+);
+
 
 const ChatLayout = () => {
   return (
@@ -32,10 +50,39 @@ const App = () => {
     setSidebarOpen,
     isSearchOpen,
     setIsSearchOpen,
+    accentColor,
+    ACCENT_COLORS,
   } = useAuthStore();
 
   const location = useLocation();
   const isDark = actualTheme === 'dark';
+
+  // Dynamic Favicon Update
+  useEffect(() => {
+    const color = ACCENT_COLORS[accentColor] || '#2196F3';
+    const svg = `
+      <svg width="32" height="32" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+            <stop stop-color="${color}" />
+            <stop offset="1" stop-color="${color}" stop-opacity="0.6" />
+          </linearGradient>
+        </defs>
+        <circle cx="256" cy="256" r="60" fill="url(#g)"/>
+        <path d="M120 400L120 112L392 400L392 112" stroke="url(#g)" stroke-width="40" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+        <circle cx="120" cy="112" r="20" fill="${isDark ? 'white' : '#111827'}" />
+        <circle cx="120" cy="400" r="20" fill="${isDark ? 'white' : '#111827'}" />
+        <circle cx="392" cy="112" r="20" fill="${isDark ? 'white' : '#111827'}" />
+        <circle cx="392" cy="400" r="20" fill="${isDark ? 'white' : '#111827'}" />
+      </svg>
+    `.trim();
+
+    const encodedSvg = btoa(svg);
+    const link = document.querySelector("link[rel*='icon']");
+    if (link) {
+      link.href = `data:image/svg+xml;base64,${encodedSvg}`;
+    }
+  }, [accentColor, isDark, ACCENT_COLORS]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -56,77 +103,89 @@ const App = () => {
         reverseOrder={false}
         toastOptions={{
           style: isDark ? {
-            background: 'rgba(19, 19, 20, 0.85)',
+            background: '#1E1E21',
             color: '#e5e7eb',
-            border: '1px solid #232326',
+            border: '1px solid #333338',
             boxShadow: '0 4px 24px 0 rgba(0,0,0,0.35)',
-            backdropFilter: 'blur(10px)',
+            borderRadius: '9999px',
+            padding: '8px 16px',
           } : {
-            background: 'rgba(255, 255, 255, 0.92)',
+            background: '#ffffff',
             color: '#1a1a1a',
             border: '1px solid #e5e7eb',
             boxShadow: '0 4px 24px 0 rgba(0,0,0,0.08)',
-            backdropFilter: 'blur(10px)',
+            borderRadius: '9999px',
+            padding: '8px 16px',
           },
           success: {
             iconTheme: {
               primary: '#22c55e',
-              secondary: isDark ? '#131314' : '#ffffff',
+              secondary: '#ffffff',
             },
             style: isDark ? {
-              background: 'rgba(34,197,94,0.10)',
-              color: '#bbf7d0',
+              background: '#1E1E21',
+              color: '#e5e7eb',
               border: '1px solid #22c55e',
-              backdropFilter: 'blur(10px)',
+              borderRadius: '9999px',
             } : {
-              background: 'rgba(34,197,94,0.08)',
-              color: '#166534',
+              background: '#ffffff',
+              color: '#1a1a1a',
               border: '1px solid #22c55e',
-              backdropFilter: 'blur(10px)',
+              borderRadius: '9999px',
             },
           },
           error: {
             iconTheme: {
               primary: '#ef4444',
-              secondary: isDark ? '#131314' : '#ffffff',
+              secondary: '#ffffff',
             },
             style: isDark ? {
-              background: 'rgba(239,68,68,0.10)',
-              color: '#fecaca',
+              background: '#1E1E21',
+              color: '#e5e7eb',
               border: '1px solid #ef4444',
-              backdropFilter: 'blur(10px)',
+              borderRadius: '9999px',
             } : {
-              background: 'rgba(239,68,68,0.08)',
-              color: '#991b1b',
+              background: '#ffffff',
+              color: '#1a1a1a',
               border: '1px solid #ef4444',
-              backdropFilter: 'blur(10px)',
+              borderRadius: '9999px',
             },
           },
+
+
+
         }}
       />
-      <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          {/* Public routes */}
-          <Route path="/" element={
-            user ? <Navigate to="/chat" replace /> : <LandingPage />
-          } />
-          <Route path="/login" element={
-            user ? <Navigate to="/chat" replace /> : <LoginPage />
-          } />
-          <Route path="/register" element={
-            user ? <Navigate to="/chat" replace /> : <RegisterPage />
-          } />
-          <Route path="/share/:shareId" element={<SharedChatPage />} />
+      <Suspense fallback={<PageLoader />}>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            {/* Public routes */}
+            <Route path="/" element={
+              user ? <Navigate to="/chat" replace /> : <LandingPage />
+            } />
+            <Route path="/login" element={
+              user ? <Navigate to="/chat" replace /> : <LoginPage />
+            } />
+            <Route path="/register" element={
+              user ? <Navigate to="/chat" replace /> : <RegisterPage />
+            } />
+            <Route path="/share/:shareId" element={<SharedChatPage />} />
 
-          {/* Protected routes */}
-          <Route path="/chat" element={
-            !user ? <Navigate to="/" replace /> : <ChatLayout />
-          } />
-          <Route path="/chat/:chatId" element={
-            !user ? <Navigate to="/" replace /> : <ChatLayout />
-          } />
-        </Routes>
-      </AnimatePresence>
+            {/* Protected routes */}
+            <Route path="/chat" element={
+              !user ? <Navigate to="/" replace /> : <ChatLayout />
+            } />
+            <Route path="/chat/:chatId" element={
+              !user ? <Navigate to="/" replace /> : <ChatLayout />
+            } />
+
+            {/* Catch-all 404 route */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+
+        </AnimatePresence>
+      </Suspense>
+
     </>
   );
 }

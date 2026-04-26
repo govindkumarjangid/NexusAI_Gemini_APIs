@@ -95,24 +95,32 @@ const ChatAreaHeader = () => {
     }
 
 
+    const springConfig = { type: "spring", damping: 25, stiffness: 300 };
+
     return (
         <>
             {/* header  */}
+
             <header
                 className="h-14 shrink-0 w-full flex items-center justify-between px-3 sm:px-4 border-b sticky top-0 z-10 backdrop-blur-sm border-(--border-color) bg-(--bg-surface) text-(--text-primary)"
             >
 
-                <div className="flex items-center gap-3">
+
+                <div className="flex items-center gap-1.5 sm:gap-3">
                     {isMobile && !sidebarOpen && (
                         <button
                             onClick={() => setSidebarOpen(true)}
-                            className="p-0 sm:p-3 rounded-full transition-all cursor-ew-resize duration-300 active:scale-95 text-(--text-secondary)"
+                            className="p-2 sm:p-3 dark:hover:bg-gray-800 hover:bg-gray-200 rounded-full transition-all cursor-pointer duration-300 active:scale-95 text-(--text-secondary)"
+                            title="Expand Sidebar"
                         >
                             <SquareChevronRight size={22} />
                         </button>
                     )}
-                    <span className="font-semibold text-lg ">NexusAI</span>
+                    <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-linear-to-r from-(--text-primary) via-(--text-primary) to-(--accent-color)">
+                        NexusAI
+                    </span>
                 </div>
+
 
 
                 {
@@ -172,7 +180,8 @@ const ChatAreaHeader = () => {
                             initial={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
                             animate={isMobile ? { y: 0 } : { opacity: 1, y: 0 }}
                             exit={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
-                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            transition={springConfig}
+
                             className={`${isMobile
                                 ? "fixed bottom-0 left-0 right-0 rounded-t-3xl border-t p-6"
                                 : "absolute top-16 right-4 w-40 p-3 rounded-lg border shadow-lg"
@@ -237,7 +246,8 @@ const ChatAreaHeader = () => {
                             initial={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
                             animate={isMobile ? { y: 0 } : { opacity: 1, y: 0 }}
                             exit={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
-                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            transition={springConfig}
+
                             className={`${isMobile
                                 ? "fixed bottom-0 left-0 right-0 rounded-t-3xl border-t"
                                 : "absolute top-16 right-4 w-full max-w-md rounded-xl border shadow-lg"
@@ -341,7 +351,8 @@ const ChatAreaHeader = () => {
                             initial={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
                             animate={isMobile ? { y: 0 } : { opacity: 1, y: 0 }}
                             exit={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
-                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            transition={springConfig}
+
                             className={`${isMobile
                                 ? "fixed bottom-0 left-0 right-0 rounded-t-3xl border-t"
                                 : "absolute top-16 right-4 w-full max-w-md rounded-xl border shadow-lg"
@@ -431,7 +442,8 @@ const ChatAreaHeader = () => {
                             initial={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
                             animate={isMobile ? { y: 0 } : { opacity: 1, y: 0 }}
                             exit={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
-                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            transition={springConfig}
+
                             className={`${isMobile
                                 ? "fixed bottom-0 left-0 right-0 rounded-t-3xl border-t"
                                 : "absolute top-16 right-4 w-full max-w-md rounded-xl border shadow-lg"
