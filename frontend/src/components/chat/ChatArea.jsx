@@ -17,7 +17,7 @@ const ChatArea = () => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
 
   const { user } = useAuthStore();
-  const { currentChat, setCurrentChat, chats, createChat } = useChatStore();
+  const { currentChat, setCurrentChat, chats, createChat, isLoading } = useChatStore();
   const { sendAndStreamMessage } = useMessageStore();
   const { chatId } = useParams();
 
@@ -29,20 +29,35 @@ const ChatArea = () => {
     }
   }, [chatId, chats]);
 
+  const [isSyncing, setIsSyncing] = useState(false);
+
   useEffect(() => {
-    if (currentChat && currentChat.messages) {
-      setMessages(currentChat.messages.map((msg, idx) => {
-        const msgData = typeof msg.toObject === 'function' ? msg.toObject() : msg;
-        return {
-          ...msgData,
-          id: msgData._id || idx
-        };
-      }));
-      document.title = `${currentChat.messages?.currentChat || 'Chat'} - NexusAI`;
-    } else {
+    if (chatId) {
+      setIsSyncing(true);
       setMessages([]);
     }
-  }, [currentChat]);
+  }, [chatId]);
+
+  useEffect(() => {
+    if (currentChat && currentChat._id === chatId && isSyncing) {
+      // Ensure the spinner stays visible long enough to be seen and allows UI thread to breathe
+      const timer = setTimeout(() => {
+        if (currentChat.messages) {
+          const mappedMessages = currentChat.messages.map((msg, idx) => {
+            const msgData = typeof msg.toObject === 'function' ? msg.toObject() : msg;
+            return {
+              ...msgData,
+              id: msgData._id || idx
+            };
+          });
+          setMessages(mappedMessages);
+          document.title = `${currentChat.title || 'Chat'} - NexusAI`;
+        }
+        setIsSyncing(false);
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [currentChat, chatId, isSyncing]);
 
 
 
@@ -105,6 +120,9 @@ const ChatArea = () => {
     });
   };
 
+  const isTransitioning = chatId && currentChat?._id !== chatId;
+  const showLoader = isLoading || isSyncing || isTransitioning;
+
   return (
     <div className="flex-1 flex flex-col h-dvh w-full max-w-[100vw] overflow-x-hidden bg-(--bg-base) text-(--text-primary)">
 
@@ -112,7 +130,15 @@ const ChatArea = () => {
       <ChatAreaHeader />
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-3 sm:p-6 flex flex-col">
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-3 sm:p-6 flex flex-col relative">
+        {showLoader ? (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-(--bg-base) z-10">
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-12 h-12 rounded-full border-4 border-accent border-t-transparent animate-spin" />
+              <p className="text-sm font-medium text-muted animate-pulse">Syncing conversation...</p>
+            </div>
+          </div>
+        ) : null}
         <ChatMessages messages={messages} isStreaming={isStreaming} />
       </div>
 

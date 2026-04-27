@@ -53,8 +53,10 @@ const ChatList = memo(({ chats, currentChat, setCurrentChat, navigate, deleteCha
               title={chatDisplayName}
               className={`group flex items-center justify-between rounded-full cursor-pointer transition-colors px-4 py-2 ${isActive ? 'dark:bg-[#131314] bg-gray-200 dark:text-gray-400 text-gray-500' : 'dark:hover:bg-[#2d2f31] hover:bg-gray-200 dark:text-gray-300 text-gray-600 dark:hover:text-gray-100 hover:text-gray-900'}`}
               onClick={() => {
-                setCurrentChat(chat);
-                navigate(`/chat/${chat._id}`);
+                requestAnimationFrame(() => {
+                  setCurrentChat(chat);
+                  navigate(`/chat/${chat._id}`);
+                });
               }}
             >
               <div className="flex items-center gap-3 overflow-hidden text-sm">

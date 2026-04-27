@@ -85,25 +85,23 @@ const ChatMessages = ({ messages, isStreaming }) => {
 
     const messagesEndRef = useRef(null);
     const prevChatIdRef = useRef(null);
+    const prevMessagesLength = useRef(0);
     const { currentChat } = useChatStore();
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 640);
         window.addEventListener('resize', handleResize);
-
         if (messagesEndRef.current) {
             const isChatSwitch = prevChatIdRef.current !== currentChat?._id;
-            
-            // Only auto-scroll on chat switch (instant) or while streaming (smooth)
-            if (isChatSwitch || isStreaming) {
-                messagesEndRef.current.scrollIntoView({ 
-                    behavior: isChatSwitch ? 'auto' : 'smooth' 
+            const messagesJustAppeared = prevMessagesLength.current === 0 && messages.length > 0;
+            if (isChatSwitch || isStreaming || messagesJustAppeared) {
+                messagesEndRef.current.scrollIntoView({
+                    behavior: (isChatSwitch || messagesJustAppeared) ? 'auto' : 'smooth'
                 });
             }
-            
             prevChatIdRef.current = currentChat?._id;
+            prevMessagesLength.current = messages.length;
         }
-
         return () => window.removeEventListener('resize', handleResize);
     }, [messages, currentChat?._id, isStreaming]);
 
