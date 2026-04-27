@@ -106,19 +106,25 @@ const sendMessage = wrapAsync(async (req, res) => {
 
         const result = await chatSession.sendMessageStream(currentParts);
 
+        let lineBuffer = "";
         for await (const chunk of result.stream) {
             const chunkText = chunk.text();
-            // console.log(chunkText)
             if (chunkText) {
                 fullAssistantResponse += chunkText;
-                const words = chunkText.match(/\S+\s*|\s+/g) || [];
-                //  console.log(words)
-                for (let i = 0; i < words.length; i++) {
-                    const singleWord = words[i];
-                    res.write(`data: ${JSON.stringify({ text: singleWord })}\n\n`);
-                    await delay(20);
+                lineBuffer += chunkText;
+                
+                const lines = lineBuffer.split('\n');
+                // Keep the last partial line in the buffer
+                lineBuffer = lines.pop();
+                
+                for (const line of lines) {
+                    res.write(`data: ${JSON.stringify({ text: line + '\n' })}\n\n`);
+                    await delay(50);
                 }
             }
+        }
+        if (lineBuffer) {
+            res.write(`data: ${JSON.stringify({ text: lineBuffer })}\n\n`);
         }
         //  console.log(fullAssistantResponse)
 

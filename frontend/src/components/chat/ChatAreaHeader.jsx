@@ -102,7 +102,7 @@ const ChatAreaHeader = () => {
             {/* header  */}
 
             <header
-                className="h-14 shrink-0 w-full flex items-center justify-between px-3 sm:px-4 border-b sticky top-0 z-10 backdrop-blur-sm border-(--border-color) bg-(--bg-surface) text-(--text-primary)"
+                className={`h-14 shrink-0 w-full flex items-center justify-between px-3 sm:px-4 border-b sticky top-0 z-10 backdrop-blur-sm border-(--border-color) ${sidebarOpen ? "bg-(--bg-surface) " : "bg-(--bg-header) "} text-(--text-primary)`}
             >
 
 

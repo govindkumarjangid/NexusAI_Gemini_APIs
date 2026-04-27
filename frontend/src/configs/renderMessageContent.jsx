@@ -1,6 +1,6 @@
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import React, { useState } from 'react';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useState } from 'react';
 import { Check, Copy } from 'lucide-react';
 
 import 'katex/dist/katex.min.css';
@@ -8,11 +8,27 @@ import { InlineMath, BlockMath } from 'react-katex';
 
 const CodeBlockComponent = ({ lang, code }) => {
   const [isCopied, setIsCopied] = useState(false);
-  const isDark = document.documentElement.classList.contains('dark');
+
+
+  const dedent = (text) => {
+    const lines = text.split('\n');
+    while (lines.length > 0 && lines[0].trim() === '') lines.shift();
+    while (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+    const minIndent = lines.reduce((min, line) => {
+      if (line.trim() === '') return min;
+      const match = line.match(/^(\s*)/);
+      return Math.min(min, match[1].length);
+    }, Infinity);
+
+    return lines.map(line => line.slice(minIndent === Infinity ? 0 : minIndent)).join('\n');
+  };
+
+  const processedCode = dedent(code);
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(code);
+      await navigator.clipboard.writeText(processedCode);
       setIsCopied(true);
       setTimeout(() => {
         setIsCopied(false);
@@ -41,8 +57,8 @@ const CodeBlockComponent = ({ lang, code }) => {
         <button
           onClick={handleCopy}
           className={`flex items-center gap-2 px-3 py-1.5 rounded-lg font-semibold text-xs transition-all duration-300 transform active:scale-95 ${isCopied
-              ? 'bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20'
-              : 'bg-white dark:bg-[#2d3238] text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 border border-gray-200 dark:border-neutral-700 shadow-sm'
+            ? 'bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20'
+            : 'bg-white dark:bg-[#2d3238] text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 border border-gray-200 dark:border-neutral-700 shadow-sm'
             } cursor-pointer`}
         >
           {isCopied ? <Check size={14} className="animate-in fade-in zoom-in duration-300" /> : <Copy size={14} />}
@@ -70,15 +86,15 @@ const CodeBlockComponent = ({ lang, code }) => {
             padding: '1.25rem 1.25rem',
             backgroundColor: '#1E2225',
             fontSize: '0.875rem',
-            lineHeight: '1.4',
+            lineHeight: '1.6',
             overflowX: 'auto',
             fontFamily: "'JetBrains Mono', 'Fira Code', 'Menlo', monospace",
             textAlign: 'left',
           }}
 
-          codeTagProps={{ style: { fontFamily: "'JetBrains Mono', 'Fira Code', 'Menlo', monospace", lineHeight: '1.4' } }}
+          codeTagProps={{ style: { fontFamily: "'JetBrains Mono', 'Fira Code', 'Menlo', monospace", lineHeight: '1.6', textAlign: 'left' } }}
         >
-          {code.trim()}
+          {processedCode}
         </SyntaxHighlighter>
       </div>
     </div>
@@ -88,7 +104,7 @@ const CodeBlockComponent = ({ lang, code }) => {
 
 
 export function renderMessageContent(content, isDark) {
-  if (!content) return null;
+  if (!content || !content.trim()) return null;
 
   const elements = [];
   let keyCounter = 0;
@@ -97,24 +113,30 @@ export function renderMessageContent(content, isDark) {
   const parseInline = (str) => {
     if (!str) return str;
 
-    // \$[^$]+\$ for inline math and \$\$[\s\S]+?\$\$ for block math
-    const parts = str.split(/(\$\$[\s\S]+?\$\$|\$[^$]+\$|`[^`]+`|\*\*[^*]+\*\*)/).filter(Boolean);
+    // More compatible regex without lookbehinds for maximum browser support
+    const parts = str.split(/(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\(.+?\\\)|(?:\$[^$]+?\$)|`[^`]+`|\*\*[^*]+\*\*|__[^_]+__|\*[^*]+\*|_[^_]+_|~~[^~]+~~)/).filter(Boolean);
 
-    return parts.map((part) => {
-      // 1. Block Math ($$...$$)
-      if (part.startsWith('$$') && part.endsWith('$$')) {
+    return parts.map((part, idx) => {
+      const uniqueKey = `${inlineKeyCounter++}-${idx}`;
+
+      // 1. Block Math ($$...$$ or \[...\])
+      if ((part.startsWith('$$') && part.endsWith('$$')) || (part.startsWith('\\[') && part.endsWith('\\]'))) {
+        const math = part.replace(/^(\$\$|\\\[)/, '').replace(/(\$\$|\\\])$/, '').trim();
+        if (!math) return part;
         return (
-          <span key={`im-${inlineKeyCounter++}`} className="my-4 block w-full overflow-x-auto text-[#111827] dark:text-[#e6e6e6]">
-            <BlockMath math={part.slice(2, -2)} />
-          </span>
+          <div key={`bm-${uniqueKey}`} className="my-6 block w-full overflow-x-auto text-[#111827] dark:text-[#e6e6e6] bg-gray-50/50 dark:bg-white/5 p-6 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm backdrop-blur-sm">
+            <BlockMath math={math} />
+          </div>
         );
       }
 
-      // 2. Inline Math ($...$)
-      if (part.startsWith('$') && part.endsWith('$')) {
+      // 2. Inline Math ($...$ or \(...\))
+      if ((part.startsWith('$') && part.endsWith('$')) || (part.startsWith('\\(') && part.endsWith('\\)'))) {
+        const math = part.replace(/^(\$|\\\()/, '').replace(/(\$|\\\))$/, '').trim();
+        if (!math) return part;
         return (
-          <span key={`im-${inlineKeyCounter++}`} className="text-[#111827] dark:text-[#e6e6e6]">
-            <InlineMath math={part.slice(1, -1)} />
+          <span key={`im-${uniqueKey}`} className="inline-flex items-center text-[#111827] dark:text-[#e6e6e6] mx-0.5 px-1.5 py-0.5 rounded-md bg-gray-100/40 dark:bg-white/10 font-medium border border-transparent hover:border-gray-200/50 dark:hover:border-white/10 transition-all cursor-default select-all">
+            <InlineMath math={math} />
           </span>
         );
       }
@@ -123,28 +145,43 @@ export function renderMessageContent(content, isDark) {
       if (part.startsWith('`') && part.endsWith('`')) {
         return (
           <code
-            key={`ic-${inlineKeyCounter++}`}
-            className="wrap-break-words bg-[#e8eaed] dark:bg-[#2d3139] text-[#0369a1] dark:text-[#7dd3fc] rounded-sm px-[0.35em] py-[0.15em] font-['JetBrains_Mono','Fira_Code',monospace] text-[0.8em] wrap-break-words whitespace-pre-wrap"
+            key={`ic-${uniqueKey}`}
+            className="wrap-break-words bg-[#f1f5f9] dark:bg-[#2d3139] text-[#0369a1] dark:text-[#7dd3fc] rounded-md px-[0.4em] py-[0.1em] font-['JetBrains_Mono','Fira_Code',monospace] text-[0.85em] border border-slate-200 dark:border-slate-700/50"
           >
             {part.slice(1, -1)}
           </code>
         );
       }
 
-      // 4. Bold Text (** ... **)
-      if (part.startsWith('**') && part.endsWith('**')) {
+      // 4. Bold Text (** ... ** or __ ... __)
+      if ((part.startsWith('**') && part.endsWith('**')) || (part.startsWith('__') && part.endsWith('__'))) {
         return (
-          <strong
-            key={`ib-${inlineKeyCounter++}`}
-            className="font-bold text-[#111827] dark:text-white"
-          >
-            {part.slice(2, -2)}
+          <strong key={`ib-${uniqueKey}`} className="font-bold text-[#111827] dark:text-white">
+            {parseInline(part.slice(2, -2))}
           </strong>
         );
       }
 
-      // 5. Standard Text
-      return <span key={`it-${inlineKeyCounter++}`} className="wrap-break-words">{part}</span>;
+      // 5. Italics (* ... * or _ ... _)
+      if ((part.startsWith('*') && part.endsWith('*')) || (part.startsWith('_') && part.endsWith('_'))) {
+        return (
+          <em key={`ie-${uniqueKey}`} className="italic text-[#374151] dark:text-[#d1d5db]">
+            {parseInline(part.slice(1, -1))}
+          </em>
+        );
+      }
+
+      // 6. Strikethrough (~~ ... ~~)
+      if (part.startsWith('~~') && part.endsWith('~~')) {
+        return (
+          <del key={`is-${uniqueKey}`} className="line-through text-gray-500 opacity-70">
+            {parseInline(part.slice(2, -2))}
+          </del>
+        );
+      }
+
+      // 7. Standard Text
+      return <span key={`it-${uniqueKey}`} className="wrap-break-words">{part}</span>;
     });
   };
 
@@ -265,7 +302,7 @@ export function renderMessageContent(content, isDark) {
 
 
         const currentType = isNumberedList ? 'ol' : 'ul';
-        
+
         if (inList && listType !== currentType) {
           const Tag = listType === 'ol' ? 'ol' : 'ul';
           const listClass = listType === 'ol' ? 'list-decimal' : 'list-disc';
@@ -322,7 +359,7 @@ export function renderMessageContent(content, isDark) {
     return textElements;
   };
 
-  const regex = /```([\w]*)\n([\s\S]*?)```/g;
+  const regex = /(```[\w]*\n[\s\S]*?```|\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\])/g;
   let lastIndex = 0;
   let match;
 
@@ -330,18 +367,25 @@ export function renderMessageContent(content, isDark) {
     const textBefore = content.slice(lastIndex, match.index);
     if (textBefore.trim()) elements.push(...parseMarkdownText(textBefore));
 
-    const lang = match[1] ? match[1].toLowerCase() : 'text';
-    const code = match[2];
-
-    elements.push(
-      <CodeBlockComponent key={`codeblock-${keyCounter++}`} lang={lang} code={code} />
-    );
-
+    const matchedText = match[0];
+    if (matchedText.startsWith('```')) {
+      const langMatch = matchedText.match(/^```([\w]*)\n/);
+      const lang = langMatch && langMatch[1] ? langMatch[1].toLowerCase() : 'text';
+      const code = matchedText.replace(/^```[\w]*\n/, '').replace(/```$/, '');
+      elements.push(<CodeBlockComponent key={`codeblock-${keyCounter++}`} lang={lang} code={code} />);
+    } else {
+      const math = matchedText.replace(/^(\$\$|\\\[)/, '').replace(/(\$\$|\\\])$/, '').trim();
+      elements.push(
+        <div key={`blockmath-${keyCounter++}`} className="my-6 block w-full overflow-x-auto text-[#111827] dark:text-[#e6e6e6] bg-gray-50/50 dark:bg-[#1E2225]/30 p-6 rounded-xl border border-gray-200 dark:border-[#2d3238] shadow-sm backdrop-blur-sm">
+          <BlockMath math={math} />
+        </div>
+      );
+    }
     lastIndex = regex.lastIndex;
   }
 
   const textAfter = content.slice(lastIndex);
   if (textAfter.trim()) elements.push(...parseMarkdownText(textAfter));
 
-  return <div className="text-left w-full">{elements}</div>;
+  return <div className="text-left w-full space-y-2">{elements}</div>;
 }

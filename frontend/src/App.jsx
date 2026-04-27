@@ -158,7 +158,7 @@ const App = () => {
       />
       <Suspense fallback={<PageLoader />}>
         <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
+          <Routes location={location} key={location.pathname.split('/')[1] || 'root'}>
             {/* Public routes */}
             <Route path="/" element={
               user ? <Navigate to="/chat" replace /> : <LandingPage />

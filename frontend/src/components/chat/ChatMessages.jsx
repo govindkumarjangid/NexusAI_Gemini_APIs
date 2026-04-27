@@ -84,16 +84,28 @@ const ChatMessages = ({ messages, isStreaming }) => {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
 
     const messagesEndRef = useRef(null);
+    const prevChatIdRef = useRef(null);
+    const { currentChat } = useChatStore();
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 640);
         window.addEventListener('resize', handleResize);
 
-        if (messagesEndRef.current)
-            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        if (messagesEndRef.current) {
+            const isChatSwitch = prevChatIdRef.current !== currentChat?._id;
+            
+            // Only auto-scroll on chat switch (instant) or while streaming (smooth)
+            if (isChatSwitch || isStreaming) {
+                messagesEndRef.current.scrollIntoView({ 
+                    behavior: isChatSwitch ? 'auto' : 'smooth' 
+                });
+            }
+            
+            prevChatIdRef.current = currentChat?._id;
+        }
 
         return () => window.removeEventListener('resize', handleResize);
-    }, [messages]);
+    }, [messages, currentChat?._id, isStreaming]);
 
     const handleCopy = (text, id) => {
         navigator.clipboard.writeText(text);
@@ -140,8 +152,7 @@ const ChatMessages = ({ messages, isStreaming }) => {
                             >
                                 {msg.role === 'user' ? (
                                     <UserMessageItem msg={msg} idx={idx} handleCopy={handleCopy} copiedId={copiedId} setSelectedImage={setSelectedImage} />
-                                ) : (
-
+                                ) : (msg.content || msg.text || msg.imageUrl || msg.image) ? (
                                     <div
                                         className="min-w-0 transition-all duration-300 dark:bg-[#1e1e21] bg-(--bg-panel) border border-(--border-color) text-(--text-primary) px-4 py-3 sm:px-6 sm:py-4 rounded-3xl rounded-tl-sm leading-relaxed w-full shadow-sm"
                                     >
@@ -184,7 +195,7 @@ const ChatMessages = ({ messages, isStreaming }) => {
                                             )}
                                         </div>
                                     </div>
-                                )}
+                                ) : null}
 
                             </motion.div>
                         ))}

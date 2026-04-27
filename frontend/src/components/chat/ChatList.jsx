@@ -1,14 +1,12 @@
+import { memo } from 'react';
 import { Edit2, Trash2, MessageCircle, Pin } from 'lucide-react';
 import useAuthStore from '../../store/useAuthStore.js';
 import useChatStore from '../../store/useChatStore.js';
-import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
 
-
-const ChatList = ({ chats, currentChat, setCurrentChat, navigate, deleteChat, getChatsByUser }) => {
+const ChatList = memo(({ chats, currentChat, setCurrentChat, navigate, deleteChat, getChatsByUser }) => {
 
   const { user } = useAuthStore();
-  const { togglePinChat, updateChatTitle, setShowEditModal, setChatToEdit, setShowDeleteModal, setChatToDelete } = useChatStore();
+  const { togglePinChat, setShowEditModal, setChatToEdit, setShowDeleteModal, setChatToDelete } = useChatStore();
 
 
 
@@ -99,7 +97,9 @@ const ChatList = ({ chats, currentChat, setCurrentChat, navigate, deleteChat, ge
       )}
     </div>
   );
-};
+
+
+});
 
 
 

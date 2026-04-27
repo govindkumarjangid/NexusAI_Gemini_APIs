@@ -58,10 +58,9 @@ const useMessageStore = create((set) => ({
           if (wordQueue.length > 0) {
             const word = wordQueue.shift();
             if (onStream) onStream(word);
-
-            await new Promise(resolve => setTimeout(resolve, 20));
+            await new Promise(resolve => setTimeout(resolve, 0));
           } else {
-            await new Promise(resolve => setTimeout(resolve, 10));
+            await new Promise(resolve => setTimeout(resolve, 0));
           }
         }
         isTyping = false;
