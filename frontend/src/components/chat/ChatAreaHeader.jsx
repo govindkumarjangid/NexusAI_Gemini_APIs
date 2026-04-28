@@ -60,8 +60,6 @@ const ChatAreaHeader = () => {
         setShowMore(false);
     }
 
-
-
     const handleSaveTitle = async (e) => {
         if (e) e.preventDefault();
         if (editedTitle.trim() && (editedTitle !== chatToEdit.title)) {
@@ -69,8 +67,6 @@ const ChatAreaHeader = () => {
         }
         setShowEditModal(false);
     }
-
-
 
     const handleDelete = async () => {
         setChatToDelete(currentChat);
@@ -89,7 +85,6 @@ const ChatAreaHeader = () => {
     }
 
 
-
     const handleMore = () => {
         setShowMore(!showMore);
     }
@@ -102,7 +97,7 @@ const ChatAreaHeader = () => {
             {/* header  */}
 
             <header
-                className={`h-14 shrink-0 w-full flex items-center justify-between px-3 sm:px-4 border-b sticky top-0 z-10 backdrop-blur-sm border-(--border-color) ${sidebarOpen ? "bg-(--bg-surface) " : "bg-(--bg-header) "} text-(--text-primary)`}
+                className={`h-14 shrink-0 w-full flex items-center justify-between px-3 sm:px-4 sticky top-0 z-10 border-(--border-color) ${sidebarOpen ? "bg-(--bg-surface)" : "bg-(--bg-header)"} text-(--text-primary)`}
             >
 
 
@@ -165,17 +160,13 @@ const ChatAreaHeader = () => {
             <AnimatePresence>
                 {showMore && (
                     <>
-                        {/* Backdrop for mobile */}
-                        {isMobile && (
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                onClick={() => setShowMore(false)}
-                                className="fixed inset-0 bg-black/40 z-40"
-                            />
-                        )}
-
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowMore(false)}
+                            className={`fixed inset-0 z-40 ${isMobile ? "bg-black/40" : ""}`}
+                        />
                         <motion.div
                             initial={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
                             animate={isMobile ? { y: 0 } : { opacity: 1, y: 0 }}
@@ -212,16 +203,6 @@ const ChatAreaHeader = () => {
                                 <Trash size={18} />
                                 <span>Delete Chat</span>
                             </button>
-
-
-                            {isMobile && (
-                                <button
-                                    onClick={() => setShowMore(false)}
-                                    className="absolute block sm:hidden top-2 right-2 p-2 rounded-full text-sm bg-accent cursor-pointer"
-                                >
-                                    <X size={18} className='text-(--text-primary)' />
-                                </button>
-                            )}
                         </motion.div>
                     </>
                 )}
@@ -231,16 +212,13 @@ const ChatAreaHeader = () => {
             <AnimatePresence>
                 {showShareModal && (
                     <>
-                        {/* Backdrop for mobile */}
-                        {isMobile && (
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                onClick={() => setShowShareModal(false)}
-                                className="fixed inset-0 bg-black/40 z-40"
-                            />
-                        )}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowShareModal(false)}
+                            className={`fixed inset-0 z-40 ${isMobile ? "bg-black/40" : ""}`}
+                        />
 
                         <motion.div
                             initial={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
@@ -267,14 +245,6 @@ const ChatAreaHeader = () => {
                                         Share Chat
                                     </h2>
                                 </div>
-
-                                <button
-                                    onClick={() => setShowShareModal(false)}
-                                    className="absolute block sm:hidden top-2 right-2 p-2 rounded-full text-sm bg-accent cursor-pointer transition-colors text-(--text-primary)"
-                                >
-                                    <X size={18} />
-                                </button>
-
 
                                 <div className="space-y-6">
                                     <div className="flex items-start gap-4 p-4 rounded-xl bg-(--bg-accent)/50 border border-(--border-color)">
@@ -336,16 +306,13 @@ const ChatAreaHeader = () => {
             <AnimatePresence>
                 {showEditModal && (
                     <>
-                        {/* Backdrop for mobile */}
-                        {isMobile && (
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                onClick={() => setShowEditModal(false)}
-                                className="fixed inset-0 bg-black/40 z-40"
-                            />
-                        )}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowEditModal(false)}
+                            className={`fixed inset-0 z-40 ${isMobile ? "bg-black/40" : ""}`}
+                        />
 
                         <motion.div
                             initial={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
@@ -371,18 +338,6 @@ const ChatAreaHeader = () => {
                                         <Pencil size={24} className="text-(--accent-color)" />
                                         Rename Chat
                                     </h2>
-                                    <button
-                                        onClick={() => setShowEditModal(false)}
-                                        className="hidden sm:block p-2 rounded-full hover:bg-(--bg-accent) transition-colors text-(--text-secondary) cursor-pointer"
-                                    >
-                                        <X size={20} />
-                                    </button>
-                                    <button
-                                        onClick={() => setShowEditModal(false)}
-                                        className="absolute block sm:hidden top-2 right-2 p-2 rounded-full text-sm bg-accent cursor-pointer transition-colors text-(--text-primary)"
-                                    >
-                                        <X size={18} />
-                                    </button>
                                 </div>
 
 
@@ -427,16 +382,13 @@ const ChatAreaHeader = () => {
             <AnimatePresence>
                 {showDeleteModal && (
                     <>
-                        {/* Backdrop for mobile */}
-                        {isMobile && (
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                onClick={() => setShowDeleteModal(false)}
-                                className="fixed inset-0 bg-black/40 z-40"
-                            />
-                        )}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowDeleteModal(false)}
+                            className={`fixed inset-0 z-40 ${isMobile ? "bg-black/40" : ""}`}
+                        />
 
                         <motion.div
                             initial={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
@@ -462,18 +414,6 @@ const ChatAreaHeader = () => {
                                         <Trash size={24} className="text-red-500" />
                                         Delete Chat
                                     </h2>
-                                    <button
-                                        onClick={() => setShowDeleteModal(false)}
-                                        className="hidden sm:block p-2 rounded-full hover:bg-(--bg-accent) transition-colors text-(--text-secondary) cursor-pointer"
-                                    >
-                                        <X size={20} />
-                                    </button>
-                                    <button
-                                        onClick={() => setShowDeleteModal(false)}
-                                        className="absolute block sm:hidden top-2 right-2 p-2 rounded-full text-sm bg-accent cursor-pointer transition-colors text-(--text-primary)"
-                                    >
-                                        <X size={18} />
-                                    </button>
                                 </div>
 
 

@@ -172,10 +172,7 @@ const App = () => {
             <Route path="/share/:shareId" element={<SharedChatPage />} />
 
             {/* Protected routes */}
-            <Route path="/chat" element={
-              !user ? <Navigate to="/" replace /> : <ChatLayout />
-            } />
-            <Route path="/chat/:chatId" element={
+            <Route path="/chat/:chatId?" element={
               !user ? <Navigate to="/" replace /> : <ChatLayout />
             } />
 

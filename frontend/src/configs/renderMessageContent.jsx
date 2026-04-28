@@ -106,6 +106,13 @@ const CodeBlockComponent = ({ lang, code }) => {
 export function renderMessageContent(content, isDark) {
   if (!content || !content.trim()) return null;
 
+  let processedContent = content
+    .replace(/\barc\s+([A-Z]{1,3})\b/g, '$\\wideparen{$1}$')
+    .replace(/\\arc\{([^}]+)\}/gi, '\\wideparen{$1}')
+    .replace(/(^|[^\\])\b(arcsin|arccos|arctan|arccot|arcsec|arccsc|sin|cos|tan|cot|sec|csc|log|ln|exp|lim|max|min|det)\b/g, '$1\\$2')
+    .replace(/\*\*(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\])\*\*/g, '$1')
+    .replace(/\*\*(\$[^$]+\$|\\\(.+?\\\))\*\*/g, '$1');
+
   const elements = [];
   let keyCounter = 0;
   let inlineKeyCounter = 0;
@@ -113,7 +120,7 @@ export function renderMessageContent(content, isDark) {
   const parseInline = (str) => {
     if (!str) return str;
 
-    // More compatible regex without lookbehinds for maximum browser support
+    // More compatible regex 
     const parts = str.split(/(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\(.+?\\\)|(?:\$[^$]+?\$)|`[^`]+`|\*\*[^*]+\*\*|__[^_]+__|\*[^*]+\*|_[^_]+_|~~[^~]+~~)/).filter(Boolean);
 
     return parts.map((part, idx) => {
@@ -155,9 +162,14 @@ export function renderMessageContent(content, isDark) {
 
       // 4. Bold Text (** ... ** or __ ... __)
       if ((part.startsWith('**') && part.endsWith('**')) || (part.startsWith('__') && part.endsWith('__'))) {
+        const content = part.slice(2, -2);
+        // If content is just a math block, don't wrap in strong to avoid double bolding issues
+        if (/^(\$[^$]+\$|\\\(.+?\\\))$/.test(content.trim())) {
+          return parseInline(content);
+        }
         return (
           <strong key={`ib-${uniqueKey}`} className="font-bold text-[#111827] dark:text-white">
-            {parseInline(part.slice(2, -2))}
+            {parseInline(content)}
           </strong>
         );
       }
@@ -363,8 +375,8 @@ export function renderMessageContent(content, isDark) {
   let lastIndex = 0;
   let match;
 
-  while ((match = regex.exec(content)) !== null) {
-    const textBefore = content.slice(lastIndex, match.index);
+  while ((match = regex.exec(processedContent)) !== null) {
+    const textBefore = processedContent.slice(lastIndex, match.index);
     if (textBefore.trim()) elements.push(...parseMarkdownText(textBefore));
 
     const matchedText = match[0];
@@ -384,7 +396,7 @@ export function renderMessageContent(content, isDark) {
     lastIndex = regex.lastIndex;
   }
 
-  const textAfter = content.slice(lastIndex);
+  const textAfter = processedContent.slice(lastIndex);
   if (textAfter.trim()) elements.push(...parseMarkdownText(textAfter));
 
   return <div className="text-left w-full space-y-2">{elements}</div>;

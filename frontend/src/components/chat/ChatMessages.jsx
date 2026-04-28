@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, memo } from 'react';
 import useAuthStore from '../../store/useAuthStore';
 import useChatStore from '../../store/useChatStore';
 import Spinner from '../model/Spinner';
@@ -7,7 +7,7 @@ import { renderMessageContent } from '../../configs/renderMessageContent';
 import { X, Download, ExternalLink, Copy, Check, ChevronDown, ChevronUp } from 'lucide-react';
 
 
-const UserMessageItem = ({ msg, setSelectedImage }) => {
+const UserMessageItem = memo(({ msg, setSelectedImage, handleCopy, copiedId, idx }) => {
 
     const [isExpanded, setIsExpanded] = useState(false);
     const contentRef = useRef(null);
@@ -22,7 +22,7 @@ const UserMessageItem = ({ msg, setSelectedImage }) => {
 
     return (
         <div
-            className="bg-accent text-accent-contrast rounded-3xl rounded-tr-sm px-4 py-2 sm:px-5 shadow-lg max-w-[95%] sm:max-w-[85%] md:max-w-[70%] w-fit self-end transition-all duration-300"
+            className="group relative bg-accent text-accent-contrast rounded-3xl rounded-tr-sm px-4 py-2 sm:px-5 shadow-lg max-w-[95%] sm:max-w-[85%] md:max-w-[70%] w-fit self-end transition-all duration-300"
         >
             <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words w-full relative">
                 {(msg.imageUrl || msg.image) && (
@@ -69,9 +69,69 @@ const UserMessageItem = ({ msg, setSelectedImage }) => {
                     </button>
                 )}
             </div>
+
+            {/* Copy button on hover */}
+            <button
+                onClick={() => handleCopy(msg.content || msg.text, msg._id || idx)}
+                className="absolute right-full mr-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-white/10 dark:bg-black/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer border border-white/10"
+                title="Copy message"
+            >
+                {copiedId === (msg._id || idx) ? (
+                    <Check size={14} className="text-green-400" />
+                ) : (
+                    <Copy size={14} className="text-white/70" />
+                )}
+            </button>
         </div>
     );
-};
+});
+
+const AssistantMessageItem = memo(({ msg, isDark, setSelectedImage, handleCopy, copiedId, idx }) => {
+    return (
+        <div
+            className="min-w-0 transition-all duration-300 dark:bg-[#1e1e21] bg-(--bg-panel) border border-(--border-color) text-(--text-primary) px-4 py-3 sm:px-6 sm:py-4 rounded-3xl rounded-tl-sm leading-relaxed w-full shadow-sm"
+        >
+            <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words w-full overflow-hidden">
+                {(msg.imageUrl || msg.image) && (
+                    <div className="mb-2 max-w-[280px] sm:max-w-[300px] overflow-hidden rounded-xl border border-gray-200/60 dark:border-gray-700/50 bg-black/5 dark:bg-white/5 p-1 group relative">
+                        <img
+                            src={msg.imageUrl || msg.image}
+                            alt="Uploaded content"
+                            className="max-h-[260px] w-full rounded-lg object-cover cursor-pointer opacity-0 transition-all duration-300 ease-in hover:brightness-90"
+                            onClick={() => setSelectedImage(msg.imageUrl || msg.image)}
+                            onLoad={(e) => e.target.classList.replace('opacity-0', 'opacity-100')}
+                        />
+                    </div>
+                )}
+                <div className="mt-1">
+                    {renderMessageContent(msg.content || msg.text, isDark)}
+                </div>
+
+                {msg.role === 'assistant' && msg.content && (
+                    <div className="mt-2 flex items-center gap-2">
+                        <button
+                            onClick={() => handleCopy(msg.content, msg._id || idx)}
+                            className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-gray-500 transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-medium"
+                            title="Copy response"
+                        >
+                            {copiedId === (msg._id || idx) ? (
+                                <>
+                                    <Check size={14} className="text-green-500" />
+                                    <span className="text-green-500">Copied</span>
+                                </>
+                            ) : (
+                                <>
+                                    <Copy size={14} />
+                                    <span>Copy</span>
+                                </>
+                            )}
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+});
 
 const ChatMessages = ({ messages, isStreaming }) => {
 
@@ -149,50 +209,22 @@ const ChatMessages = ({ messages, isStreaming }) => {
                                 className={`flex gap-3 sm:gap-4 w-full ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
                             >
                                 {msg.role === 'user' ? (
-                                    <UserMessageItem msg={msg} idx={idx} handleCopy={handleCopy} copiedId={copiedId} setSelectedImage={setSelectedImage} />
+                                    <UserMessageItem
+                                        msg={msg}
+                                        setSelectedImage={setSelectedImage}
+                                        handleCopy={handleCopy}
+                                        copiedId={copiedId}
+                                        idx={idx}
+                                    />
                                 ) : (msg.content || msg.text || msg.imageUrl || msg.image) ? (
-                                    <div
-                                        className="min-w-0 transition-all duration-300 dark:bg-[#1e1e21] bg-(--bg-panel) border border-(--border-color) text-(--text-primary) px-4 py-3 sm:px-6 sm:py-4 rounded-3xl rounded-tl-sm leading-relaxed w-full shadow-sm"
-                                    >
-                                        <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words w-full overflow-hidden">
-                                            {(msg.imageUrl || msg.image) && (
-                                                <div className="mb-2 max-w-[280px] sm:max-w-[300px] overflow-hidden rounded-xl border border-gray-200/60 dark:border-gray-700/50 bg-black/5 dark:bg-white/5 p-1 group relative">
-                                                    <img
-                                                        src={msg.imageUrl || msg.image}
-                                                        alt="Uploaded content"
-                                                        className="max-h-[260px] w-full rounded-lg object-cover cursor-pointer opacity-0 transition-all duration-300 ease-in hover:brightness-90"
-                                                        onClick={() => setSelectedImage(msg.imageUrl || msg.image)}
-                                                        onLoad={(e) => e.target.classList.replace('opacity-0', 'opacity-100')}
-                                                    />
-                                                </div>
-                                            )}
-                                            <div className="mt-1">
-                                                {renderMessageContent(msg.content || msg.text, isDark)}
-                                            </div>
-
-                                            {msg.role === 'assistant' && msg.content && (
-                                                <div className="mt-2 flex items-center gap-2">
-                                                    <button
-                                                        onClick={() => handleCopy(msg.content, msg._id || idx)}
-                                                        className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-gray-500 transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-medium"
-                                                        title="Copy response"
-                                                    >
-                                                        {copiedId === (msg._id || idx) ? (
-                                                            <>
-                                                                <Check size={14} className="text-green-500" />
-                                                                <span className="text-green-500">Copied</span>
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <Copy size={14} />
-                                                                <span>Copy</span>
-                                                            </>
-                                                        )}
-                                                    </button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
+                                    <AssistantMessageItem
+                                        msg={msg}
+                                        isDark={isDark}
+                                        setSelectedImage={setSelectedImage}
+                                        handleCopy={handleCopy}
+                                        copiedId={copiedId}
+                                        idx={idx}
+                                    />
                                 ) : null}
 
                             </motion.div>

@@ -23,7 +23,6 @@ const Sidebar = () => {
   const { chats, getChatsByUser, createChat, deleteChat, setCurrentChat, currentChat, isLoading: chatLoading } = useChatStore();
 
   const [recentSidebarOpen, setRecentSidebarOpen] = useState(false);
-  const [recentPage, setRecentPage] = useState(1);
 
   // Sort chats: pinned first, then by date
   const sortedChats = [...chats].sort((a, b) => {
@@ -32,8 +31,8 @@ const Sidebar = () => {
     return new Date(b.createdAt) - new Date(a.createdAt);
   });
 
-  const paginatedChats = sortedChats.slice(0, recentPage * 6);
-  const hasMoreRecent = chats.length > paginatedChats.length;
+  const paginatedChats = sortedChats.slice(0, 6);
+  const hasMoreRecent = chats.length > 6;
 
 
   const navigate = useNavigate();
@@ -56,11 +55,6 @@ const Sidebar = () => {
 
   const handleOpenRecentSidebar = () => {
     setRecentSidebarOpen(true);
-    setRecentPage(1);
-  };
-
-  const handleLoadMoreRecent = () => {
-    setRecentPage(p => p + 1);
   };
 
   const handleRecentChatClick = (chat) => {
@@ -79,53 +73,51 @@ const Sidebar = () => {
       <motion.div
         initial={false}
         animate={{
-          width: isMobile ? 300 : (sidebarOpen ? 300 : 70),
+          width: isMobile ? 300 : (sidebarOpen ? 300 : 60),
           x: isMobile ? (sidebarOpen ? 0 : -300) : 0
         }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
 
-        className={`h-screen flex flex-col border-r whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl overflow-hidden' : 'relative overflow-visible z-20'} bg-(--bg-surface) border-(--border-color) text-(--text-primary)`}
+        className={`h-screen flex flex-col whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl overflow-hidden' : 'relative overflow-visible z-20'} bg-(--bg-surface) border-(--border-color) text-(--text-primary)`}
       >
         {/* Top Header */}
         <div className="h-14 flex items-center justify-between shrink-0">
           {(isMobile || sidebarOpen) && (
             <div className="w-full flex items-center justify-between shrink-0 relative group px-3">
               <NavLink to="/chat" className="flex items-center gap-1">
-                <Logo size={36} className="text-(--accent-color) drop-shadow-sm transition-all duration-200 hover:scale-105" />
+                <Logo size={32} className="text-(--accent-color) drop-shadow-sm transition-all duration-200 hover:scale-105" />
                 <h1 className="font-semibold text-lg dark:text-gray-200 text-gray-800">
                   NexusAI
                 </h1>
               </NavLink>
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="p-0 sm:p-3 dark:hover:bg-gray-800 hover:bg-gray-200 rounded-full transition-all cursor-ew-resize duration-300 active:scale-95 dark:text-gray-400 text-gray-500 dark:hover:text-gray-200 hover:text-gray-800"
+                className="p-0 sm:p-3 dark:hover:bg-gray-800 hover:bg-gray-200 rounded-full transition-all cursor-pointer duration-300 active:scale-95 dark:text-gray-400 text-gray-500 dark:hover:text-gray-200 hover:text-gray-800"
                 title="Collapse Menu"
               >
-                <SquareChevronLeft size={22} />
+                <SquareChevronLeft size={18} />
               </button>
             </div>
           )}
           {!isMobile && !sidebarOpen && (
-            <div className="w-17.5 flex items-center justify-center shrink-0 relative group">
-              <Logo size={36} className="text-(--accent-color) drop-shadow-sm transition-all duration-200 hover:scale-105 group-hover:hidden" />
-
-
+            <div className="w-full flex items-center justify-center shrink-0 relative group">
+              <Logo size={32} className="text-(--accent-color) drop-shadow-sm transition-all duration-200 hover:scale-105 group-hover:hidden" />
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="p-0 sm:p-3 dark:hover:bg-gray-800 hover:bg-gray-200 rounded-full hidden group-hover:block transition-all cursor-ew-resize duration-300 active:scale-95 dark:text-gray-400 text-gray-500 dark:hover:text-gray-200 hover:text-gray-800"
+                className="p-0 sm:p-3 dark:hover:bg-gray-800 hover:bg-gray-200 rounded-full hidden group-hover:block transition-all cursor-pointer duration-300 active:scale-95 dark:text-gray-400 text-gray-500 dark:hover:text-gray-200 hover:text-gray-800"
                 title="Expand Menu"
               >
-                <SquareChevronRight size={22} />
+                <SquareChevronRight size={18} />
               </button>
             </div>
           )}
         </div>
 
         {/*  Buttons */}
-        <div className="px-3 py-3 mt-1 shrink-0 flex flex-col gap-2">
+        <div className="px-2 py-3 mt-1 shrink-0 flex flex-col gap-2">
           {[
-            { label: 'New Chat', icon: <SquarePen size={18} />, onClick: handleCreateChat },
-            { label: 'Search', icon: <Search size={18} />, onClick: () => setIsSearchOpen(true) },
+            { label: 'New Chat', icon: <SquarePen size={16} />, onClick: handleCreateChat },
+            { label: 'Search', icon: <Search size={16} />, onClick: () => setIsSearchOpen(true) },
           ].map(btn => (
             <button
               key={btn.label}
@@ -222,7 +214,7 @@ const Sidebar = () => {
         onClose={() => setRecentSidebarOpen(false)}
         chats={paginatedChats}
         onChatClick={handleRecentChatClick}
-        onLoadMore={handleLoadMoreRecent}
+        setIsSearchOpen={setIsSearchOpen}
         hasMore={hasMoreRecent}
       />
     </>

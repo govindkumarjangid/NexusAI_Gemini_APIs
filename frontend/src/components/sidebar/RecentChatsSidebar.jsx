@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, MessageCircle, X } from 'lucide-react';
 
-const RecentChatsSidebar = ({ open, onClose, chats, onChatClick, onLoadMore, hasMore }) => {
+const RecentChatsSidebar = ({ open, onClose, chats, onChatClick, setIsSearchOpen, hasMore }) => {
     return (
         <AnimatePresence>
             {open && (
@@ -42,7 +42,7 @@ const RecentChatsSidebar = ({ open, onClose, chats, onChatClick, onLoadMore, has
                                 if (chat.messages && chat.messages.length > 0) {
                                     const firstUserMsg = chat.messages.find(m => m.role === 'user' && m.content);
                                     if (firstUserMsg)
-                                        return firstUserMsg.content.length > 40 ? firstUserMsg.content.substring(0, 40) + '...' : firstUserMsg.content;
+                                        return firstUserMsg.content.length > 50 ? firstUserMsg.content.substring(0, 50) + '...' : firstUserMsg.content;
                                 }
                                 return 'New Chat';
                             })();
@@ -68,9 +68,12 @@ const RecentChatsSidebar = ({ open, onClose, chats, onChatClick, onLoadMore, has
                         {hasMore && (
                             <button
                                 className="my-4 py-2 px-5 text-sm rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer w-full max-w-fit mx-auto shadow-lg flex items-center gap-1 justify-center active:scale-95 hover:opacity-90"
-                                onClick={onLoadMore}
+                                onClick={() => {
+                                    setIsSearchOpen(true);
+                                    onClose();
+                                }}
                             >
-                                Load More <ChevronDown size={16} />
+                                All Chats <ChevronDown size={16} />
                             </button>
                         )}
                     </div>

@@ -37,7 +37,6 @@ const ChatInputArea = ({
             recognitionRef.current.continuous = true;
             recognitionRef.current.interimResults = true;
             recognitionRef.current.lang = 'en-US';
-
             recognitionRef.current.onstart = () => setIsListening(true);
             recognitionRef.current.onend = () => setIsListening(false);
             recognitionRef.current.onerror = (event) => {
@@ -49,10 +48,8 @@ const ChatInputArea = ({
                 for (let i = 0; i < event.results.length; i++) {
                     currentTranscript += event.results[i][0].transcript;
                 }
-
                 const baseText = preVoiceTextRef.current;
                 setInputText(baseText + (baseText.trim() ? " " : "") + currentTranscript);
-
                 if (textareaRef.current) {
                     textareaRef.current.style.height = 'auto';
                     textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
@@ -144,7 +141,7 @@ const ChatInputArea = ({
                 <div className="w-full max-w-4xl mx-auto">
                     <form
                         onSubmit={onSubmit}
-                        className="flex flex-col rounded-3xl px-2 py-2 shadow-sm transition-all border-2 bg-(--bg-surface) border-(--border-color)"
+                        className="flex flex-col rounded-3xl px-2 py-2 shadow-sm transition-all bg-(--bg-surface) border-(--border-color)"
                     >
                         <input
                             type="file"

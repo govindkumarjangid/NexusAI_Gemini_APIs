@@ -5,7 +5,7 @@ import ChatInputArea from './ChatInputArea';
 import useAuthStore from '../../store/useAuthStore';
 import useChatStore from '../../store/useChatStore';
 import useMessageStore from '../../store/useMessageStore';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const ChatArea = () => {
 
@@ -18,8 +18,9 @@ const ChatArea = () => {
 
   const { user } = useAuthStore();
   const { currentChat, setCurrentChat, chats, createChat, isLoading } = useChatStore();
-  const { sendAndStreamMessage } = useMessageStore();
+   const { sendAndStreamMessage } = useMessageStore();
   const { chatId } = useParams();
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -32,7 +33,7 @@ const ChatArea = () => {
   const [isSyncing, setIsSyncing] = useState(false);
 
   useEffect(() => {
-    if (chatId) {
+    if (chatId && (!currentChat || currentChat._id !== chatId)) {
       setIsSyncing(true);
       setMessages([]);
     }
@@ -72,13 +73,20 @@ const ChatArea = () => {
 
     if (!chat_id && user) {
       await createChat({ userId: user.id || user._id });
-      chat_id = useChatStore.getState().currentChat?._id;
-      if (user.id || user._id) {
-        const { getChatsByUser } = useChatStore.getState();
-        await getChatsByUser(user.id || user._id);
+      const newChat = useChatStore.getState().currentChat;
+      chat_id = newChat?._id;
+
+      if (chat_id) {
+        navigate(`/chat/${chat_id}`, { replace: true });
+        if (user.id || user._id) {
+          const { getChatsByUser } = useChatStore.getState();
+          await getChatsByUser(user.id || user._id);
+        }
       }
       chatJustCreated = true;
     }
+
+    if (!chat_id) return; // Safety check
 
     setMessages(prev => [
       ...prev,
@@ -87,11 +95,14 @@ const ChatArea = () => {
     ]);
     setIsStreaming(true);
 
-    if (currentChat) {
+    // If chat was just created, we might need to update local store's currentChat 
+    // to include these messages so the UI stays in sync
+    const activeChat = useChatStore.getState().currentChat;
+    if (activeChat) {
       setCurrentChat({
-        ...currentChat,
+        ...activeChat,
         messages: [
-          ...(currentChat.messages || []),
+          ...(activeChat.messages || []),
           { role: 'user', content: userMessage, imageUrl: selectedImageUrl },
           { role: 'assistant', content: "" }
         ]

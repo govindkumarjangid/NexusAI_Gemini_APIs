@@ -55,8 +55,7 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
   }, [popupOpen]);
 
   return (
-    <div className="p-3 space-y-1 shrink-0 relative">
-
+    <div className={`py-3 shrink-0 relative flex flex-col gap-1 ${sidebarOpen ? 'px-3' : 'items-center'}`}>
       <AnimatePresence>
         {popupOpen && (
           <>
@@ -84,7 +83,7 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
                   ? 'fixed bottom-0 left-0 right-0 rounded-t-3xl border-t'
                   : sidebarOpen
                     ? 'absolute bottom-full left-2 right-2 mb-2 rounded-2xl'
-                    : 'absolute bottom-0 left-full ml-2 w-64 rounded-2xl'
+                    : 'absolute bottom-2 left-full ml-2 w-64 rounded-2xl'
                 }`
               }
             >
@@ -151,12 +150,12 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
       <button
         ref={buttonRef}
         onClick={() => setPopupOpen(v => !v)}
-        className="w-full flex items-center rounded-full cursor-pointer transition-all text-sm h-11 overflow-hidden hover:opacity-80 text-(--text-secondary)"
+        className={`flex items-center rounded-full cursor-pointer transition-all duration-300 text-sm h-11 overflow-hidden hover:opacity-80 text-(--text-secondary) bg-(--bg-elevated) border border-(--border-color) ${sidebarOpen ? 'w-full px-1' : 'w-11 justify-center'}`}
         title={!sidebarOpen ? 'Profile & Settings' : ''}
       >
         {/* Avatar circle */}
-        <div className="w-11 h-11 shrink-0 flex items-center justify-center">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-accent text-accent-contrast">
+        <div className="w-11 h-11 shrink-0 flex items-center justify-center ">
+          <div className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs bg-accent text-accent-contrast">
             {initial}
           </div>
         </div>
