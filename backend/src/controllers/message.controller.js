@@ -3,6 +3,7 @@ import Chat from '../models/chat.model.js';
 import wrapAsync from '../utils/wrapAsync.js';
 import genAI from '../configs/genAI.js';
 import axios from 'axios';
+import { cloudinary } from '../configs/cloudinary.js';
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -49,7 +50,7 @@ const sendMessage = wrapAsync(async (req, res) => {
     let fullAssistantResponse = "";
 
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
         const formattedMessages = await Promise.all(chat.messages.map(async (msg) => {
             const parts = [{ text: msg.content }];
             // console.log(msg);
@@ -112,11 +113,11 @@ const sendMessage = wrapAsync(async (req, res) => {
             if (chunkText) {
                 fullAssistantResponse += chunkText;
                 lineBuffer += chunkText;
-                
+
                 const lines = lineBuffer.split('\n');
                 // Keep the last partial line in the buffer
                 lineBuffer = lines.pop();
-                
+
                 for (const line of lines) {
                     res.write(`data: ${JSON.stringify({ text: line + '\n' })}\n\n`);
                     await delay(50);
@@ -156,8 +157,82 @@ const getMessagesByChat = wrapAsync(async (req, res) => {
 });
 
 
+// generate image using nano-banana-pro-preview
+const generateImage = wrapAsync(async (req, res) => {
+    const { chatId } = req.params;
+    const { prompt } = req.body;
+
+    const chat = await Chat.findById(chatId);
+    if (!chat) return res.status(404).json({ message: 'Chat not found' });
+
+    // Save user message (the prompt)
+    const userMsg = new Message({ chatId, role: 'user', content: `Generate image: ${prompt}` });
+    await userMsg.save();
+    chat.messages.push({ messageId: userMsg._id, role: 'user', content: userMsg.content });
+    await chat.save();
+
+    try {
+        // Step 1: Enhance the prompt using a text model
+        const textModel = genAI.getGenerativeModel({ model: "gemini-3.1-flash-image-preview" });
+        const enhancementPrompt = `You are an expert prompt engineer for AI image generators.
+        Your task is to take a simple user prompt and expand it into a detailed, high-quality, artistic prompt for an image generator.
+        Add details about lighting, style, composition, texture, and mood, but keep the core subject exactly as the user requested.
+        Focus on creating a visually stunning result.
+
+        User prompt: "${prompt}"
+
+        Detailed artistic prompt:`;
+
+        const textResult = await textModel.generateContent(enhancementPrompt);
+        const enhancedPrompt = textResult.response.text().trim();
+        // console.log("Original prompt:", prompt);
+        // console.log("Enhanced prompt:", enhancedPrompt);
+
+        const model = genAI.getGenerativeModel({ model: "gemma-3-12b-it" });
+        const result = await model.generateContent(enhancedPrompt);
+        const response = await result.response;
+
+        let imageUrl = "";
+        const parts = response.candidates[0].content.parts;
+        const imagePart = parts.find(p => p.inlineData);
+
+        if (imagePart) {
+            const base64Data = imagePart.inlineData.data;
+            const mimeType = imagePart.inlineData.mimeType;
+            // Upload to Cloudinary
+            const uploadRes = await cloudinary.uploader.upload(`data:${mimeType};base64,${base64Data}`, {
+                folder: 'NexusAi_Generated',
+            });
+            imageUrl = uploadRes.secure_url;
+        } else {
+            return res.status(500).json({ success: false, message: 'Model did not return an image. It might be a text-only response.' });
+        }
+
+        const assistantMsg = new Message({
+            chatId,
+            role: 'assistant',
+            content: `Generated image for: ${prompt}`,
+            imageUrl: imageUrl
+        });
+        await assistantMsg.save();
+        chat.messages.push({
+            messageId: assistantMsg._id,
+            role: 'assistant',
+            content: assistantMsg.content,
+            imageUrl: imageUrl
+        });
+        await chat.save();
+
+        res.status(200).json({ success: true, imageUrl });
+    } catch (error) {
+        console.error("Image Gen Error:", error);
+        res.status(500).json({ success: false, message: error.message || 'Failed to generate image' });
+    }
+});
+
 export default {
     sendMessage,
     getMessagesByChat,
-    uploadImage
+    uploadImage,
+    generateImage
 };

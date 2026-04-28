@@ -4,7 +4,17 @@ import useChatStore from '../../store/useChatStore';
 import Spinner from '../model/Spinner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { renderMessageContent } from '../../configs/renderMessageContent';
-import { X, Download, ExternalLink, Copy, Check, ChevronDown, ChevronUp } from 'lucide-react';
+import { X, Download, ExternalLink, Copy, Check, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
+
+const ImageSkeleton = () => (
+    <div className="w-full max-w-[300px] aspect-square rounded-xl bg-(--accent-color)/10 dark:bg-(--accent-color)/15 animate-pulse flex flex-col items-center justify-center gap-3 border border-(--accent-color)/20 shadow-inner">
+        <div className="relative">
+            <Sparkles className="text-(--accent-color) animate-bounce" size={32} />
+            <div className="absolute inset-0 bg-(--accent-color)/30 blur-2xl animate-pulse rounded-full" />
+        </div>
+        <p className="text-xs font-bold text-(--accent-color) uppercase tracking-widest animate-pulse text-center px-4">Creating Magic...</p>
+    </div>
+);
 
 
 const UserMessageItem = memo(({ msg, setSelectedImage, handleCopy, copiedId, idx }) => {
@@ -87,6 +97,13 @@ const UserMessageItem = memo(({ msg, setSelectedImage, handleCopy, copiedId, idx
 });
 
 const AssistantMessageItem = memo(({ msg, isDark, setSelectedImage, handleCopy, copiedId, idx }) => {
+    if (msg.isGeneratingImage && !msg.imageUrl) {
+        return (
+            <div className="min-w-0 transition-all duration-300 dark:bg-[#1e1e21] bg-(--bg-panel) border border-(--border-color) text-(--text-primary) px-4 py-3 sm:px-6 sm:py-4 rounded-3xl rounded-tl-sm leading-relaxed w-full shadow-sm">
+                <ImageSkeleton />
+            </div>
+        );
+    }
     return (
         <div
             className="min-w-0 transition-all duration-300 dark:bg-[#1e1e21] bg-(--bg-panel) border border-(--border-color) text-(--text-primary) px-4 py-3 sm:px-6 sm:py-4 rounded-3xl rounded-tl-sm leading-relaxed w-full shadow-sm"
@@ -216,7 +233,7 @@ const ChatMessages = ({ messages, isStreaming }) => {
                                         copiedId={copiedId}
                                         idx={idx}
                                     />
-                                ) : (msg.content || msg.text || msg.imageUrl || msg.image) ? (
+                                ) : (msg.content || msg.text || msg.imageUrl || msg.image || msg.isGeneratingImage) ? (
                                     <AssistantMessageItem
                                         msg={msg}
                                         isDark={isDark}

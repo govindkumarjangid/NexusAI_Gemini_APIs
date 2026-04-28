@@ -15,10 +15,11 @@ const ChatArea = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
+  const [isImageMode, setIsImageMode] = useState(false);
 
   const { user } = useAuthStore();
   const { currentChat, setCurrentChat, chats, createChat, isLoading } = useChatStore();
-  const { sendAndStreamMessage } = useMessageStore();
+  const { sendAndStreamMessage, generateImage } = useMessageStore();
   const { chatId } = useParams();
   const navigate = useNavigate();
 
@@ -34,8 +35,8 @@ const ChatArea = () => {
 
   useEffect(() => {
     if (chatId) {
-      setIsSyncing(true);
-      if (!currentChat || currentChat._id !== chatId) {
+      if (!isStreaming) {
+        setIsSyncing(true);
         setMessages([]);
       }
     }
@@ -56,7 +57,7 @@ const ChatArea = () => {
           document.title = `${currentChat.title || 'Chat'} - NexusAI`;
         }
         setIsSyncing(false);
-      }, 150);
+      }, 300); 
       return () => clearTimeout(timer);
     }
   }, [currentChat, chatId, isSyncing]);
@@ -92,7 +93,7 @@ const ChatArea = () => {
     setMessages(prev => [
       ...prev,
       { role: 'user', content: userMessage, imageUrl: selectedImageUrl },
-      { role: 'assistant', content: "" }
+      { role: 'assistant', content: "", isGeneratingImage: isImageMode }
     ]);
     setIsStreaming(true);
 
@@ -105,9 +106,40 @@ const ChatArea = () => {
         messages: [
           ...(activeChat.messages || []),
           { role: 'user', content: userMessage, imageUrl: selectedImageUrl },
-          { role: 'assistant', content: "" }
+          { role: 'assistant', content: "", isGeneratingImage: isImageMode }
         ]
       });
+    }
+
+    if (isImageMode) {
+      setIsImageMode(false);
+      try {
+        const imageUrl = await generateImage({ chatId: chat_id, prompt: userMessage });
+        if (imageUrl) {
+          const assistantMsg = { role: 'assistant', content: "Generated image:", imageUrl: imageUrl };
+          setMessages(prev => {
+            const newMsgs = [...prev];
+            newMsgs[newMsgs.length - 1] = assistantMsg;
+            return newMsgs;
+          });
+
+          // Update currentChat in store
+          const latestChat = useChatStore.getState().currentChat;
+          if (latestChat) {
+            setCurrentChat({
+              ...latestChat,
+              messages: [...latestChat.messages, assistantMsg]
+            });
+          }
+        } else {
+          setMessages(prev => prev.slice(0, -1)); // Remove the assistant placeholder
+        }
+      } catch (err) {
+        setMessages(prev => prev.slice(0, -1));
+      } finally {
+        setIsStreaming(false);
+      }
+      return;
     }
 
     await sendAndStreamMessage({
@@ -168,6 +200,8 @@ const ChatArea = () => {
         setIsUploading={setIsUploading}
         uploadedImageUrl={uploadedImageUrl}
         setUploadedImageUrl={setUploadedImageUrl}
+        isImageMode={isImageMode}
+        setIsImageMode={setIsImageMode}
       />
 
     </div>

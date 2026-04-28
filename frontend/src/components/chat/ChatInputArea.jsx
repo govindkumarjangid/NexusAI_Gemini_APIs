@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Image, FolderUp, Mic, Plus, ArrowUp, X, Loader2 } from 'lucide-react';
+import { Image, FolderUp, Mic, Plus, ArrowUp, X, Loader2, Sparkles } from 'lucide-react';
 import axiosInstance from '../../configs/axiosInstance';
 import { toast } from 'react-hot-toast';
 
@@ -14,7 +14,9 @@ const ChatInputArea = ({
     isUploading,
     setIsUploading,
     uploadedImageUrl,
-    setUploadedImageUrl
+    setUploadedImageUrl,
+    isImageMode,
+    setIsImageMode
 }) => {
 
     const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
@@ -177,6 +179,22 @@ const ChatInputArea = ({
                             </div>
                         )}
 
+                        {isImageMode && (
+                            <div className="px-4 pt-2">
+                                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-(--accent-color)/10 border border-(--accent-color)/20 w-fit">
+                                    <Sparkles size={14} className="text-(--accent-color)" />
+                                    <span className="text-xs font-semibold text-(--accent-color)">Image Generation Mode</span>
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setIsImageMode(false)}
+                                        className="p-0.5 hover:bg-(--accent-color)/20 rounded-full transition-colors"
+                                    >
+                                        <X size={12} className="text-(--accent-color)" />
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
                         <textarea
                             ref={textareaRef}
                             rows="1"
@@ -187,7 +205,7 @@ const ChatInputArea = ({
                                 e.target.style.height = `${e.target.scrollHeight}px`;
                             }}
                             disabled={isStreaming}
-                            placeholder="Ask NexusAI anything..."
+                            placeholder={isImageMode ? "Describe the image you want to generate..." : "Ask NexusAI anything..."}
                             className="w-full max-h-40 sm:max-h-62.5 min-h-12.5 bg-transparent px-3 sm:px-4 py-3 focus:outline-none resize-none overflow-y-auto custom-scrollbar rounded-2xl text-(--text-primary)"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -261,6 +279,17 @@ const ChatInputArea = ({
                                                     <Mic size={18} className="dark:text-gray-400 text-gray-500" />
                                                     <span>Voice Input</span>
                                                 </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setIsImageMode(true);
+                                                        setIsAddMenuOpen(false);
+                                                    }}
+                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-3 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-[#3f4145] hover:bg-gray-100 transition-colors text-left rounded-xl cursor-pointer"
+                                                >
+                                                    <Sparkles size={18} className="text-purple-400" />
+                                                    <span>Generate Image</span>
+                                                </button>
                                             </motion.div>
                                         </>
                                     )}
@@ -273,7 +302,11 @@ const ChatInputArea = ({
                                     disabled={(!inputText.trim() && !uploadedImageUrl) || isStreaming || isUploading}
                                     className="p-2.5 bg-accent disabled:opacity-40 text-accent-contrast rounded-full transition-all flex items-center justify-center cursor-pointer active:scale-95"
                                 >
-                                    <ArrowUp size={20} />
+                                    {isStreaming ? (
+                                        <Loader2 size={20} className="animate-spin" />
+                                    ) : (
+                                        <ArrowUp size={20} />
+                                    )}
                                 </button>
                             </div>
                         </div>

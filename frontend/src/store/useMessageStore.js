@@ -110,7 +110,25 @@ const useMessageStore = create((set) => ({
       if (onDone) onDone();
       set({ isLoading: false, error: null });
     }
-  }
+  },
+
+  generateImage: async ({ chatId, prompt }) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await axiosInstance.post(`/messages/generate-image/${chatId}`, { prompt });
+      set({ isLoading: false });
+      if (response.data.success) {
+        return response.data.imageUrl;
+      } else {
+        toast.error(response.data.message || 'Image generation failed');
+        return null;
+      }
+    } catch (error) {
+      set({ isLoading: false, error: error.response?.data?.message || 'Failed to generate image' });
+      toast.error(error.response?.data?.message || 'Failed to generate image');
+      return null;
+    }
+  },
 
 }));
 
