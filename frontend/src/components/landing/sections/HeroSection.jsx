@@ -1,11 +1,49 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 
 const headingFont = { fontFamily: "'Outfit', 'Inter', sans-serif" };
 
 const HeroSection = () => (
+
   <section className="min-h-screen flex flex-col items-center justify-center px-5 sm:px-8 pt-24 pb-16 relative overflow-hidden">
+
+    {/* Technical Radial Background (Matching Image) */}
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center">
+      {/* Intense Center Glow */}
+      <div
+        className="absolute inset-0 opacity-60"
+        style={{
+          background: `radial-gradient(circle at center, color-mix(in srgb, var(--accent-color) 20%, transparent) 0%, transparent 70%)`
+        }}
+      />
+
+      {/* Subdued Concentric Rings */}
+      {[...Array(7)].map((_, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{
+            opacity: [0.03, 0.1, 0.03],
+            scale: [0.98, 1.02, 0.98],
+          }}
+          transition={{
+            duration: 12 + i,
+            repeat: Infinity,
+            delay: i * 0.6,
+            ease: "easeInOut"
+          }}
+          className="absolute border-2 border-color-mix(in_srgb,var(--accent-color)_80%,transparent_0%) rounded-full"
+          style={{
+            width: `calc(${(i + 1) * 16}vh)`,
+            height: `calc(${(i + 1) * 16}vh)`,
+            maxWidth: '400vw',
+            maxHeight: '400vw'
+          }}
+        />
+      ))}
+    </div>
+
 
     <div className="landing-grid-bg absolute inset-0 pointer-events-none" />
 

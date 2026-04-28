@@ -144,8 +144,10 @@ html.dark {
   transition: background-color 0.2s ease;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background-color: var(--accent-color, var(--scrollbar-thumb-hover));
+::-webkit-scrollbar-thumb:hover,
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent-color) !important;
+  background: var(--accent-color) !important;
 }
 
 /* Ensure specific containers also follow the theme */

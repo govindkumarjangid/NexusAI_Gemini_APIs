@@ -1,6 +1,3 @@
-import { motion } from 'framer-motion';
-
-
 import LandingNav from '../components/landing/ui/LandingNav';
 import HeroSection from '../components/landing/sections/HeroSection';
 import FeaturesSection from '../components/landing/sections/FeaturesSection';
