@@ -16,6 +16,8 @@ import ChatList from '../chat/ChatList';
 import SidebarBottom from '../sidebar/SidebarBottom';
 import RecentChatsSidebar from '../sidebar/RecentChatsSidebar';
 import { useState, useEffect } from 'react';
+import Tooltip from '../common/Tooltip';
+
 
 const Sidebar = () => {
 
@@ -103,13 +105,14 @@ const Sidebar = () => {
           {!isMobile && !sidebarOpen && (
             <div className="w-full flex items-center justify-center shrink-0 relative group">
               <Logo size={32} className="text-(--accent-color) drop-shadow-sm transition-all duration-200 hover:scale-105 group-hover:hidden" />
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="p-0 sm:p-3 dark:hover:bg-gray-800 hover:bg-gray-200 rounded-full hidden group-hover:block transition-all cursor-pointer duration-300 active:scale-95 dark:text-gray-400 text-gray-500 dark:hover:text-gray-200 hover:text-gray-800"
-                title="Expand Menu"
-              >
-                <SquareChevronRight size={18} />
-              </button>
+              <Tooltip text="Expand Menu" position="right" disabled={sidebarOpen}>
+                <button
+                  onClick={() => setSidebarOpen(true)}
+                  className="p-0 sm:p-3 dark:hover:bg-gray-800 hover:bg-gray-200 rounded-full hidden group-hover:block transition-all cursor-pointer duration-300 active:scale-95 dark:text-gray-400 text-gray-500 dark:hover:text-gray-200 hover:text-gray-800"
+                >
+                  <SquareChevronRight size={18} />
+                </button>
+              </Tooltip>
             </div>
           )}
         </div>
@@ -120,34 +123,35 @@ const Sidebar = () => {
             { label: 'New Chat', icon: <SquarePen size={16} />, onClick: handleCreateChat },
             { label: 'Search', icon: <Search size={16} />, onClick: () => setIsSearchOpen(true) },
           ].map(btn => (
-            <button
-              key={btn.label}
-              className="flex items-center cursor-pointer rounded-full transition-all w-full overflow-hidden h-11 hover:opacity-80 active:scale-95"
-              style={{ backgroundColor: 'var(--bg-elevated)', color: 'var(--text-primary)' }}
-              onClick={btn.onClick}
-              disabled={chatLoading}
-              title={btn.label}
-            >
-              <div className="w-11 shrink-0 flex items-center justify-center">{btn.icon}</div>
-              <AnimatePresence>
-                {sidebarOpen && (
-                  <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-sm font-medium whitespace-nowrap">
-                    {btn.label}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </button>
+            <Tooltip key={btn.label} text={btn.label} position="right" disabled={sidebarOpen}>
+              <button
+                className="flex items-center cursor-pointer rounded-full transition-all w-full overflow-hidden h-11 hover:opacity-80 active:scale-95"
+                style={{ backgroundColor: 'var(--bg-elevated)', color: 'var(--text-primary)' }}
+                onClick={btn.onClick}
+                disabled={chatLoading}
+              >
+                <div className="w-11 shrink-0 flex items-center justify-center">{btn.icon}</div>
+                <AnimatePresence>
+                  {sidebarOpen && (
+                    <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-sm font-medium whitespace-nowrap">
+                      {btn.label}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </button>
+            </Tooltip>
           ))}
           {!sidebarOpen && (
-            <button
-              className="flex items-center cursor-pointer rounded-full transition-all w-full overflow-hidden h-11 hover:opacity-80 active:scale-95"
-              style={{ backgroundColor: 'var(--bg-elevated)', color: 'var(--text-primary)' }}
-              onClick={handleOpenRecentSidebar}
-              disabled={chatLoading}
-              title="Recent Chats"
-            >
-              <div className="w-11 shrink-0 flex items-center justify-center"><MessageCircle size={18} /></div>
-            </button>
+            <Tooltip text="Recent Chats" position="right">
+              <button
+                className="flex items-center cursor-pointer rounded-full transition-all w-full overflow-hidden h-11 hover:opacity-80 active:scale-95"
+                style={{ backgroundColor: 'var(--bg-elevated)', color: 'var(--text-primary)' }}
+                onClick={handleOpenRecentSidebar}
+                disabled={chatLoading}
+              >
+                <div className="w-11 shrink-0 flex items-center justify-center"><MessageCircle size={18} /></div>
+              </button>
+            </Tooltip>
           )}
         </div>
 

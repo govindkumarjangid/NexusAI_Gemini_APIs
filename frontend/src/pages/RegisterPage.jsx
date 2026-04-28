@@ -17,7 +17,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden px-4 py-8 bg-(--bg-base)">
+    <div className="h-screen flex items-center justify-center relative overflow-hidden px-4 py-8 bg-(--bg-base)">
       {/* Background blobs */}
       <div className="absolute inset-0 pointer-events-none">
         <div

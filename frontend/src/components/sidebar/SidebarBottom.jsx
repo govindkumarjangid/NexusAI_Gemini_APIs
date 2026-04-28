@@ -3,6 +3,7 @@ import { LogOut, Settings, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useAuthStore from '../../store/useAuthStore';
 import SettingsModal from '../model/SettingsModal';
+import Tooltip from '../common/Tooltip';
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 640);
@@ -147,29 +148,30 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
       </AnimatePresence>
 
       {/* Profile Button */}
-      <button
-        ref={buttonRef}
-        onClick={() => setPopupOpen(v => !v)}
-        className={`flex items-center rounded-full cursor-pointer transition-all duration-300 text-sm h-11 overflow-hidden hover:opacity-80 text-(--text-secondary) bg-(--bg-elevated) border border-(--border-color) ${sidebarOpen ? 'w-full px-1' : 'w-11 justify-center'}`}
-        title={!sidebarOpen ? 'Profile & Settings' : ''}
-      >
-        {/* Avatar circle */}
-        <div className="w-11 h-11 shrink-0 flex items-center justify-center ">
-          <div className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs bg-accent text-accent-contrast">
-            {initial}
+      <Tooltip text="Profile & Settings" position="right" disabled={sidebarOpen}>
+        <button
+          ref={buttonRef}
+          onClick={() => setPopupOpen(v => !v)}
+          className={`flex items-center rounded-full cursor-pointer transition-all duration-300 text-sm h-11 overflow-hidden hover:opacity-80 text-(--text-secondary) bg-(--bg-elevated) border border-(--border-color) ${sidebarOpen ? 'w-full px-1' : 'w-11 justify-center'}`}
+        >
+          {/* Avatar circle */}
+          <div className="w-11 h-11 shrink-0 flex items-center justify-center ">
+            <div className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs bg-accent text-accent-contrast">
+              {initial}
+            </div>
           </div>
-        </div>
-        {sidebarOpen && (
-          <div className="min-w-0 flex flex-col items-start pr-3">
-            <span className="font-medium text-sm truncate w-full text-(--text-primary)">
-              {user?.name || 'Profile'}
-            </span>
-            <span className="text-xs truncate w-full text-(--text-muted)">
-              {user?.email || ''}
-            </span>
-          </div>
-        )}
-      </button>
+          {sidebarOpen && (
+            <div className="min-w-0 flex flex-col items-start pr-3">
+              <span className="font-medium text-sm truncate w-full text-(--text-primary)">
+                {user?.name || 'Profile'}
+              </span>
+              <span className="text-xs truncate w-full text-(--text-muted)">
+                {user?.email || ''}
+              </span>
+            </div>
+          )}
+        </button>
+      </Tooltip>
 
       {/* Settings modal */}
       <SettingsModal open={showSettings} onClose={() => setShowSettings(false)} />

@@ -268,7 +268,7 @@ const ChatMessages = ({ messages, isStreaming }) => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-9999 flex items-end sm:items-center justify-center bg-black/30 sm:bg-black/50 backdrop-blur-md  p-0 sm:p-8"
+                        className="fixed inset-0 z-9999 flex items-end sm:items-center justify-center bg-black/20 sm:bg-black/50 sm:backdrop-blur-xs p-0 sm:p-8"
                         onClick={() => setSelectedImage(null)}
                     >
                         <motion.div
@@ -279,7 +279,7 @@ const ChatMessages = ({ messages, isStreaming }) => {
                                 opacity: 1,
                             }}
                             exit={isMobile ? { y: "100%" } : { opacity: 0, scale: 0.9 }}
-                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            transition={{ type: "spring", damping: 30, stiffness: 300 }}
                             className="relative max-w-full sm:max-w-4xl w-full max-h-[90vh] flex flex-col items-center justify-center gap-4 sm:gap-6 bg-(--bg-surface) sm:bg-transparent rounded-t-3xl sm:rounded-none p-6 sm:p-0 shadow-2xl sm:shadow-none"
                             onClick={(e) => e.stopPropagation()}
                         >
@@ -287,12 +287,16 @@ const ChatMessages = ({ messages, isStreaming }) => {
                             <div className="w-12 h-1.5 bg-(--border-color) rounded-full sm:hidden mb-4 shrink-0" />
 
                             {/* Close Button */}
-                            <button
-                                className="absolute top-2 right-2 sm:-top-10 sm:-right-50 p-2.5 bg-accent text-white rounded-full transition-all duration-200 cursor-pointer"
-                                onClick={() => setSelectedImage(null)}
-                            >
-                                <X size={24} />
-                            </button>
+                            {
+                                !isMobile && (
+                                    <button
+                                        className="absolute top-2 right-2 sm:-top-10 sm:-right-50 p-2.5 bg-accent text-white rounded-full transition-all duration-200 cursor-pointer"
+                                        onClick={() => setSelectedImage(null)}
+                                    >
+                                        <X size={24} />
+                                    </button>
+                                )
+                            }
 
                             <div className="relative group overflow-hidden rounded-2xl shadow-2xl border border-white/10">
                                 <motion.img
