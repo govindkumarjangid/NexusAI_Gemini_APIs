@@ -59,6 +59,7 @@ const Sidebar = () => {
 
   const handleRecentChatClick = (chat) => {
     setCurrentChat(chat);
+    navigate(`/chat/${chat._id}`);
     setRecentSidebarOpen(false);
   };
 

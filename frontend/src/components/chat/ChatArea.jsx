@@ -18,7 +18,7 @@ const ChatArea = () => {
 
   const { user } = useAuthStore();
   const { currentChat, setCurrentChat, chats, createChat, isLoading } = useChatStore();
-   const { sendAndStreamMessage } = useMessageStore();
+  const { sendAndStreamMessage } = useMessageStore();
   const { chatId } = useParams();
   const navigate = useNavigate();
 
@@ -33,15 +33,16 @@ const ChatArea = () => {
   const [isSyncing, setIsSyncing] = useState(false);
 
   useEffect(() => {
-    if (chatId && (!currentChat || currentChat._id !== chatId)) {
+    if (chatId) {
       setIsSyncing(true);
-      setMessages([]);
+      if (!currentChat || currentChat._id !== chatId) {
+        setMessages([]);
+      }
     }
   }, [chatId]);
 
   useEffect(() => {
-    if (currentChat && currentChat._id === chatId && isSyncing) {
-      // Ensure the spinner stays visible long enough to be seen and allows UI thread to breathe
+    if (currentChat && currentChat._id === chatId) {
       const timer = setTimeout(() => {
         if (currentChat.messages) {
           const mappedMessages = currentChat.messages.map((msg, idx) => {
@@ -95,7 +96,7 @@ const ChatArea = () => {
     ]);
     setIsStreaming(true);
 
-    // If chat was just created, we might need to update local store's currentChat 
+    // If chat was just created, we might need to update local store's currentChat
     // to include these messages so the UI stays in sync
     const activeChat = useChatStore.getState().currentChat;
     if (activeChat) {
