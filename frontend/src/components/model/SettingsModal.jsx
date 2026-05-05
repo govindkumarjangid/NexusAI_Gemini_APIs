@@ -37,7 +37,7 @@ export default function SettingsModal({ open, onClose }) {
                             <button
                                 key={t.id}
                                 onClick={() => setTab(t.id)}
-                                className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all cursor-pointer shrink-0 hover:opacity-80"
+                                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all cursor-pointer shrink-0 hover:opacity-80"
                                 style={{
                                     backgroundColor: tab === t.id ? 'var(--bg-elevated)' : 'transparent',
                                     color: tab === t.id ? 'var(--text-primary)' : 'var(--text-secondary)',

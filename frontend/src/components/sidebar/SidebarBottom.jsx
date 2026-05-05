@@ -121,7 +121,7 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
               <div className="p-2">
                 <button
                   onClick={() => { setPopupOpen(false); setShowSettings(true); }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-full text-sm transition-all cursor-pointer hover:opacity-80 text-(--text-secondary) hover:bg-(--bg-elevated)"
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all cursor-pointer hover:opacity-80 text-(--text-secondary) hover:bg-(--bg-elevated)"
                 >
                   <Settings size={18} />
                   <span>Preferences</span>
@@ -129,7 +129,7 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
 
                 <button
                   onClick={() => { setPopupOpen(false); handleLogout(); }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-full text-sm transition-all cursor-pointer hover:text-red-400 hover:bg-red-500/10 text-(--text-secondary)"
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all cursor-pointer hover:text-red-400 hover:bg-red-500/10 text-(--text-secondary)"
                 >
                   <LogOut size={18} />
                   <span>Log out</span>

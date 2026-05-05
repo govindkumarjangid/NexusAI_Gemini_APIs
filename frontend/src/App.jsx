@@ -17,14 +17,12 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 const PageLoader = () => (
   <div className="flex h-screen w-full items-center justify-center bg-base">
-    <motion.div
-      animate={{ scale: [1, 1.1, 1], opacity: [0.5, 1, 0.5] }}
-      transition={{ repeat: Infinity, duration: 1.5 }}
+    <div
       className="flex flex-col items-center gap-4"
     >
       <div className="w-16 h-16 rounded-full border-4 border-accent border-t-transparent animate-spin" />
       <p className="text-sm font-semibold text-muted tracking-widest uppercase">NexusAI</p>
-    </motion.div>
+    </div>
   </div>
 );
 
