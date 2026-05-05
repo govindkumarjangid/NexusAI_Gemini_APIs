@@ -139,7 +139,7 @@ const ChatInputArea = ({
 
     return (
         <>
-            <div className="shrink-0 w-full px-3 sm:px-4 py-3">
+            <div className="shrink-0 w-full px-3 sm:px-4">
                 <div className="w-full max-w-4xl mx-auto">
                     <form
                         onSubmit={onSubmit}
@@ -184,8 +184,8 @@ const ChatInputArea = ({
                                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-(--accent-color)/10 border border-(--accent-color)/20 w-fit">
                                     <Sparkles size={14} className="text-(--accent-color)" />
                                     <span className="text-xs font-semibold text-(--accent-color)">Image Generation Mode</span>
-                                    <button 
-                                        type="button" 
+                                    <button
+                                        type="button"
                                         onClick={() => setIsImageMode(false)}
                                         className="p-0.5 hover:bg-(--accent-color)/20 rounded-full transition-colors"
                                     >
@@ -313,7 +313,7 @@ const ChatInputArea = ({
                     </form>
 
                     <p className="text-center text-[10px] py-1 text-(--text-muted)">
-                        NexusAI may produce inaccurate information about people, places, or facts.
+                        NexusAI is AI and can make mistakes.
                     </p>
                 </div>
             </div>

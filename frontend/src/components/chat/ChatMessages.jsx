@@ -7,7 +7,7 @@ import { renderMessageContent } from '../../configs/renderMessageContent';
 import { X, Download, ExternalLink, Copy, Check, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 
 const ImageSkeleton = () => (
-    <div className="w-full max-w-[300px] aspect-square rounded-xl bg-(--accent-color)/10 dark:bg-(--accent-color)/15 animate-pulse flex flex-col items-center justify-center gap-3 border border-(--accent-color)/20 shadow-inner">
+    <div className="w-full max-w-75 aspect-square rounded-xl bg-(--accent-color)/10 dark:bg-(--accent-color)/15 animate-pulse flex flex-col items-center justify-center gap-3 border border-(--accent-color)/20 shadow-inner">
         <div className="relative">
             <Sparkles className="text-(--accent-color) animate-bounce" size={32} />
             <div className="absolute inset-0 bg-(--accent-color)/30 blur-2xl animate-pulse rounded-full" />
@@ -36,11 +36,11 @@ const UserMessageItem = memo(({ msg, setSelectedImage, handleCopy, copiedId, idx
         >
             <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words w-full relative">
                 {(msg.imageUrl || msg.image) && (
-                    <div className="mb-2 max-w-[280px] sm:max-w-[300px] overflow-hidden rounded-xl border border-white/20 bg-black/10 p-1 group relative">
+                    <div className="mb-2 max-w-70 sm:max-w-75 overflow-hidden rounded-xl border border-white/20 bg-black/10 p-1 group relative">
                         <img
                             src={msg.imageUrl || msg.image}
                             alt="User upload"
-                            className="max-h-[260px] w-full rounded-lg object-cover cursor-pointer hover:brightness-110 transition-all"
+                            className="max-h-65 w-full rounded-lg object-cover cursor-pointer hover:brightness-110 transition-all"
                             onClick={() => setSelectedImage(msg.imageUrl || msg.image)}
                         />
                     </div>
@@ -99,22 +99,22 @@ const UserMessageItem = memo(({ msg, setSelectedImage, handleCopy, copiedId, idx
 const AssistantMessageItem = memo(({ msg, isDark, setSelectedImage, handleCopy, copiedId, idx }) => {
     if (msg.isGeneratingImage && !msg.imageUrl) {
         return (
-            <div className="min-w-0 transition-all duration-300 dark:bg-[#1e1e21] bg-(--bg-panel) border border-(--border-color) text-(--text-primary) px-4 py-3 sm:px-6 sm:py-4 rounded-3xl rounded-tl-sm leading-relaxed w-full shadow-sm">
+            <div className="min-w-0 transition-all duration-300 text-(--text-primary) px-4 py-3 sm:px-6 sm:py-4 rounded-3xl rounded-tl-sm leading-relaxed w-full">
                 <ImageSkeleton />
             </div>
         );
     }
     return (
         <div
-            className="min-w-0 transition-all duration-300 dark:bg-[#1e1e21] bg-(--bg-panel) border border-(--border-color) text-(--text-primary) px-4 py-3 sm:px-6 sm:py-4 rounded-3xl rounded-tl-sm leading-relaxed w-full shadow-sm"
+            className="min-w-0 transition-all duration-300 px-4 py-3 sm:px-6 sm:py-4 rounded-3xl rounded-tl-sm leading-relaxed w-full shadow-sm"
         >
             <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words w-full overflow-hidden">
                 {(msg.imageUrl || msg.image) && (
-                    <div className="mb-2 max-w-[280px] sm:max-w-[300px] overflow-hidden rounded-xl border border-gray-200/60 dark:border-gray-700/50 bg-black/5 dark:bg-white/5 p-1 group relative">
+                    <div className="mb-2 max-w-70 sm:max-w-75 overflow-hidden rounded-xl border border-gray-200/60 dark:border-gray-700/50 bg-black/5 dark:bg-white/5 p-1 group relative">
                         <img
                             src={msg.imageUrl || msg.image}
                             alt="Uploaded content"
-                            className="max-h-[260px] w-full rounded-lg object-cover cursor-pointer opacity-0 transition-all duration-300 ease-in hover:brightness-90"
+                            className="max-h-65 w-full rounded-lg object-cover cursor-pointer opacity-0 transition-all duration-300 ease-in hover:brightness-90"
                             onClick={() => setSelectedImage(msg.imageUrl || msg.image)}
                             onLoad={(e) => e.target.classList.replace('opacity-0', 'opacity-100')}
                         />
@@ -163,6 +163,8 @@ const ChatMessages = ({ messages, isStreaming }) => {
     const messagesEndRef = useRef(null);
     const prevChatIdRef = useRef(null);
     const prevMessagesLength = useRef(0);
+    const scrollTimeoutRef = useRef(null);
+    const lastStreamingScrollRef = useRef(0);
     const { currentChat } = useChatStore();
 
     useEffect(() => {
@@ -171,15 +173,41 @@ const ChatMessages = ({ messages, isStreaming }) => {
         if (messagesEndRef.current) {
             const isChatSwitch = prevChatIdRef.current !== currentChat?._id;
             const messagesJustAppeared = prevMessagesLength.current === 0 && messages.length > 0;
-            if (isChatSwitch || isStreaming || messagesJustAppeared) {
-                messagesEndRef.current.scrollIntoView({
-                    behavior: (isChatSwitch || messagesJustAppeared) ? 'auto' : 'smooth'
-                });
+            const shouldScroll = isChatSwitch || isStreaming || messagesJustAppeared;
+
+            if (shouldScroll) {
+                const scrollToBottom = (behavior) => {
+                    if (messagesEndRef.current) {
+                        messagesEndRef.current.scrollIntoView({ behavior, block: 'end' });
+                    }
+                };
+
+                if (isChatSwitch || messagesJustAppeared) {
+                    scrollToBottom('auto');
+                } else {
+                    const now = Date.now();
+                    const throttleDelay = 120;
+                    const elapsed = now - lastStreamingScrollRef.current;
+
+                    if (elapsed >= throttleDelay) {
+                        lastStreamingScrollRef.current = now;
+                        scrollToBottom('auto');
+                    } else {
+                        clearTimeout(scrollTimeoutRef.current);
+                        scrollTimeoutRef.current = setTimeout(() => {
+                            lastStreamingScrollRef.current = Date.now();
+                            scrollToBottom('auto');
+                        }, throttleDelay - elapsed);
+                    }
+                }
             }
             prevChatIdRef.current = currentChat?._id;
             prevMessagesLength.current = messages.length;
         }
-        return () => window.removeEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            clearTimeout(scrollTimeoutRef.current);
+        };
     }, [messages, currentChat?._id, isStreaming]);
 
     const handleCopy = (text, id) => {
@@ -219,10 +247,8 @@ const ChatMessages = ({ messages, isStreaming }) => {
 
                     <>
                         {messages.map((msg, idx) => (
-                            <motion.div
+                            <div
                                 key={msg._id || idx}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
                                 className={`flex gap-3 sm:gap-4 w-full ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
                             >
                                 {msg.role === 'user' ? (
@@ -244,7 +270,7 @@ const ChatMessages = ({ messages, isStreaming }) => {
                                     />
                                 ) : null}
 
-                            </motion.div>
+                            </div>
                         ))}
                         {isStreaming && (
                             <div className="flex gap-3 sm:gap-4 w-full mt-2">

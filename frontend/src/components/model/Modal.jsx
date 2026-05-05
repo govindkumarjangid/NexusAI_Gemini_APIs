@@ -35,7 +35,7 @@ export default function Modal({ open, onClose, children }) {
     const mobileVariants = {
         hidden: { y: "100%", opacity: 0 },
         visible: { y: 0, opacity: 1, transition: { type: "spring", damping: 28, stiffness: 260 } },
-        exit: { y: "100%", opacity: 0, transition: { duration: 0.22, ease: "easeIn" } },
+        exit: { y: "100%", opacity: 0, transition: { duration: 0.3, ease: "easeIn" } },
     };
 
     const desktopVariants = {
@@ -54,7 +54,7 @@ export default function Modal({ open, onClose, children }) {
                     {/* Backdrop */}
                     <motion.div
                         key="modal-backdrop"
-                        className="fixed inset-0 z-50 bg-black/40 "
+                        className="fixed inset-0 z-50 bg-black/40"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -73,11 +73,6 @@ export default function Modal({ open, onClose, children }) {
                             className="relative w-full sm:max-w-2xl rounded-t-3xl sm:rounded-2xl shadow-2xl border overflow-hidden flex flex-col bg-(--bg-panel) border-(--border-color) text-(--text-primary) max-h-[92dvh]"
                         >
                             {/* Close button */}
-                            <button
-                                onClick={() => onClose()}
-                                className='absolute block sm:hidden top-2 right-2 p-2 rounded-full text-sm bg-accent cursor-pointer transition-colors text-(--text-primary)'>
-                                <X size={18} />
-                            </button>
                             <button
                                 onClick={() => onClose()}
                                 className='hidden sm:block absolute top-2 right-2 p-2 rounded-full cursor-pointer hover:bg-(--bg-accent) transition-all duration-300 active:scale-95'>

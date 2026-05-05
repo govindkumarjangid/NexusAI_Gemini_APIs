@@ -150,7 +150,11 @@ const ChatArea = () => {
         setMessages(prev => {
           const newMessages = [...prev];
           const lastIndex = newMessages.length - 1;
-          newMessages[lastIndex].content += text;
+          const lastMessage = newMessages[lastIndex] || {};
+          newMessages[lastIndex] = {
+            ...lastMessage,
+            content: `${lastMessage.content || ''}${text}`
+          };
           return newMessages;
         });
       },

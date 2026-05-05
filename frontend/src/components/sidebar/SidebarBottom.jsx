@@ -29,6 +29,8 @@ const mobileVariants = {
 };
 
 const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
+
+
   const { user } = useAuthStore();
   const [popupOpen, setPopupOpen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -56,7 +58,7 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
   }, [popupOpen]);
 
   return (
-    <div className={`py-3 shrink-0 relative flex flex-col gap-1 ${sidebarOpen ? 'px-3' : 'items-center'}`}>
+    <div className={`py-3 shrink-0 relative flex flex-col gap-1 ${sidebarOpen ? 'px-2' : 'px-2'}`}>
       <AnimatePresence>
         {popupOpen && (
           <>
@@ -112,14 +114,6 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
                 </div>
               </div>
 
-              <button
-                onClick={() => setPopupOpen(false)}
-                className="absolute block sm:hidden top-2 right-2 p-2 rounded-full text-sm bg-accent cursor-pointer transition-colors text-(--text-primary)"
-              >
-                <X size={18} />
-              </button>
-
-
               {/* Divider */}
               <div className="mx-4 border-t border-(--border-color)" />
 
@@ -152,7 +146,7 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
         <button
           ref={buttonRef}
           onClick={() => setPopupOpen(v => !v)}
-          className={`flex items-center rounded-full cursor-pointer transition-all duration-300 text-sm h-11 overflow-hidden hover:opacity-80 text-(--text-secondary) bg-(--bg-elevated) border border-(--border-color) ${sidebarOpen ? 'w-full px-1' : 'w-11 justify-center'}`}
+          className={`flex items-center rounded-full cursor-pointer transition-all duration-300 text-sm h-11 overflow-hidden hover:opacity-80 text-(--text-secondary) bg-(--bg-elevated) border border-(--border-color) ${sidebarOpen ? 'w-full' : 'w-11 justify-center'}`}
         >
           {/* Avatar circle */}
           <div className="w-11 h-11 shrink-0 flex items-center justify-center ">

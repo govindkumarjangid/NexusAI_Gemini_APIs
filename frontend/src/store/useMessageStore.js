@@ -49,28 +49,53 @@ const useMessageStore = create((set) => ({
 
       const wordQueue = [];
       let isStreamFinished = false;
-      let isTyping = false;
+      let pumpTimer = null;
+      const wordsPerChunk = 2;
 
-      const processQueue = async () => {
-        if (isTyping) return;
-        isTyping = true;
-        while (wordQueue.length > 0 || !isStreamFinished) {
-          if (wordQueue.length > 0) {
-            const word = wordQueue.shift();
-            if (onStream) onStream(word);
-            await new Promise(resolve => setTimeout(resolve, 0));
-          } else {
-            await new Promise(resolve => setTimeout(resolve, 0));
-          }
-        }
-        isTyping = false;
-        if (onDone) {
-          onDone();
-          set({ isLoading: false, error: null });
+      const enqueueText = (text) => {
+        if (!text) return;
+        const words = text.match(/\s+|[^\s]+/g);
+        if (words) {
+          wordQueue.push(...words);
         }
       };
 
-      processQueue();
+      const stopPump = () => {
+        if (pumpTimer) {
+          clearInterval(pumpTimer);
+          pumpTimer = null;
+        }
+      };
+
+      const startPump = () => {
+        if (pumpTimer) return;
+
+        pumpTimer = setInterval(() => {
+          if (wordQueue.length > 0) {
+            let nextChunk = '';
+            let wordsEmitted = 0;
+
+            while (wordQueue.length > 0 && wordsEmitted < wordsPerChunk) {
+              const token = wordQueue.shift();
+              nextChunk += token;
+              if (token.trim()) {
+                wordsEmitted += 1;
+              }
+            }
+
+            if (onStream && nextChunk) onStream(nextChunk);
+            return;
+          }
+
+          if (isStreamFinished) {
+            stopPump();
+            if (onDone) onDone();
+            set({ isLoading: false, error: null });
+          }
+        }, 18);
+      };
+
+      startPump();
 
       while (true) {
         const { done, value } = await reader.read();
@@ -91,7 +116,7 @@ const useMessageStore = create((set) => ({
               if (data.done) {
                 isStreamFinished = true;
               } else if (data.text) {
-                wordQueue.push(data.text);
+                enqueueText(data.text);
               } else if (data.error) {
                 console.error("AI Streaming Error from Backend:", data.error);
                 toast.error(data.error);
@@ -103,6 +128,8 @@ const useMessageStore = create((set) => ({
           }
         }
       }
+
+      startPump();
 
     } catch (error) {
       console.error("Fetch/Stream failed:", error);
