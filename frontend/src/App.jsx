@@ -4,38 +4,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
-// Lazy load components for performance
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));
-const SearchPage = lazy(() => import('./pages/SearchPage'));
 const SharedChatPage = lazy(() => import('./pages/SharedChatPage'));
-const Sidebar = lazy(() => import('./components/sidebar/Sidebar'));
-const ChatArea = lazy(() => import('./components/chat/ChatArea'));
-const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
+const PageLoader = lazy(() => import('./components/common/PageLoader'));
+const ChatLayout = lazy(() => import('./components/chat/ChatLayout'));
 
-
-const PageLoader = () => (
-  <div className="flex h-screen w-full items-center justify-center bg-base">
-    <div
-      className="flex flex-col items-center gap-4"
-    >
-      <div className="w-16 h-16 rounded-full border-4 border-accent border-t-transparent animate-spin" />
-      <p className="text-sm font-semibold text-muted tracking-widest uppercase">NexusAI</p>
-    </div>
-  </div>
-);
-
-
-const ChatLayout = () => {
-  return (
-    <div className="flex h-screen overflow-hidden relative bg-base text-primary">
-      <Sidebar />
-      <ChatArea />
-      <SearchPage />
-    </div>
-  );
-};
 
 const App = () => {
 

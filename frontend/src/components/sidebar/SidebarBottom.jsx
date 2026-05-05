@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useMemo } from 'react';
 import { LogOut, Settings, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useAuthStore from '../../store/useAuthStore';
@@ -31,19 +31,14 @@ const mobileVariants = {
 const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
 
 
-  const { user } = useAuthStore();
+  const { user, getInitials } = useAuthStore();
   const [popupOpen, setPopupOpen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const popupRef = useRef(null);
   const buttonRef = useRef(null);
   const isMobile = useIsMobile();
 
-  const initial = (() => {
-    if (!user?.name) return '?';
-    const parts = user.name.trim().split(/\s+/);
-    if (parts.length === 1) return parts[0][0].toUpperCase();
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  })();
+  const initial = useMemo(() => getInitials(), [user, getInitials]);
 
   useEffect(() => {
     if (!popupOpen) return;

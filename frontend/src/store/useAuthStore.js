@@ -77,7 +77,7 @@ window.matchMedia('(prefers-contrast: more)').addEventListener('change', () => {
     }
 });
 
-const useAuthStore = create((set) => ({
+const useAuthStore = create((set, get) => ({
     user: JSON.parse(localStorage.getItem('user')) || null,
     token: localStorage.getItem('token') || null,
     isLoading: false,
@@ -88,6 +88,15 @@ const useAuthStore = create((set) => ({
     accentColor: initialAccent,
     contrast: initialContrast,
     actualContrast: getActualContrast(initialContrast),
+
+    getInitials: () => {
+        const user = get().user;
+        if (!user || (!user.name && !user.username)) return '?';
+        const nameToUse = user.name || user.username;
+        const parts = nameToUse.trim().split(/\s+/);
+        if (parts.length === 1) return parts[0][0].toUpperCase();
+        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    },
 
     setTheme: (theme) => {
         localStorage.setItem('theme', theme);
