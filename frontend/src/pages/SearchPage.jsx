@@ -64,7 +64,7 @@ const SearchPage = () => {
           className="fixed top-0 right-0 h-full w-full sm:w-112.5 md:w-137.5 border-l z-70 flex flex-col shadow-2xl bg-(--bg-surface) border-(--border-color) text-(--text-primary)"
         >
           {/* Header */}
-          <div className="p-6 flex items-center justify-between pb-2">
+          <div className="py-4 px-5 flex items-center justify-between pb-1">
             <h2 className="text-2xl font-semibold text-(--text-primary)">Search</h2>
             <button
               onClick={() => setIsSearchOpen(false)}
@@ -75,7 +75,7 @@ const SearchPage = () => {
           </div>
 
           {/* Search Input */}
-          <div className="px-6 py-4">
+          <div className="p-4">
             <div className="relative group">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 transition-colors text-(--text-muted)" />
               <input
@@ -90,7 +90,7 @@ const SearchPage = () => {
           </div>
 
           {/* Results List */}
-          <div className="flex-1 overflow-y-auto px-4 custom-scrollbar">
+          <div className="flex-1 overflow-y-auto px-2 custom-scrollbar">
             <div className="px-2 py-3">
               <p className="text-[15px] font-semibold mb-3 px-2 text-(--text-primary)">Chats</p>
               <div className="space-y-1">
@@ -110,8 +110,8 @@ const SearchPage = () => {
                           navigate(`/chat/${chat._id}`);
                         }}
                       >
-                        <span className="text-[15px] truncate mr-4">{getChatTitle(chat)}</span>
-                        <span className="text-sm dark:text-gray-400 text-gray-400 whitespace-nowrap">{formatDateTime(chat.updatedAt)}</span>
+                        <span className="sm:text-[15px] text-sm truncate mr-4">{getChatTitle(chat)}</span>
+                        <span className="sm:text-sm text-xs dark:text-gray-400 text-gray-400 whitespace-nowrap">{formatDateTime(chat.updatedAt)}</span>
                       </div>
                     ))}
                     {hasMoreChats && (

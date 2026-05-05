@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Trash2, LoaderIcon } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import useAuthStore from "../../store/useAuthStore";
@@ -7,8 +7,26 @@ import { toast } from "react-hot-toast";
 
 function useIsMobile() {
     const [isMobile, setIsMobile] = useState(() => window.innerWidth < 640);
+    useEffect(() => {
+        const mq = window.matchMedia('(max-width: 639px)');
+        const handler = (e) => setIsMobile(e.matches);
+        mq.addEventListener('change', handler);
+        return () => mq.removeEventListener('change', handler);
+    }, []);
     return isMobile;
 }
+
+const mobileVariants = {
+    hidden: { y: '100%', opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { type: 'spring', damping: 28, stiffness: 260 } },
+    exit: { y: '100%', opacity: 0, transition: { duration: 0.2, ease: 'easeIn' } },
+};
+
+const desktopVariants = {
+    hidden: { opacity: 0, scale: 0.95, y: -8 },
+    visible: { opacity: 1, scale: 1, y: 0, transition: { type: 'spring', damping: 24, stiffness: 300 } },
+    exit: { opacity: 0, scale: 0.95, y: -8, transition: { type: 'spring', damping: 24, stiffness: 300 } },
+};
 
 export function DeleteConfirmDialog({ open, onClose }) {
     const [password, setPassword] = useState('');
@@ -31,64 +49,83 @@ export function DeleteConfirmDialog({ open, onClose }) {
     return (
         <AnimatePresence>
             {open && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-60 flex items-end sm:items-center justify-center bg-black/40"
-                    onClick={handleBackdropClick}
-                >
-                    <motion.div
-                        ref={dialogRef}
-                        initial={{ y: 20, opacity: 0, scale: 0.9 }}
-                        animate={{ y: 0, opacity: 1, scale: 1 }}
-                        exit={{ y: 20, opacity: 0, scale: 0.9 }}
-                        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                        className="rounded-t-3xl sm:rounded-2xl p-8 pb-10 sm:pb-8 shadow-2xl w-full sm:max-w-sm text-center border bg-(--bg-panel) border-(--border-color)"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <h3 className="text-lg font-semibold mb-3 text-(--text-primary)">
-                            Delete Account?
-                        </h3>
-                        <p className="mb-6 text-sm wrap-break-word line-clamp-1 text-(--text-secondary)">
-                            This action cannot be undone. All your chats will be permanently deleted.
-                        </p>
-                        <input
-                            name="password"
-                            id="password"
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Enter your password"
-                            className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)] mb-6"
+                <>
+                    {isMobile && (
+                        <motion.div
+                            key="delete-backdrop"
+                            className="fixed inset-0 z-50 bg-black/30"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.18 }}
+                            onClick={handleBackdropClick}
                         />
-                        <div className="flex justify-center gap-3">
-                            <button
-                                className="px-6 py-2 rounded-full transition-colors cursor-pointer bg-(--bg-elevated) text-(--text-primary) hover:bg-(--bg-hover)"
-                                onClick={onClose}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                className="px-6 py-2 rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer active:scale-95 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
-                                disabled={isLoading || !password}
-                                onClick={handleDeleteAccount}
-                            >
-                                {isLoading ? (
-                                    <div className="flex items-center gap-2 justify-center">
-                                        <LoaderIcon
-                                            size={20}
-                                            className="animate-spin text-white"
-                                        />
-                                        <span>Deleting...</span>
-                                    </div>
-                                ) : (
-                                    "Delete"
-                                )}
-                            </button>
-                        </div>
+                    )}
+                    <motion.div
+                        key="delete-dialog"
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        variants={isMobile ? mobileVariants : desktopVariants}
+                        className={`fixed z-60 ${isMobile ? 'bottom-0 left-0 right-0 rounded-t-3xl' : 'inset-0 flex items-center justify-center'}`}
+                        onClick={isMobile ? undefined : handleBackdropClick}
+                    >
+                        <motion.div
+                            ref={dialogRef}
+                            className={`${isMobile ? 'w-full rounded-t-3xl' : 'sm:max-w-sm w-full sm:rounded-2xl'} p-8 pb-10 sm:pb-8 shadow-2xl border bg-(--bg-panel) border-(--border-color)`}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Mobile handle */}
+                            {isMobile && (
+                                <div className="flex justify-center pb-3">
+                                    <div className="w-10 h-1 rounded-full opacity-30 bg-(--text-primary)" />
+                                </div>
+                            )}
+
+                            <h3 className="text-lg font-semibold mb-3 text-(--text-primary) text-center">
+                                Delete Account?
+                            </h3>
+                            <p className="mb-6 text-sm wrap-break-word line-clamp-1 text-(--text-secondary) text-center">
+                                This action cannot be undone. All your chats will be permanently deleted.
+                            </p>
+                            <input
+                                name="password"
+                                id="password"
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="Enter your password"
+                                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)] mb-6"
+                            />
+                            <div className="flex justify-center gap-3">
+                                <button
+                                    className="px-6 py-2 rounded-full transition-colors cursor-pointer bg-(--bg-elevated) text-(--text-primary) hover:bg-(--bg-hover)"
+                                    onClick={onClose}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    className="px-6 py-2 rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer active:scale-95 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
+                                    disabled={isLoading || !password}
+                                    onClick={handleDeleteAccount}
+                                >
+                                    {isLoading ? (
+                                        <div className="flex items-center gap-2 justify-center">
+                                            <LoaderIcon
+                                                size={20}
+                                                className="animate-spin text-white"
+                                            />
+                                            <span>Deleting...</span>
+                                        </div>
+                                    ) : (
+                                        "Delete"
+                                    )}
+                                </button>
+                            </div>
+                            {isMobile && <div className="pb-safe h-4" />}
+                        </motion.div>
                     </motion.div>
-                </motion.div>
+                </>
             )}
         </AnimatePresence>
     );

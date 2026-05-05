@@ -22,7 +22,7 @@ const RecentChatsSidebar = ({ open, onClose, chats, onChatClick, setIsSearchOpen
 
                     className="fixed top-0 right-0 h-full w-120 max-w-full border-l shadow-2xl flex flex-col z-70 bg-(--bg-surface) border-(--border-color) text-(--text-primary)"
                 >
-                    <div className="flex items-center justify-between p-6 pb-4">
+                    <div className="flex items-center justify-between py-4 px-5">
                         <span className="font-semibold text-2xl text-(--text-primary)">Recent Chats</span>
                         <button
                             className="p-2 cursor-pointer rounded-full transition-colors hover:opacity-80 text-(--text-secondary)"

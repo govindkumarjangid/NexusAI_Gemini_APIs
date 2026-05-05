@@ -143,7 +143,7 @@ const ChatInputArea = ({
                 <div className="w-full max-w-4xl mx-auto">
                     <form
                         onSubmit={onSubmit}
-                        className="flex flex-col rounded-3xl px-2 py-2 shadow-sm transition-all bg-(--bg-surface) border-(--border-color)"
+                        className="flex flex-col rounded-3xl px-2 py-2 shadow-sm transition-all bg-(--bg-panel) border-(--border-color)"
                     >
                         <input
                             type="file"
@@ -252,12 +252,12 @@ const ChatInputArea = ({
                                                     ? { y: "100%", opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }
                                                     : { opacity: 0, y: 10, scale: 0.95, transition: { duration: 0.15, ease: "easeIn" } }
                                                 }
-                                                className="fixed bottom-0 left-0 right-0 sm:absolute sm:bottom-full sm:left-0 mb-0 sm:mb-3 w-full sm:w-48 rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden z-50 p-4 sm:p-2 text-sm font-semibold border-t sm:border bg-(--bg-elevated) border-(--border-color)"
+                                                className="fixed bottom-0 left-0 right-0 sm:absolute sm:bottom-full sm:left-0 mb-0 sm:mb-3 w-full sm:w-48 rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden z-50 p-4 sm:p-2 text-sm font-semibold border-t sm:border bg-(--bg-panel) border-(--border-color)"
                                             >
                                                 {/* Mobile Handle */}
                                                 {
                                                     isMobile && (
-                                                        <div className="flex justify-center -mt-1.5 pb-1">
+                                                        <div className="flex justify-center my-2 pb-1">
                                                             <div className="w-10 h-1 rounded-full opacity-30 bg-(--text-primary)" />
                                                         </div>
                                                     )
@@ -266,7 +266,7 @@ const ChatInputArea = ({
                                                 <button
                                                     type="button"
                                                     onClick={handleImageClick}
-                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-3 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-[#3f4145] hover:bg-gray-100 transition-colors text-left rounded-xl cursor-pointer"
+                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-3 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-(--bg-hover) hover:bg-gray-100 transition-colors text-left rounded-xl cursor-pointer"
                                                 >
                                                     <Image size={18} className="dark:text-gray-400 text-gray-500" />
                                                     <span>Upload Image</span>
@@ -274,7 +274,7 @@ const ChatInputArea = ({
                                                 <button
                                                     type="button"
                                                     onClick={toggleListening}
-                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-3 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-[#3f4145] hover:bg-gray-100 transition-colors text-left rounded-xl cursor-pointer"
+                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-3 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-(--bg-hover) hover:bg-gray-100 transition-colors text-left rounded-xl cursor-pointer"
                                                 >
                                                     <Mic size={18} className="dark:text-gray-400 text-gray-500" />
                                                     <span>Voice Input</span>
@@ -285,7 +285,7 @@ const ChatInputArea = ({
                                                         setIsImageMode(true);
                                                         setIsAddMenuOpen(false);
                                                     }}
-                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-3 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-[#3f4145] hover:bg-gray-100 transition-colors text-left rounded-xl cursor-pointer"
+                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-3 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-(--bg-hover) hover:bg-gray-100 transition-colors text-left rounded-xl cursor-pointer"
                                                 >
                                                     <Sparkles size={18} className="text-purple-400" />
                                                     <span>Generate Image</span>
@@ -376,7 +376,7 @@ const ChatInputArea = ({
                             </div>
 
                             {/* Live Text Preview */}
-                            <div className="w-full min-h-[80px] max-h-[150px] overflow-y-auto bg-black/5 dark:bg-white/5 rounded-2xl p-4 border border-(--border-color) text-base italic text-(--text-secondary) text-center">
+                            <div className="w-full min-h-20 max-h-37.5 overflow-y-auto bg-black/5 dark:bg-white/5 rounded-2xl p-4 border border-(--border-color) text-base italic text-(--text-secondary) text-center">
                                 {inputText.replace(preVoiceTextRef.current, "").trim() || "Waiting for audio..."}
                             </div>
 
