@@ -1,8 +1,8 @@
 import { lazy, Suspense, useEffect } from 'react';
 import useAuthStore from './store/useAuthStore.js';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Toaster } from 'react-hot-toast';
+import { AnimatePresence } from 'framer-motion';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import ToastProvider from './components/common/ToastProvider';
 
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
@@ -14,19 +14,7 @@ const ChatLayout = lazy(() => import('./components/chat/ChatLayout'));
 
 
 const App = () => {
-
-  const {
-    user,
-    actualTheme,
-    isMobile,
-    setIsMobile,
-    sidebarOpen,
-    setSidebarOpen,
-    isSearchOpen,
-    setIsSearchOpen,
-    accentColor,
-    ACCENT_COLORS,
-  } = useAuthStore();
+  const { user, actualTheme, setIsMobile, setSidebarOpen, accentColor, ACCENT_COLORS } = useAuthStore();
 
   const location = useLocation();
   const isDark = actualTheme === 'dark';
@@ -72,64 +60,7 @@ const App = () => {
 
   return (
     <>
-      <Toaster
-        position="top-right"
-        reverseOrder={false}
-        toastOptions={{
-          style: isDark ? {
-            background: '#1E1E21',
-            color: '#e5e7eb',
-            border: '1px solid #333338',
-            boxShadow: '0 4px 24px 0 rgba(0,0,0,0.35)',
-            borderRadius: '9999px',
-            padding: '8px 16px',
-          } : {
-            background: '#ffffff',
-            color: '#1a1a1a',
-            border: '1px solid #e5e7eb',
-            boxShadow: '0 4px 24px 0 rgba(0,0,0,0.08)',
-            borderRadius: '9999px',
-            padding: '8px 16px',
-          },
-          success: {
-            iconTheme: {
-              primary: '#22c55e',
-              secondary: '#ffffff',
-            },
-            style: isDark ? {
-              background: '#1E1E21',
-              color: '#e5e7eb',
-              border: '1px solid #22c55e',
-              borderRadius: '9999px',
-            } : {
-              background: '#ffffff',
-              color: '#1a1a1a',
-              border: '1px solid #22c55e',
-              borderRadius: '9999px',
-            },
-          },
-          error: {
-            iconTheme: {
-              primary: '#ef4444',
-              secondary: '#ffffff',
-            },
-            style: isDark ? {
-              background: '#1E1E21',
-              color: '#e5e7eb',
-              border: '1px solid #ef4444',
-              borderRadius: '9999px',
-            } : {
-              background: '#ffffff',
-              color: '#1a1a1a',
-              border: '1px solid #ef4444',
-              borderRadius: '9999px',
-            },
-          },
-
-
-
-        }}
-      />
+      <ToastProvider />
       <Suspense fallback={<PageLoader />}>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname.split('/')[1] || 'root'}>

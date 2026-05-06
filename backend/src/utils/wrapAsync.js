@@ -4,7 +4,6 @@ const wrapAsync = (controller) => {
             await controller(req, res, next);
         } catch (error) {
             next(error);
-            res.status(500).json({ message: 'Internal Server Error' });
         }
     }
 }

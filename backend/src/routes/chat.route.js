@@ -1,4 +1,5 @@
 import express from 'express';
+import authMiddleware from '../middleware/auth.middleware.js';
 import {
     createChat,
     getChatsByUser,
@@ -8,7 +9,6 @@ import {
     updateChatTitle,
     togglePinChat
 } from '../controllers/chat.controller.js';
-import authMiddleware from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 

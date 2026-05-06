@@ -7,14 +7,14 @@ import crypto from 'crypto';
 // create new chat
 const createChat = wrapAsync(async (req, res) => {
     const { userId } = req.body;
-    console.log(userId)
+    // console.log(userId)
 
     const user = await User.findById(userId);
     if (!user)
         return res.status(404).json({ message: 'User not found' });
 
     const newChat = new Chat({ userId, messages: [] });
-    console.log(newChat)
+    // console.log(newChat)
     await newChat.save();
 
     res.status(201).json({ success: true, message: 'Chat created successfully', chat: newChat });
@@ -29,7 +29,10 @@ const getChatsByUser = wrapAsync(async (req, res) => {
     if (!user)
         return res.status(404).json({ message: 'User not found' });
 
-    const chats = await Chat.find({ userId }).sort({ createdAt: -1 });
+    const chats = await Chat.find({ userId })
+        .sort({ createdAt: -1 })
+        .populate({ path: 'messages', select: 'content prompt role', options: { limit: 1 } })
+        .lean();
 
     res.status(200).json({ success: true, message: 'Chats fetched successfully', chats });
 });
@@ -67,11 +70,9 @@ const shareChat = wrapAsync(async (req, res) => {
 // get shared chat
 const getSharedChat = wrapAsync(async (req, res) => {
     const { shareId } = req.params;
-    const chat = await Chat.findOne({ shareId, isShared: true });
-
+    const chat = await Chat.findOne({ shareId, isShared: true }).populate('messages').lean();
     if (!chat)
         return res.status(404).json({ message: 'Shared chat not found or link has expired' });
-
     res.status(200).json({ success: true, message: 'Shared chat fetched successfully', chat });
 });
 

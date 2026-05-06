@@ -41,12 +41,14 @@ const ChatList = memo(({ chats, currentChat, setCurrentChat, navigate, deleteCha
           let chatDisplayName = chat.title;
           if (!chatDisplayName || chatDisplayName === 'New Chat') {
             if (chat.messages && Array.isArray(chat.messages)) {
-              const found = chat.messages.find(m => m.role === 'user' && m.content);
-              chatDisplayName = found ? (found.content.length > 60 ? found.content.slice(0, 60) + '...' : found.content) : 'New Chat';
-            } else {
-              chatDisplayName = 'New Chat';
+              const firstMsg = chat.messages.find(m => m && typeof m === 'object');
+              if (firstMsg) {
+                const content = firstMsg.content || firstMsg.prompt || '';
+                chatDisplayName = content.length > 60 ? content.slice(0, 60) + '...' : content;
+              }
             }
           }
+          if (!chatDisplayName || chatDisplayName === 'New Chat') chatDisplayName = 'New Chat';
           return (
             <div
               key={chat._id}

@@ -6,6 +6,97 @@ import axios from 'axios';
 import { cloudinary } from '../configs/cloudinary.js';
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const TEXT_MODEL = "gemma-3-4b-it";
+const IMAGE_ONLY_PROMPT = "Please respond to the uploaded image.";
+const DEFAULT_ASSISTANT_ERROR_MESSAGE = "Sorry, I couldn't generate a response right now. Please try again in a moment.";
+
+const getCleanText = (value) => (typeof value === 'string' ? value.trim() : '');
+
+const writeSse = (res, payload) => {
+    res.write(`data: ${JSON.stringify(payload)}\n\n`);
+};
+
+const streamTextToClient = async (res, text) => {
+    const lines = text.split('\n');
+
+    for (let index = 0; index < lines.length; index++) {
+        const isLastLine = index === lines.length - 1;
+        const textChunk = isLastLine ? lines[index] : `${lines[index]}\n`;
+
+        if (textChunk) {
+            writeSse(res, { text: textChunk });
+            await delay(20);
+        }
+    }
+};
+
+const fetchImagePart = async (imageUrl) => {
+    const response = await axios.get(imageUrl, {
+        responseType: 'arraybuffer',
+        timeout: 15000
+    });
+    const mimeType = response.headers['content-type'] || 'image/jpeg';
+
+    if (!mimeType.startsWith('image/'))
+        throw new Error('Uploaded file is not a supported image');
+
+    return {
+        inlineData: {
+            data: Buffer.from(response.data).toString('base64'),
+            mimeType
+        }
+    };
+};
+
+const buildGeminiParts = async ({ content, imageUrl, includeImage = false, fallbackText = '', failOnImageError = false }) => {
+    const parts = [];
+    const text = getCleanText(content);
+
+    if (text) parts.push({ text });
+    else if (fallbackText) parts.push({ text: fallbackText });
+
+    if (includeImage && imageUrl) {
+        try {
+            parts.push(await fetchImagePart(imageUrl));
+        } catch (error) {
+            if (failOnImageError) throw error;
+            console.error("Skipping history image for Gemini:", error.message);
+        }
+    }
+
+    return parts;
+};
+
+const appendGeminiContent = (contents, nextContent) => {
+    if (!nextContent.parts.length) return;
+    const lastContent = contents[contents.length - 1];
+
+    if (lastContent?.role === nextContent.role) {
+        lastContent.parts.push(...nextContent.parts);
+        return;
+    }
+
+    contents.push(nextContent);
+};
+
+const buildGeminiHistory = async (messages) => {
+    const history = [];
+
+    for (const msg of messages) {
+        const role = msg.role === 'assistant' ? 'model' : 'user';
+        const parts = await buildGeminiParts({
+            content: msg.content,
+            imageUrl: msg.imageUrl,
+            includeImage: msg.role === 'user' && Boolean(msg.imageUrl),
+            fallbackText: msg.role === 'user' && msg.imageUrl ? IMAGE_ONLY_PROMPT : ''
+        });
+
+        if (!history.length && role !== 'user') continue;
+        appendGeminiContent(history, { role, parts });
+    }
+
+    return history;
+};
 
 // upload image to Cloudinary
 const uploadImage = wrapAsync(async (req, res) => {
@@ -22,126 +113,99 @@ const uploadImage = wrapAsync(async (req, res) => {
 const sendMessage = wrapAsync(async (req, res) => {
     const { chatId } = req.params;
     const { content, imageUrl } = req.body;
-    // console.log("chatId", chatId)
-    // console.log("content", content)
-    // console.log("imageUrl", imageUrl)
+    const textContent = getCleanText(content);
+
+    if (!textContent && !imageUrl)
+        return res.status(400).json({ message: 'Message content or image is required' });
 
     const chat = await Chat.findById(chatId);
     if (!chat) return res.status(404).json({ message: 'Chat not found' });
 
-    const newMessage = new Message({ chatId, role: 'user', content, imageUrl });
+    if (chat.userId && req.user?._id && chat.userId.toString() !== req.user._id.toString())
+        return res.status(403).json({ message: 'You do not have access to this chat' });
+
+    const newMessage = new Message({ chatId, role: 'user', content: textContent, imageUrl: imageUrl || '' });
     await newMessage.save();
-    // console.log("New Message:", newMessage);
 
-    chat.messages.push({ messageId: newMessage._id, role: 'user', content, imageUrl });
+    chat.messages.push(newMessage._id);
 
-    // Auto-update title if it's still "New Chat" and this is the first message with content
-    if (chat.title === 'New Chat' && content) {
-        chat.title = content.substring(0, 40) + (content.length > 40 ? '...' : '');
+    // Auto-update title if it's still "New Chat"
+    if (chat.title === 'New Chat') {
+        if (textContent)
+            chat.title = textContent.substring(0, 40) + (textContent.length > 40 ? '...' : '');
+        else if (imageUrl)
+            chat.title = 'Image Message';
     }
 
     await chat.save();
 
-
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
+    res.setHeader('X-Accel-Buffering', 'no');
+    res.flushHeaders?.();
 
     let fullAssistantResponse = "";
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-        const formattedMessages = await Promise.all(chat.messages.map(async (msg) => {
-            const parts = [{ text: msg.content }];
-            // console.log(msg);
-            if (msg.imageUrl) {
-                /// console.log("Fetching history image from:", msg.imageUrl);
-                try {
-                    const response = await axios.get(msg.imageUrl, { responseType: 'arraybuffer' });
-                    // console.log("Axios response received for history image", response);
-                    const base64Image = Buffer.from(response.data).toString('base64');
-                    // console.log("Base64 conversion complete for history image. Length:", base64Image);
-                    const mimeType = response.headers['content-type'] || 'image/jpeg';
-                    parts.push({
-                        inlineData: {
-                            data: base64Image,
-                            mimeType: mimeType
-                        }
-                    });
-                    // console.log(parts)
-                } catch (err) {
-                    console.error("Error fetching history image for Gemini:", err.message);
-                }
-            }
-            return {
-                role: msg.role === 'assistant' ? 'model' : 'user',
-                parts: parts
-            };
-        }));
+        const model = genAI.getGenerativeModel({ model: TEXT_MODEL });
+        const historyMessages = await Message.find({
+            chatId,
+            _id: { $ne: newMessage._id }
+        }).sort({ createdAt: 1 });
 
-        // console.log("Formatted messages:", formattedMessages);
-
-        formattedMessages.pop();
-        const chatSession = model.startChat({ history: formattedMessages });
+        const formattedMessages = await buildGeminiHistory(historyMessages);
 
         // Final message parts including the current image if any
-        const currentParts = [{ text: content }];
-        if (imageUrl) {
-            //  console.log("Fetching current image from:", imageUrl);
-            try {
-                const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-                //  console.log("Axios response received for current image", response);
-                const base64Image = Buffer.from(response.data).toString('base64');
-                //  console.log("Base64 conversion complete for current image. Length:", base64Image);
-                const mimeType = response.headers['content-type'] || 'image/jpeg';
-                currentParts.push({
-                    inlineData: {
-                        data: base64Image,
-                        mimeType: mimeType
-                    }
-                });
-            } catch (err) {
-                console.error("Error fetching current image for Gemini:", err.message);
-            }
-        }
+        const currentParts = await buildGeminiParts({
+            content: textContent,
+            imageUrl,
+            includeImage: Boolean(imageUrl),
+            fallbackText: imageUrl ? IMAGE_ONLY_PROMPT : '',
+            failOnImageError: true
+        });
 
-        const result = await chatSession.sendMessageStream(currentParts);
+        const lastHistoryMessage = formattedMessages[formattedMessages.length - 1];
+        if (lastHistoryMessage?.role === 'user')
+            currentParts.unshift(...formattedMessages.pop().parts);
 
-        let lineBuffer = "";
-        for await (const chunk of result.stream) {
-            const chunkText = chunk.text();
-            if (chunkText) {
-                fullAssistantResponse += chunkText;
-                lineBuffer += chunkText;
+        const result = await model.generateContent({
+            contents: [
+                ...formattedMessages,
+                { role: 'user', parts: currentParts }
+            ]
+        });
 
-                const lines = lineBuffer.split('\n');
-                // Keep the last partial line in the buffer
-                lineBuffer = lines.pop();
+        fullAssistantResponse = result.response.text();
 
-                for (const line of lines) {
-                    res.write(`data: ${JSON.stringify({ text: line + '\n' })}\n\n`);
-                    await delay(50);
-                }
-            }
-        }
-        if (lineBuffer) {
-            res.write(`data: ${JSON.stringify({ text: lineBuffer })}\n\n`);
-        }
-        //  console.log(fullAssistantResponse)
+        if (!fullAssistantResponse.trim())
+            throw new Error('AI returned an empty response');
+
+        await streamTextToClient(res, fullAssistantResponse);
 
         const assistantMessage = new Message({ chatId, role: 'assistant', content: fullAssistantResponse });
         await assistantMessage.save();
-        // console.log(assistantMessage)
 
-        chat.messages.push({ messageId: assistantMessage._id, role: 'assistant', content: fullAssistantResponse });
+        chat.messages.push(assistantMessage._id);
         await chat.save();
-        // console.log(chat)
 
-        res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
+        writeSse(res, { done: true, message: assistantMessage });
         return res.end();
     } catch (error) {
         console.error("Stream Error:", error);
-        res.write(`data: ${JSON.stringify({ error: "Something went wrong" })}\n\n`);
+
+        const fallbackMessage = new Message({
+            chatId,
+            role: 'assistant',
+            content: DEFAULT_ASSISTANT_ERROR_MESSAGE
+        });
+        await fallbackMessage.save();
+
+        chat.messages.push(fallbackMessage._id);
+        await chat.save();
+
+        await streamTextToClient(res, DEFAULT_ASSISTANT_ERROR_MESSAGE);
+        writeSse(res, { done: true, message: fallbackMessage, fallback: true });
         return res.end();
     }
 });
@@ -168,11 +232,15 @@ const generateImage = wrapAsync(async (req, res) => {
     // Save user message (the prompt)
     const userMsg = new Message({ chatId, role: 'user', content: `Generate image: ${prompt}` });
     await userMsg.save();
-    chat.messages.push({ messageId: userMsg._id, role: 'user', content: userMsg.content });
+    chat.messages.push(userMsg._id);
+
+    if (chat.title === 'New Chat')
+        chat.title = prompt.substring(0, 40) + (prompt.length > 40 ? '...' : '');
+
     await chat.save();
 
     try {
-        // Step 1: Enhance the prompt using a text model
+        // Enhance the prompt using a text model
         const textModel = genAI.getGenerativeModel({ model: "gemini-3.1-flash-image-preview" });
         const enhancementPrompt = `You are an expert prompt engineer for AI image generators.
         Your task is to take a simple user prompt and expand it into a detailed, high-quality, artistic prompt for an image generator.
@@ -215,12 +283,7 @@ const generateImage = wrapAsync(async (req, res) => {
             imageUrl: imageUrl
         });
         await assistantMsg.save();
-        chat.messages.push({
-            messageId: assistantMsg._id,
-            role: 'assistant',
-            content: assistantMsg.content,
-            imageUrl: imageUrl
-        });
+        chat.messages.push(assistantMsg._id);
         await chat.save();
 
         res.status(200).json({ success: true, imageUrl });

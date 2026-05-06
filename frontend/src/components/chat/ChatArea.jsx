@@ -19,7 +19,7 @@ const ChatArea = () => {
 
   const { user } = useAuthStore();
   const { currentChat, setCurrentChat, chats, createChat, isLoading } = useChatStore();
-  const { sendAndStreamMessage, generateImage } = useMessageStore();
+  const { sendAndStreamMessage, generateImage, getMessagesByChat } = useMessageStore();
   const { chatId } = useParams();
   const navigate = useNavigate();
 
@@ -35,33 +35,27 @@ const ChatArea = () => {
 
   useEffect(() => {
     if (chatId) {
-      if (!isStreaming) {
-        setIsSyncing(true);
-        setMessages([]);
-      }
+      setIsSyncing(true);
+      setMessages([]);
     }
   }, [chatId]);
 
   useEffect(() => {
-    if (currentChat && currentChat._id === chatId) {
-      const timer = setTimeout(() => {
-        if (currentChat.messages) {
-          const mappedMessages = currentChat.messages.map((msg, idx) => {
-            const msgData = typeof msg.toObject === 'function' ? msg.toObject() : msg;
-            return {
-              ...msgData,
-              id: msgData._id || idx
-            };
-          });
-          setMessages(mappedMessages);
-          document.title = `${currentChat.title || 'Chat'} - NexusAI`;
-        }
+    const fetchMessages = async () => {
+      if (chatId && !isStreaming) {
+        const msgs = await getMessagesByChat(chatId);
+        setMessages(msgs.map((m, idx) => ({ ...m, id: m._id || idx })));
         setIsSyncing(false);
-      }, 300); 
-      return () => clearTimeout(timer);
-    }
-  }, [currentChat, chatId, isSyncing]);
+      }
+    };
 
+    fetchMessages();
+  }, [chatId, isStreaming]);
+
+  useEffect(() => {
+    if (currentChat && currentChat._id === chatId)
+      document.title = `${currentChat.title || 'Chat'} - NexusAI`;
+  }, [currentChat, chatId]);
 
 
   const handleSendMessage = async (e, selectedImageUrl = null) => {
@@ -69,7 +63,6 @@ const ChatArea = () => {
     if (!inputText.trim() && !selectedImageUrl) return;
 
     let chat_id = currentChat?._id;
-    let chatJustCreated = false;
     const userMessage = inputText;
     setInputText("");
 
@@ -85,10 +78,9 @@ const ChatArea = () => {
           await getChatsByUser(user.id || user._id);
         }
       }
-      chatJustCreated = true;
     }
 
-    if (!chat_id) return; // Safety check
+    if (!chat_id) return;
 
     setMessages(prev => [
       ...prev,
@@ -97,9 +89,8 @@ const ChatArea = () => {
     ]);
     setIsStreaming(true);
 
-    // If chat was just created, we might need to update local store's currentChat
-    // to include these messages so the UI stays in sync
     const activeChat = useChatStore.getState().currentChat;
+
     if (activeChat) {
       setCurrentChat({
         ...activeChat,
@@ -123,7 +114,6 @@ const ChatArea = () => {
             return newMsgs;
           });
 
-          // Update currentChat in store
           const latestChat = useChatStore.getState().currentChat;
           if (latestChat) {
             setCurrentChat({
@@ -132,9 +122,9 @@ const ChatArea = () => {
             });
           }
         } else {
-          setMessages(prev => prev.slice(0, -1)); // Remove the assistant placeholder
+          setMessages(prev => prev.slice(0, -1));
         }
-      } catch (err) {
+      } catch {
         setMessages(prev => prev.slice(0, -1));
       } finally {
         setIsStreaming(false);
@@ -160,10 +150,27 @@ const ChatArea = () => {
       },
       onDone: async () => {
         setIsStreaming(false);
+        const finalMsgs = await getMessagesByChat(chat_id);
+        setMessages(finalMsgs.map((m, idx) => ({ ...m, id: m._id || idx })));
         if (user && (user.id || user._id)) {
           const { getChatsByUser } = useChatStore.getState();
           await getChatsByUser(user.id || user._id);
         }
+      },
+      onError: (fallbackMessage) => {
+        setIsStreaming(false);
+        setMessages(prev => {
+          const newMessages = [...prev];
+          const lastIndex = newMessages.length - 1;
+          const lastMessage = newMessages[lastIndex] || {};
+          newMessages[lastIndex] = {
+            ...lastMessage,
+            role: 'assistant',
+            content: fallbackMessage,
+            isGeneratingImage: false
+          };
+          return newMessages;
+        });
       }
     });
   };

@@ -39,13 +39,18 @@ const RecentChatsSidebar = ({ open, onClose, chats, onChatClick, setIsSearchOpen
                         {chats.map(chat => {
                             const displayTitle = (() => {
                                 if (chat.title && chat.title !== 'New Chat') return chat.title;
+                                console.log(chat)
                                 if (chat.messages && chat.messages.length > 0) {
-                                    const firstUserMsg = chat.messages.find(m => m.role === 'user' && m.content);
-                                    if (firstUserMsg)
-                                        return firstUserMsg.content.length > 50 ? firstUserMsg.content.substring(0, 50) + '...' : firstUserMsg.content;
+                                    const firstMsg = chat.messages.find(m => m && typeof m === 'object');
+                                    console.log(firstMsg)
+                                    if (firstMsg) {
+                                        const content = firstMsg.content || firstMsg.prompt || '';
+                                        return content.length > 50 ? content.substring(0, 50) + '...' : content;
+                                    }
                                 }
                                 return 'New Chat';
                             })();
+                            console.log(displayTitle);
                             return (
 
                                 <button

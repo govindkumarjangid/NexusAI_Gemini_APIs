@@ -18,9 +18,15 @@ const SearchPage = () => {
   }, [isSearchOpen, user, getChatsByUser]);
 
   function getChatTitle(chat) {
-    if (!chat.messages || !Array.isArray(chat.messages)) return 'Untitled Chat';
-    const userMsg = chat.messages.find(m => m.role === 'user' && m.content);
-    return userMsg ? userMsg.content.slice(0, 60) : 'Untitled Chat';
+    if (chat.title && chat.title !== 'New Chat') return chat.title;
+    if (chat.messages && Array.isArray(chat.messages)) {
+      const firstMsg = chat.messages.find(m => m && typeof m === 'object');
+      if (firstMsg) {
+        const content = firstMsg.content || firstMsg.prompt || '';
+        return content.length > 60 ? content.slice(0, 60) + '...' : content;
+      }
+    }
+    return 'New Chat';
   }
 
   function formatDateTime(dt) {
