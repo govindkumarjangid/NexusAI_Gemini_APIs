@@ -7,10 +7,18 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom', 'zustand'],
-          ui: ['framer-motion', 'lucide-react', 'react-hot-toast'],
-          markdown: ['react-syntax-highlighter', 'prismjs', 'react-katex']
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom') || id.includes('zustand')) {
+              return 'vendor';
+            }
+            if (id.includes('framer-motion') || id.includes('lucide-react') || id.includes('react-hot-toast')) {
+              return 'ui';
+            }
+            if (id.includes('react-syntax-highlighter') || id.includes('prismjs') || id.includes('react-katex') || id.includes('katex')) {
+              return 'markdown';
+            }
+          }
         }
       }
     }
