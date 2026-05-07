@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nexus-ai-gemini-ap-is.vercel.app/sitemap.xml

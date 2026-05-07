@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Trash2, LoaderIcon } from "lucide-react";
+import { Trash2, Loader } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import useAuthStore from "../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
@@ -111,7 +111,7 @@ export function DeleteConfirmDialog({ open, onClose }) {
                                 >
                                     {isLoading ? (
                                         <div className="flex items-center gap-2 justify-center">
-                                            <LoaderIcon
+                                            <Loader
                                                 size={20}
                                                 className="animate-spin text-white"
                                             />

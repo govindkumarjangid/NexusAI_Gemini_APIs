@@ -58,10 +58,10 @@ const Tooltip = ({ children, text, position = 'right', disabled = false }) => {
             {/* Arrow */}
             <div
               className={`absolute w-1.5 h-1.5 bg-accent rotate-45 pointer-events-none ${
-                position === 'right' ? 'left-[-3px] top-1/2 -translate-y-1/2' :
-                position === 'left' ? 'right-[-3px] top-1/2 -translate-y-1/2' :
-                position === 'top' ? 'bottom-[-3px] left-1/2 -translate-x-1/2' :
-                'top-[-3px] left-1/2 -translate-x-1/2'
+                position === 'right' ? '-left-0.75 top-1/2 -translate-y-1/2' :
+                position === 'left' ? '-right-0.75 top-1/2 -translate-y-1/2' :
+                position === 'top' ? '-bottom-0.75 left-1/2 -translate-x-1/2' :
+                '-top-0.75 left-1/2 -translate-x-1/2'
               }`}
             />
           </motion.div>

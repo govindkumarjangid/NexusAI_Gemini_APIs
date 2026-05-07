@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Loader } from 'lucide-react';
 import ChatAreaHeader from './ChatAreaHeader';
 import ChatMessages from '../chat/ChatMessages';
 import ChatInputArea from './ChatInputArea';
@@ -189,7 +190,7 @@ const ChatArea = () => {
         {showLoader ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-(--bg-base) z-10">
             <div className="flex flex-col items-center gap-4">
-              <div className="w-12 h-12 rounded-full border-4 border-accent border-t-transparent animate-spin" />
+              <Loader className="w-12 h-12 text-accent animate-spin" />
               <p className="text-sm font-medium text-muted animate-pulse">Syncing conversation...</p>
             </div>
           </div>

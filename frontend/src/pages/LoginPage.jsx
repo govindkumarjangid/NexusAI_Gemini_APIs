@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogIn, Loader2, ArrowLeft } from 'lucide-react';
+import { LogIn, Loader, ArrowLeft } from 'lucide-react';
 import useAuthStore from '../store/useAuthStore.js';
 
 const LoginPage = () => {
@@ -21,10 +21,10 @@ const LoginPage = () => {
       {/* Background blobs */}
       <div className="absolute inset-0 pointer-events-none">
         <div
-          className="absolute w-[350px] h-[350px] rounded-full -top-[8%] -right-[4%] animate-[orb-float_10s_ease-in-out_infinite] bg-[radial-gradient(circle,color-mix(in_srgb,var(--accent-color)_30%,transparent),transparent_70%)] blur-[70px]"
+          className="absolute w-87.5 h-87.5 rounded-full -top-[8%] -right-[4%] animate-[orb-float_10s_ease-in-out_infinite] bg-[radial-gradient(circle,color-mix(in_srgb,var(--accent-color)_30%,transparent),transparent_70%)] blur-[70px]"
         />
         <div
-          className="absolute w-[300px] h-[300px] rounded-full -bottom-[8%] -left-[4%] animate-[orb-float_12s_ease-in-out_infinite_2s] bg-[radial-gradient(circle,color-mix(in_srgb,var(--accent-color)_30%,transparent),transparent_70%)] blur-[70px]"
+          className="absolute w-75 h-75 rounded-full -bottom-[8%] -left-[4%] animate-[orb-float_12s_ease-in-out_infinite_2s] bg-[radial-gradient(circle,color-mix(in_srgb,var(--accent-color)_30%,transparent),transparent_70%)] blur-[70px]"
         />
       </div>
 
@@ -90,7 +90,7 @@ const LoginPage = () => {
               type="submit" disabled={isLoading}
               className="w-full py-3 rounded-full font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-300 hover:-translate-y-px active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer bg-(--accent-color) text-(--accent-text-color)"
             >
-              {isLoading ? <><Loader2 size={17} className="animate-spin" /> Signing in...</> : <><LogIn size={17} /> Sign In</>}
+              {isLoading ? <><Loader size={17} className="animate-spin" /> Signing in...</> : <><LogIn size={17} /> Sign In</>}
             </button>
           </motion.div>
         </form>

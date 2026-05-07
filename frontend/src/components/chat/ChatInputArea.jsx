@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Image, FolderUp, Mic, Plus, ArrowUp, X, Loader2, Sparkles } from 'lucide-react';
+import { Image, FolderUp, Mic, Plus, ArrowUp, X, Loader, Sparkles } from 'lucide-react';
 import axiosInstance from '../../configs/axiosInstance';
 import { toast } from 'react-hot-toast';
 
@@ -163,7 +163,7 @@ const ChatInputArea = ({
                                     />
                                     {isUploading && (
                                         <div className="absolute inset-0 flex items-center justify-center">
-                                            <Loader2 className="animate-spin text-accent" size={24} />
+                                            <Loader className="animate-spin text-accent" size={24} />
                                         </div>
                                     )}
                                     {!isUploading && (
@@ -303,7 +303,7 @@ const ChatInputArea = ({
                                     className="p-2.5 bg-accent disabled:opacity-40 text-accent-contrast rounded-full transition-all flex items-center justify-center cursor-pointer active:scale-95"
                                 >
                                     {isStreaming ? (
-                                        <Loader2 size={20} className="animate-spin" />
+                                        <Loader size={20} className="animate-spin" />
                                     ) : (
                                         <ArrowUp size={20} />
                                     )}
