@@ -6,7 +6,7 @@ import axios from 'axios';
 import { cloudinary } from '../configs/cloudinary.js';
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-const TEXT_MODEL = "gemini-2.5-flash";
+const TEXT_MODEL = "gemini-flash-latest";
 const IMAGE_ONLY_PROMPT = "Please respond to the uploaded image.";
 const DEFAULT_ASSISTANT_ERROR_MESSAGE = "Sorry, I couldn't generate a response right now. Please try again in a moment.";
 
