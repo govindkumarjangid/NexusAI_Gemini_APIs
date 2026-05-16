@@ -159,7 +159,7 @@ export default function RenderMessage({ content, isDark = true }) {
           // HEADINGS
           h1: ({ children }) => (
             <h1
-              className={` md:text-4xl text-3xl font-bold ${isDark ? "text-white" : "text-gray-900"
+              className={`md:text-4xl text-3xl font-bold ${isDark ? "text-white" : "text-gray-900"
                 }`}
             >
               {children}
@@ -214,7 +214,7 @@ export default function RenderMessage({ content, isDark = true }) {
           ),
 
           li: ({ children }) => (
-            <li className="leading-5 pl-2">
+            <li className="leading-6 pl-2">
               {children}
             </li>
           ),
