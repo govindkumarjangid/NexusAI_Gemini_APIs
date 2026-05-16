@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Check, Copy } from 'lucide-react';
-import { renderMessageContent } from '../../configs/renderMessageContent';
+import RenderMessage from '../../configs/renderMessageContent.jsx';
 import ImageSkeleton from './ImageSkeleton';
 
 const AssistantMessageItem = memo(({ msg, isDark, setSelectedImage, handleCopy, copiedId, idx }) => {
@@ -15,7 +15,7 @@ const AssistantMessageItem = memo(({ msg, isDark, setSelectedImage, handleCopy, 
 
     return (
         <div
-            className={`min-w-0 transition-all duration-300 px-4 py-3 sm:px-6 sm:py-4 rounded-3xl rounded-tl-sm leading-relaxed shadow-sm ${hasImage ? 'w-fit max-w-70 sm:max-w-75' : 'w-full'}`}
+            className={`min-w-0 transition-all duration-300 px-4 py-3 sm:px-6 sm:py-4 ${hasImage ? 'w-fit max-w-70 sm:max-w-75' : 'w-full'}`}
         >
 
             <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words w-full overflow-hidden">
@@ -31,9 +31,9 @@ const AssistantMessageItem = memo(({ msg, isDark, setSelectedImage, handleCopy, 
                     </div>
                 )}
 
-                <div className="mt-1">
-                    {renderMessageContent(msg.content || msg.text, isDark)}
-                </div>
+                <>
+                    <RenderMessage content={msg?.content} isDark={isDark} />
+                </>
 
                 {msg.role === 'assistant' && msg.content && (
                     <div className="mt-2 flex items-center gap-2">

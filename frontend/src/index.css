@@ -325,3 +325,24 @@ html.dark .gradient-accent-text {
     opacity: 1;
   }
 }
+
+
+/*
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 10px 0;
+  margin: 10px 0 !important;
+}
+
+.katex {
+  font-size: 1.08em !important;
+}
+
+.ai-markdown code {
+  word-break: break-word;
+}
+
+.ai-markdown table {
+  border-spacing: 0;
+} */
