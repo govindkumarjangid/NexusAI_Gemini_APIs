@@ -92,29 +92,14 @@ export default function RenderMessage({ content, isDark = true }) {
   if (!content?.trim()) return null;
 
   const cleanContent = useMemo(() => {
-    return (
-      content
-        .trim()
-        .replace(/\\\[/g, "$$")
-        .replace(/\\\]/g, "$$")
-        .replace(/\\\(/g, "$")
-        .replace(/\\\)/g, "$")
-        .replace(/\n{3,}/g, "\n\n")
-        .replace(/\\\$/g, "$")
-        .replace(/\n\s*\*\s*\n/g, "\n")
-        .replace(/```([\s\S]*?)```/g, (match, p1) => {
-          const text = p1.trim();
-
-          if (
-            /^[a-zA-Z0-9\s=+\-*/^().\\α-ωΑ-Ω]+$/.test(text) &&
-            text.length < 80
-          ) {
-            return `$$${text}$$`;
-          }
-
-          return match;
-        })
-    );
+    return content
+      .trim()
+      .replace(/\\\[/g, "$$")
+      .replace(/\\\]/g, "$$")
+      .replace(/\\\(/g, "$")
+      .replace(/\\\)/g, "$")
+      .replace(/\n{3,}/g, "\n\n")
+      .replace(/\n\s*\*\s*\n/g, "\n");
   }, [content]);
 
   return (
