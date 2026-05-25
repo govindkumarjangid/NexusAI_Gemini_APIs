@@ -49,7 +49,7 @@ function CodeBlock({ language, value, isDark }) {
           </div>
 
           <span
-            className={`text-[11px] uppercase tracking-widest ${isDark ? "text-gray-400" : "text-gray-500"
+            className={`text-[11px] uppercase tracking-widest font-semibold ${isDark ? "text-gray-400" : "text-gray-500"
               }`}
           >
             {language || "text"}
@@ -58,7 +58,7 @@ function CodeBlock({ language, value, isDark }) {
 
         <button
           onClick={copyCode}
-          className={`flex items-center gap-1 rounded-md border px-2 py-1 text-xs transition-all ${isDark
+          className={`flex items-center gap-1 rounded-md border px-2 py-1 text-xs transition-all cursor-pointer font-semibold ${isDark
             ? "border-[#3b4048] bg-[#2a2f36] text-gray-300 hover:bg-[#343a43]"
             : "border-gray-300 bg-white text-gray-700 hover:bg-gray-100"
             }`}
@@ -75,8 +75,8 @@ function CodeBlock({ language, value, isDark }) {
         customStyle={{
           margin: 0,
           padding: "18px",
-          fontSize: "16px",
-          lineHeight: "1.4",
+          fontSize: "18px",
+          lineHeight: "1.3",
           overflowX: "auto",
           fontWeight: 600,
           background: isDark ? "#1E1E1E" : "#ffffff",
