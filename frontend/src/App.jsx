@@ -27,15 +27,53 @@ const App = () => {
         <defs>
           <linearGradient id="g" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
             <stop stop-color="${color}" />
-            <stop offset="1" stop-color="${color}" stop-opacity="0.6" />
+            <stop offset="0.5" stop-color="${color}" stop-opacity="0.8" />
+            <stop offset="1" stop-color="${color}" stop-opacity="0.4" />
           </linearGradient>
+          <radialGradient id="cr" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffff" />
+            <stop offset="25%" stop-color="${color}" stop-opacity="0.9" />
+            <stop offset="65%" stop-color="${color}" stop-opacity="0.3" />
+            <stop offset="100%" stop-color="${color}" stop-opacity="0" />
+          </radialGradient>
         </defs>
-        <circle cx="256" cy="256" r="60" fill="url(#g)"/>
-        <path d="M120 400L120 112L392 400L392 112" stroke="url(#g)" stroke-width="40" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
-        <circle cx="120" cy="112" r="20" fill="${isDark ? 'white' : '#111827'}" />
-        <circle cx="120" cy="400" r="20" fill="${isDark ? 'white' : '#111827'}" />
-        <circle cx="392" cy="112" r="20" fill="${isDark ? 'white' : '#111827'}" />
-        <circle cx="392" cy="400" r="20" fill="${isDark ? 'white' : '#111827'}" />
+        
+        {/* Background Matrix Mesh Indicator */}
+        <circle cx="256" cy="256" r="220" stroke="${color}" stroke-width="1.5" stroke-dasharray="4 12" opacity="0.2" />
+
+        {/* Outer Orbit HUD Ring */}
+        <circle cx="256" cy="256" r="236" stroke="${color}" stroke-width="3" stroke-dasharray="20 40 80 40" opacity="0.45" />
+
+        {/* Dynamic Connection Path Backdrop */}
+        <path d="M120 400L120 112L392 400L392 112" stroke="${color}" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" opacity="0.15" />
+
+        {/* Main Connection Path (N Shape) */}
+        <path d="M120 400L120 112L392 400L392 112" stroke="url(#g)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" opacity="0.9" />
+
+        {/* Glowing Laser Center Core Path */}
+        <path d="M120 400L120 112L392 400L392 112" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8" />
+
+        {/* Central Quantum Singularity Core */}
+        <circle cx="256" cy="256" r="66" fill="url(#cr)"/>
+        <circle cx="256" cy="256" r="30" fill="${color}"/>
+        <circle cx="256" cy="256" r="12" fill="#ffffff"/>
+
+        {/* Corner Synaptic Nodes */}
+        <circle cx="120" cy="112" r="22" stroke="${color}" stroke-width="2.5" fill="none" opacity="0.75" />
+        <circle cx="120" cy="112" r="12" fill="${color}" />
+        <circle cx="120" cy="112" r="5" fill="#ffffff" />
+
+        <circle cx="120" cy="400" r="22" stroke="${color}" stroke-width="2.5" fill="none" opacity="0.75" />
+        <circle cx="120" cy="400" r="12" fill="${color}" />
+        <circle cx="120" cy="400" r="5" fill="#ffffff" />
+
+        <circle cx="392" cy="112" r="22" stroke="${color}" stroke-width="2.5" fill="none" opacity="0.75" />
+        <circle cx="392" cy="112" r="12" fill="${color}" />
+        <circle cx="392" cy="112" r="5" fill="#ffffff" />
+
+        <circle cx="392" cy="400" r="22" stroke="${color}" stroke-width="2.5" fill="none" opacity="0.75" />
+        <circle cx="392" cy="400" r="12" fill="${color}" />
+        <circle cx="392" cy="400" r="5" fill="#ffffff" />
       </svg>
     `.trim();
 

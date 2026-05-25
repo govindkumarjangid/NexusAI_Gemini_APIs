@@ -141,7 +141,7 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
         <button
           ref={buttonRef}
           onClick={() => setPopupOpen(v => !v)}
-          className={`flex items-center rounded-full cursor-pointer transition-all duration-300 text-sm h-11 overflow-hidden hover:opacity-80 text-(--text-secondary) bg-(--bg-elevated) border border-(--border-color) ${sidebarOpen ? 'w-full' : 'w-11 justify-center'}`}
+          className={`flex items-center rounded-full cursor-pointer transition-all duration-300 text-sm h-11 overflow-hidden text-(--text-secondary) ${sidebarOpen ? 'bg-(--bg-elevated) border border-(--border-color) w-full hover:opacity-85' : 'bg-transparent border border-transparent hover:bg-(--bg-elevated) hover:border-(--border-color) w-11 justify-center'}`}
         >
           {/* Avatar circle */}
           <div className="w-11 h-11 shrink-0 flex items-center justify-center ">
