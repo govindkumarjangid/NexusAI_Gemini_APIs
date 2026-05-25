@@ -81,7 +81,7 @@ const Sidebar = () => {
         }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
 
-        className={`h-screen flex flex-col whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl overflow-hidden' : 'relative overflow-visible z-20'} bg-(--bg-surface) border-(--border-color) text-(--text-primary)`}
+        className={`h-screen flex flex-col whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl overflow-hidden px-2 rounded-r-2xl' : 'relative overflow-visible z-20'} bg-(--bg-surface) border-(--border-color) text-(--text-primary)`}
       >
         {/* Top Header */}
         <div className="h-14 flex items-center justify-between shrink-0">
@@ -108,7 +108,7 @@ const Sidebar = () => {
               <Tooltip text="Expand Menu" position="right" disabled={sidebarOpen}>
                 <button
                   onClick={() => setSidebarOpen(true)}
-                  className="p-0 sm:p-3 hover:bg-transparent rounded-full hidden group-hover:block transition-all cursor-pointer duration-300 active:scale-95 dark:text-gray-400 text-gray-500 dark:text-gray-200 hover:text-gray-800"
+                  className="p-0 sm:p-3 hover:bg-transparent rounded-full hidden group-hover:block transition-all cursor-pointer duration-300 active:scale-95 text-gray-500 dark:text-gray-200 hover:text-gray-800"
                 >
                   <SquareChevronRight size={20} />
                 </button>
@@ -126,8 +126,8 @@ const Sidebar = () => {
             <Tooltip key={btn.label} text={btn.label} position="right" disabled={sidebarOpen}>
               <button
                 className={`flex items-center cursor-pointer rounded-full transition-all duration-300 w-full overflow-hidden h-11 active:scale-95 ${
-                  sidebarOpen 
-                    ? 'bg-(--bg-elevated) border border-transparent' 
+                  sidebarOpen
+                    ? 'bg-(--bg-elevated) border border-transparent'
                     : 'bg-transparent border border-transparent hover:bg-(--bg-elevated) hover:border-(--border-color)'
                 }`}
                 style={{ color: 'var(--text-primary)' }}

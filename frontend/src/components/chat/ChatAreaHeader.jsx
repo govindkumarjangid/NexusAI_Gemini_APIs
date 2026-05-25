@@ -14,6 +14,7 @@ import MoreMenuPopup from './MoreMenuPopup';
 import ShareModal from './ShareModal';
 import EditTitleModal from './EditTitleModal';
 import DeleteConfirmModal from './DeleteConfirmModal';
+import Logo from '../common/Logo'
 
 const ChatAreaHeader = memo(() => {
 
@@ -137,13 +138,13 @@ const ChatAreaHeader = memo(() => {
                             <SquareChevronRight size={22} />
                         </button>
                     )}
-                    <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-linear-to-r from-(--text-primary) via-(--text-primary) to-(--accent-color)">
+                    <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-linear-to-r from-(--text-primary) via-(--text-primary) to-(--accent-color) flex items-center">
+                        {
+                            isMobile &&  <Logo size={38} className="text-(--accent-color) drop-shadow-sm transition-all duration-200 hover:scale-105 group-hover:hidden" />
+                        }
                         NexusAI
                     </span>
                 </div>
-
-
-
                 {
                     currentChat ? (
                         <div className="flex items-center gap-3">
