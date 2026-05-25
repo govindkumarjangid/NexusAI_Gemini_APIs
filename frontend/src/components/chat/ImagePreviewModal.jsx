@@ -52,7 +52,7 @@ const ImagePreviewModal = ({ selectedImage, setSelectedImage, isMobile }) => {
 
                         {/* Close Button */}
                         <button
-                            className={`absolute ${isMobile ? 'hidden' : 'top-12 right-12'} p-2.5 bg-accent text-white rounded-full transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95 shadow-lg`}
+                            className={`absolute ${isMobile ? 'hidden' : 'top-2 right-2'} p-2.5 bg-accent text-white rounded-full transition-all duration-200 cursor-pointer active:scale-95 shadow-lg z-999999`}
                             onClick={() => setSelectedImage(null)}
                         >
                             <X size={isMobile ? 20 : 24} />
@@ -64,7 +64,7 @@ const ImagePreviewModal = ({ selectedImage, setSelectedImage, isMobile }) => {
                             <motion.img
                                 src={selectedImage}
                                 alt="Full size preview"
-                                className={`object-contain ${isMobile ? 'max-h-[60vh] rounded-xl max-w-full' : 'w-full h-full'}`}
+                                className={`object-cover ${isMobile ? 'max-h-[60vh] rounded-xl max-w-full' : 'min-w-full max-h-[80vh] h-full'}`}
                             />
                         </div>
 
