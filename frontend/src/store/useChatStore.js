@@ -17,8 +17,6 @@ const useChatStore = create((set) => ({
     setShowDeleteModal: (show) => set({ showDeleteModal: show }),
     setChatToDelete: (chat) => set({ chatToDelete: chat }),
 
-
-
     createChat: async ({ userId, navigate, firstMessage }) => {
         set({ isLoading: true, error: null });
         try {
@@ -105,9 +103,8 @@ const useChatStore = create((set) => ({
         try {
             const response = await axiosInstance.get(`/chats/shared/${shareId}`);
             set({ isLoading: false });
-            if (response.data.success) {
+            if (response.data.success)
                 return response.data.chat;
-            }
         } catch (error) {
             set({ isLoading: false, error: error.response?.data?.message || 'Failed to fetch shared chat' });
             toast.error(error.response?.data?.message || 'Failed to fetch shared chat');

@@ -37,7 +37,7 @@ const App = () => {
             <stop offset="100%" stop-color="${color}" stop-opacity="0" />
           </radialGradient>
         </defs>
-        
+
         {/* Background Matrix Mesh Indicator */}
         <circle cx="256" cy="256" r="220" stroke="${color}" stroke-width="1.5" stroke-dasharray="4 12" opacity="0.2" />
 

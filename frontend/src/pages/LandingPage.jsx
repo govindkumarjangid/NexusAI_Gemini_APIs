@@ -4,7 +4,6 @@ import FeaturesSection from '../components/landing/sections/FeaturesSection';
 import HowItWorksSection from '../components/landing/sections/HowItWorksSection';
 import TestimonialsSection from '../components/landing/sections/TestimonialsSection';
 import CTASection from '../components/landing/sections/CTASection';
-import SolarSystem from '../components/landing/ui/SolarSystem';
 
 const LandingPage = () => {
   return (
@@ -12,12 +11,6 @@ const LandingPage = () => {
       className="min-h-screen overflow-x-hidden overflow-y-auto scroll-smooth bg-(--bg-base) text-(--text-primary)"
     >
       <LandingNav />
-
-      {/* Fixed Background */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <SolarSystem />
-      </div>
-
 
       <div className="relative z-10">
         <HeroSection />

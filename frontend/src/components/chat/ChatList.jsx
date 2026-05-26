@@ -8,10 +8,6 @@ const ChatList = memo(({ chats, currentChat, setCurrentChat, navigate, deleteCha
   const { user } = useAuthStore();
   const { togglePinChat, setShowEditModal, setChatToEdit, setShowDeleteModal, setChatToDelete } = useChatStore();
 
-
-
-
-
   const handleDeleteChat = async (e, chatId) => {
     e.stopPropagation();
     const chat = chats.find(c => c._id === chatId);
@@ -53,7 +49,7 @@ const ChatList = memo(({ chats, currentChat, setCurrentChat, navigate, deleteCha
             <div
               key={chat._id}
               title={chatDisplayName}
-              className={`group flex items-center justify-between rounded-full cursor-pointer transition-colors px-4 py-2 ${isActive ? 'dark:bg-[#131314] bg-gray-200 dark:text-gray-400 text-gray-500' : 'dark:hover:bg-[#2d2f31] hover:bg-gray-200 dark:text-gray-300 text-gray-600 dark:hover:text-gray-100 hover:text-gray-900'}`}
+              className={`group flex items-center justify-between rounded-full cursor-pointer transition-colors px-4 py-2 select-none ${isActive ? 'dark:bg-[#131314] bg-gray-200 dark:text-gray-400 text-gray-500' : 'dark:hover:bg-[#2d2f31] hover:bg-gray-200 dark:text-gray-300 text-gray-600 dark:hover:text-gray-100 hover:text-gray-900'}`}
               onClick={() => {
                 requestAnimationFrame(() => {
                   setCurrentChat(chat);
@@ -101,10 +97,6 @@ const ChatList = memo(({ chats, currentChat, setCurrentChat, navigate, deleteCha
       )}
     </div>
   );
-
-
 });
-
-
 
 export default ChatList;

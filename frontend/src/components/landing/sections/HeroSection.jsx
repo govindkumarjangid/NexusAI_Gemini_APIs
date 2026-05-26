@@ -8,66 +8,16 @@ const HeroSection = () => (
 
   <section className="min-h-screen flex flex-col items-center justify-center px-5 sm:px-8 pt-24 pb-16 relative overflow-hidden">
 
-    {/* Technical Radial Background (Matching Image) */}
     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center">
-      {/* Intense Center Glow */}
       <div
-        className="absolute inset-0 opacity-60"
+        className="absolute inset-0 opacity-50"
         style={{
-          background: `radial-gradient(circle at center, color-mix(in srgb, var(--accent-color) 20%, transparent) 0%, transparent 70%)`
+          background: `radial-gradient(circle at center, color-mix(in srgb, var(--accent-color) 20%, transparent) 0, transparent 50%)`
         }}
       />
-
-      {/* Subdued Concentric Rings */}
-      {[...Array(7)].map((_, i) => (
-        <motion.div
-          key={i}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{
-            opacity: [0.03, 0.1, 0.03],
-            scale: [0.98, 1.02, 0.98],
-          }}
-          transition={{
-            duration: 12 + i,
-            repeat: Infinity,
-            delay: i * 0.6,
-            ease: "easeInOut"
-          }}
-          className="absolute border-2 border-color-mix(in_srgb,var(--accent-color)_80%,transparent_0%) rounded-full"
-          style={{
-            width: `calc(${(i + 1) * 16}vh)`,
-            height: `calc(${(i + 1) * 16}vh)`,
-            maxWidth: '400vw',
-            maxHeight: '400vw'
-          }}
-        />
-      ))}
     </div>
 
-
     <div className="landing-grid-bg absolute inset-0 pointer-events-none" />
-
-    {[
-      { top: '18%', left: '10%', w: 3, dur: '6s' },
-      { top: '62%', right: '14%', left: undefined, w: 4, dur: '8s', del: '1s' },
-      { top: '35%', left: '82%', w: 3, dur: '7s', del: '2s' },
-      { top: '78%', left: '25%', w: 2, dur: '9s', del: '.5s' },
-      { top: '22%', left: '68%', w: 5, dur: '11s', del: '3s' },
-    ].map((p, j) => (
-      <div
-        key={j}
-        className="absolute rounded-full pointer-events-none bg-color-mix(in_srgb,var(--accent-color)_40%,transparent) animate-[particle-drift_var(--dur)_ease-in-out_infinite_var(--del)] w-(--w) h-(--w) top-(--top) left-(--left) right-(--right)"
-        style={{
-          '--top': p.top,
-          '--left': p.left,
-          '--right': p.right,
-          '--w': `${p.w}px`,
-          '--dur': p.dur,
-          '--del': p.del || '0s',
-        }}
-      />
-    ))}
-
     <motion.div
       className="relative z-10 flex flex-col items-center mt-12 sm:mt-0"
     >
