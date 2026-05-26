@@ -28,12 +28,13 @@ const HeroSection = () => (
         transition={{ duration: 0.7, delay: 0.2 }}
       >
         <div
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold border mb-8 backdrop-blur-3xl bg-color-mix(in_srgb,var(--accent-color)_8%,transparent) text-(--accent-color) border-color-mix(in_srgb,var(--accent-color)_18%,transparent)"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold border mb-8 backdrop-blur-3xl bg-color-mix(in_srgb,var(--accent-color)_8%,transparent) text-(--accent-color) border-color-mix(in_srgb,var(--accent-color)_18%,transparent) group"
         >
           <span
             className="w-1.5 h-1.5 rounded-full animate-[pulse-dot_2s_ease-in-out_infinite] bg-[#22c55e]"
           />
           Powered by Advanced AI
+          <ChevronRight size={17} className='group-hover:translate-x-1.5 transition-transform duration-300' />
         </div>
       </motion.div>
 
@@ -76,7 +77,7 @@ const HeroSection = () => (
           to="/login"
           className="py-4 px-8 text-sm rounded-full  text-accent-contrast font-semibold transition-all cursor-pointer w-full max-w-fit  shadow-lg flex items-center gap-2 justify-center active:scale-95 hover:opacity-90 border border-(--accent-color)/50 bg-(--accent-color)/20 group"
         >
-          Sign In <ChevronRight size={17} className='group-hover:translate-x-1.5 transition-transform duration-300' />
+          Sign In <ArrowRight size={17} className='group-hover:translate-x-1.5 transition-transform duration-300' />
         </Link>
       </motion.div>
     </motion.div>
