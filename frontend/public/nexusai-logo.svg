@@ -1,0 +1,23 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    :root {
+      --logo-accent: #399FF5;
+    }
+    .logo-accent-stroke {
+      stroke: var(--accent-color, var(--logo-accent));
+    }
+    .logo-accent-fill {
+      fill: var(--accent-color, var(--logo-accent));
+    }
+  </style>
+  <g opacity="0.85">
+    <path class="logo-accent-stroke" transform="rotate(0 50 50)" d="M50 50 C66 28 82 38 78 54 C74 70 58 64 50 50" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.65" />
+    <path class="logo-accent-stroke" transform="rotate(60 50 50)" d="M50 50 C66 28 82 38 78 54 C74 70 58 64 50 50" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.65" />
+    <path class="logo-accent-stroke" transform="rotate(120 50 50)" d="M50 50 C66 28 82 38 78 54 C74 70 58 64 50 50" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.65" />
+    <path class="logo-accent-stroke" transform="rotate(180 50 50)" d="M50 50 C66 28 82 38 78 54 C74 70 58 64 50 50" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.65" />
+    <path class="logo-accent-stroke" transform="rotate(240 50 50)" d="M50 50 C66 28 82 38 78 54 C74 70 58 64 50 50" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.65" />
+    <path class="logo-accent-stroke" transform="rotate(300 50 50)" d="M50 50 C66 28 82 38 78 54 C74 70 58 64 50 50" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.65" />
+  </g>
+  <path class="logo-accent-fill" d="M50 10 C50 40 40 50 10 50 C40 50 50 60 50 90 C50 60 60 50 90 50 C60 50 50 40 50 10 Z" />
+  <path class="logo-bg-fill" d="M50 30 C50 45 45 50 30 50 C45 50 50 55 50 70 C50 55 55 50 70 50 C55 50 50 45 50 30 Z" opacity="0.95" />
+</svg>

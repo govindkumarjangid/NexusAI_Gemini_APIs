@@ -22,58 +22,19 @@ const App = () => {
   // Dynamic Favicon Update
   useEffect(() => {
     const color = ACCENT_COLORS[accentColor] || '#2196F3';
+    const innerColor = isDark ? '#212121' : '#ffffff';
     const svg = `
-      <svg width="32" height="32" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="g" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
-            <stop stop-color="${color}" />
-            <stop offset="0.5" stop-color="${color}" stop-opacity="0.8" />
-            <stop offset="1" stop-color="${color}" stop-opacity="0.4" />
-          </linearGradient>
-          <radialGradient id="cr" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#ffffff" />
-            <stop offset="25%" stop-color="${color}" stop-opacity="0.9" />
-            <stop offset="65%" stop-color="${color}" stop-opacity="0.3" />
-            <stop offset="100%" stop-color="${color}" stop-opacity="0" />
-          </radialGradient>
-        </defs>
-
-        {/* Background Matrix Mesh Indicator */}
-        <circle cx="256" cy="256" r="220" stroke="${color}" stroke-width="1.5" stroke-dasharray="4 12" opacity="0.2" />
-
-        {/* Outer Orbit HUD Ring */}
-        <circle cx="256" cy="256" r="236" stroke="${color}" stroke-width="3" stroke-dasharray="20 40 80 40" opacity="0.45" />
-
-        {/* Dynamic Connection Path Backdrop */}
-        <path d="M120 400L120 112L392 400L392 112" stroke="${color}" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" opacity="0.15" />
-
-        {/* Main Connection Path (N Shape) */}
-        <path d="M120 400L120 112L392 400L392 112" stroke="url(#g)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" opacity="0.9" />
-
-        {/* Glowing Laser Center Core Path */}
-        <path d="M120 400L120 112L392 400L392 112" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8" />
-
-        {/* Central Quantum Singularity Core */}
-        <circle cx="256" cy="256" r="66" fill="url(#cr)"/>
-        <circle cx="256" cy="256" r="30" fill="${color}"/>
-        <circle cx="256" cy="256" r="12" fill="#ffffff"/>
-
-        {/* Corner Synaptic Nodes */}
-        <circle cx="120" cy="112" r="22" stroke="${color}" stroke-width="2.5" fill="none" opacity="0.75" />
-        <circle cx="120" cy="112" r="12" fill="${color}" />
-        <circle cx="120" cy="112" r="5" fill="#ffffff" />
-
-        <circle cx="120" cy="400" r="22" stroke="${color}" stroke-width="2.5" fill="none" opacity="0.75" />
-        <circle cx="120" cy="400" r="12" fill="${color}" />
-        <circle cx="120" cy="400" r="5" fill="#ffffff" />
-
-        <circle cx="392" cy="112" r="22" stroke="${color}" stroke-width="2.5" fill="none" opacity="0.75" />
-        <circle cx="392" cy="112" r="12" fill="${color}" />
-        <circle cx="392" cy="112" r="5" fill="#ffffff" />
-
-        <circle cx="392" cy="400" r="22" stroke="${color}" stroke-width="2.5" fill="none" opacity="0.75" />
-        <circle cx="392" cy="400" r="12" fill="${color}" />
-        <circle cx="392" cy="400" r="5" fill="#ffffff" />
+      <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g opacity="0.85">
+          <path transform="rotate(0 50 50)" d="M50 50 C66 28 82 38 78 54 C74 70 58 64 50 50" stroke="${color}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.65" />
+          <path transform="rotate(60 50 50)" d="M50 50 C66 28 82 38 78 54 C74 70 58 64 50 50" stroke="${color}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.65" />
+          <path transform="rotate(120 50 50)" d="M50 50 C66 28 82 38 78 54 C74 70 58 64 50 50" stroke="${color}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.65" />
+          <path transform="rotate(180 50 50)" d="M50 50 C66 28 82 38 78 54 C74 70 58 64 50 50" stroke="${color}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.65" />
+          <path transform="rotate(240 50 50)" d="M50 50 C66 28 82 38 78 54 C74 70 58 64 50 50" stroke="${color}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.65" />
+          <path transform="rotate(300 50 50)" d="M50 50 C66 28 82 38 78 54 C74 70 58 64 50 50" stroke="${color}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.65" />
+        </g>
+        <path d="M50 10 C50 40 40 50 10 50 C40 50 50 60 50 90 C50 60 60 50 90 50 C60 50 50 40 50 10 Z" fill="${color}" />
+        <path d="M50 30 C50 45 45 50 30 50 C45 50 50 55 50 70 C50 55 55 50 70 50 C55 50 50 45 50 30 Z" fill="${innerColor}" opacity="0.95" />
       </svg>
     `.trim();
 
