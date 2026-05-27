@@ -5,6 +5,7 @@ import ChatMessages from '../components/chat/ChatMessages';
 import { Globe, MessageSquare, ArrowRight, Code2, MessageCircle } from 'lucide-react';
 import Spinner from '../components/model/Spinner';
 import { motion } from 'framer-motion';
+import Logo from '../components/common/Logo'
 
 const SharedChatPage = () => {
     const { shareId } = useParams();
@@ -70,7 +71,7 @@ const SharedChatPage = () => {
             <header className="h-16 shrink-0 w-full flex items-center justify-between px-4 sm:px-8 border-b border-(--border-color) bg-(--bg-surface)/10 backdrop-blur-sm sticky top-0 z-10">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-(--accent-color)/10 flex items-center justify-center text-(--accent-color) shadow-lg shadow-(--accent-color)/30 transform transition-transform hover:rotate-3">
-                        <MessageCircle size={20} />
+                        <Logo size={38} />
                     </div>
                     <div>
                         <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-linear-to-r from-(--text-primary) via-(--text-primary) to-(--accent-color)">
@@ -150,9 +151,8 @@ const SharedChatPage = () => {
                 <div className="p-4 sm:p-6 bg-(--bg-surface)/80 border-t border-(--border-color) backdrop-blur-2xl mt-auto">
                     <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
                         <div className="flex items-center gap-4 w-full sm:w-auto">
-                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-(--accent-color) flex items-center justify-center text-white shadow-lg shrink-0">
-                                <MessageCircle size={20} className="sm:hidden" />
-                                <MessageCircle size={24} className="hidden sm:block" />
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-(--accent-color)/15 flex items-center justify-center shadow-lg shrink-0 text-(--accent-color)">
+                                <Logo size={38} />
                             </div>
                             <div>
                                 <p className="text-sm font-bold text-(--text-primary)">Enjoying this conversation?</p>
