@@ -141,28 +141,35 @@ export default function AccountSettings({ onOpenDeleteConfirm }) {
     }
 
     return (
-        <div className="space-y-6 rounded-2xl p-2">
-            <h2 className="text-xl font-semibold mb-4 text-(--text-primary)">Account</h2>
-            <div className="flex items-center justify-between">
-                <span className="text-(--text-secondary)">Name</span>
-                <span className="text-(--text-primary)">{mockUser.name}</span>
-            </div>
-            <div className="flex items-center justify-between">
-                <span className="text-(--text-secondary)">Email</span>
-                <span className="text-(--text-primary)">{mockUser.email}</span>
-            </div>
-            <div className="flex items-center justify-between border-b pb-6 border-(--border-color)">
-                <span className="text-(--text-secondary)">Last Login</span>
-                <span className="text-(--text-primary)">{mockUser.lastLogin}</span>
-            </div>
-            <div className="pt-4">
-                <button
-                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer active:scale-95 hover:opacity-90"
-                    onClick={onOpenDeleteConfirm}
-                >
-                    <Trash2 size={18} /> Delete Account
-                </button>
-            </div>
-        </div>
+        <AnimatePresence>
+            <motion.div
+                initial={{ opacity: 0, filter: "blur(5px)" }}
+                animate={{ opacity: 1, filter: "blur(0px)" }}
+                transition={{ duration: 0.4 }}
+                exit={{ opacity: 0, filter: "blur(10px)" }}
+                className="space-y-6 rounded-2xl p-2">
+                <h2 className="text-xl font-semibold mb-4 text-(--text-primary)">Account</h2>
+                <div className="flex items-center justify-between">
+                    <span className="text-(--text-secondary)">Name</span>
+                    <span className="text-(--text-primary)">{mockUser.name}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                    <span className="text-(--text-secondary)">Email</span>
+                    <span className="text-(--text-primary)">{mockUser.email}</span>
+                </div>
+                <div className="flex items-center justify-between border-b pb-6 border-(--border-color)">
+                    <span className="text-(--text-secondary)">Last Login</span>
+                    <span className="text-(--text-primary)">{mockUser.lastLogin}</span>
+                </div>
+                <div className="pt-4">
+                    <button
+                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer active:scale-98 hover:opacity-90"
+                        onClick={onOpenDeleteConfirm}
+                    >
+                        <Trash2 size={18} /> Delete Account
+                    </button>
+                </div>
+            </motion.div>
+        </AnimatePresence>
     );
 }

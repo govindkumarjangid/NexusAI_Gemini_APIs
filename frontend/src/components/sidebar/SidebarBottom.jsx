@@ -19,13 +19,13 @@ function useIsMobile() {
 const desktopVariants = {
   hidden: { opacity: 0, y: 10, scale: 0.95 },
   visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', damping: 22, stiffness: 280 } },
-  exit: { opacity: 0, y: 10, scale: 0.95, transition: { duration: 0.15, ease: 'easeIn' } },
+  exit: { opacity: 0, y: 10, scale: 0.95, transition: { duration: 0.15, ease: 'easeInOut' } },
 };
 
 const mobileVariants = {
   hidden: { y: '100%', opacity: 0 },
   visible: { y: 0, opacity: 1, transition: { type: 'spring', damping: 28, stiffness: 260 } },
-  exit: { y: '100%', opacity: 0, transition: { duration: 0.2, ease: 'easeIn' } },
+  exit: { y: '100%', opacity: 0, transition: { duration: 0.2, ease: 'easeInOut' } },
 };
 
 const SidebarBottom = ({ sidebarOpen, handleLogout }) => {

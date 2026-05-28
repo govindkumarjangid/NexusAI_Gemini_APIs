@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useAuthStore from '../../store/useAuthStore.js';
+import { motion, AnimatePresence } from 'framer-motion'
 
 const ACCENT_COLORS = [
   { name: "Blue", value: "blue", color: "#2196F3" },
@@ -18,69 +19,77 @@ export default function GeneralSettings() {
   const [language, setLanguage] = useState("auto");
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold mb-4 text-(--text-primary)">General Settings</h2>
+    <AnimatePresence>
+      <motion.div
+        className="space-y-6"
+        initial={{ opacity: 0, filter: "blur(5px)" }}
+        animate={{ opacity: 1, filter: "blur(0px)" }}
+        transition={{ duration: 0.4 }}
+      >
 
-      {/* Appearance */}
-      <div className="flex items-center justify-between">
-        <span className="text-(--text-secondary)">Appearance</span>
-        <select
-          className="rounded-full px-3 py-2 outline-none border text-sm cursor-pointer bg-(--bg-elevated) text-(--text-primary) border-(--border-color)"
-          value={theme}
-          onChange={e => setTheme(e.target.value)}
-        >
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-          <option value="system">System</option>
-        </select>
-      </div>
+        <h2 className="text-xl font-semibold mb-4 text-(--text-primary)">General Settings</h2>
 
-      {/* Contrast */}
-      <div className="flex items-center justify-between">
-        <span className="text-(--text-secondary)">Contrast</span>
-        <select
-          className="rounded-full px-3 py-2 outline-none border text-sm cursor-pointer bg-(--bg-elevated) text-(--text-primary) border-(--border-color)"
-          value={contrast}
-          onChange={e => setContrast(e.target.value)}
-        >
-          <option value="standard">Standard</option>
-          <option value="high">High</option>
-          <option value="system">System</option>
-        </select>
-      </div>
+        {/* Appearance */}
+        <div className="flex items-center justify-between">
+          <span className="text-(--text-secondary)">Appearance</span>
+          <select
+            className="rounded-full px-3 py-2 outline-none border text-sm cursor-pointer bg-(--bg-elevated) text-(--text-primary) border-(--border-color)"
+            value={theme}
+            onChange={e => setTheme(e.target.value)}
+          >
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="system">System</option>
+          </select>
+        </div>
 
-      {/* Accent Color */}
-      <div className="space-y-3">
-        <span className="text-(--text-secondary)">Accent Color</span>
-        <div className="flex items-center gap-3 flex-wrap mt-4">
-          {ACCENT_COLORS.map(c => (
-            <button
-              key={c.value}
-              title={c.name}
-              onClick={() => setAccentColor(c.value)}
-              className={`w-5 h-5 rounded-full border-2 transition-all duration-200 cursor-pointer hover:scale-110 bg-(--c) ${accentColor === c.value
+        {/* Contrast */}
+        <div className="flex items-center justify-between">
+          <span className="text-(--text-secondary)">Contrast</span>
+          <select
+            className="rounded-full px-3 py-2 outline-none border text-sm cursor-pointer bg-(--bg-elevated) text-(--text-primary) border-(--border-color)"
+            value={contrast}
+            onChange={e => setContrast(e.target.value)}
+          >
+            <option value="standard">Standard</option>
+            <option value="high">High</option>
+            <option value="system">System</option>
+          </select>
+        </div>
+
+        {/* Accent Color */}
+        <div className="space-y-3">
+          <span className="text-(--text-secondary)">Accent Color</span>
+          <div className="flex items-center gap-3 flex-wrap mt-4">
+            {ACCENT_COLORS.map(c => (
+              <button
+                key={c.value}
+                title={c.name}
+                onClick={() => setAccentColor(c.value)}
+                className={`w-5 h-5 rounded-full border-2 transition-all duration-200 cursor-pointer hover:scale-110 bg-(--c) ${accentColor === c.value
                   ? 'scale-110 shadow-lg ring-2 ring-offset-2 ring-offset-(--bg-panel) border-(--text-primary)'
                   : 'border-transparent hover:border-gray-400'
-                }`}
-              style={{ '--c': c.color }}
-            />
-          ))}
+                  }`}
+                style={{ '--c': c.color }}
+              />
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Language */}
-      <div className="flex items-center justify-between">
-        <span className="text-(--text-secondary)">Language</span>
-        <select
-          className="rounded-full px-3 py-2 outline-none border text-sm cursor-pointer bg-(--bg-elevated) text-(--text-primary) border-(--border-color)"
-          value={language}
-          onChange={e => setLanguage(e.target.value)}
-        >
-          <option value="auto">Auto-detect</option>
-          <option value="en">English</option>
-          <option value="hi">Hindi</option>
-        </select>
-      </div>
-    </div>
+        {/* Language */}
+        <div className="flex items-center justify-between">
+          <span className="text-(--text-secondary)">Language</span>
+          <select
+            className="rounded-full px-3 py-2 outline-none border text-sm cursor-pointer bg-(--bg-elevated) text-(--text-primary) border-(--border-color)"
+            value={language}
+            onChange={e => setLanguage(e.target.value)}
+          >
+            <option value="auto">Auto-detect</option>
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+          </select>
+        </div>
+      </motion.div>
+    </AnimatePresence>
   );
 }
