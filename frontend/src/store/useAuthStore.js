@@ -15,12 +15,13 @@ const ACCENT_COLORS = {
 
 function applyTheme(theme) {
     const html = document.documentElement;
-    if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) html.classList.add('dark');
+    if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches))
+        html.classList.add('dark');
     else html.classList.remove('dark');
 }
 
 const ACCENT_TEXT_COLORS = {
-    yellow: '#000000',
+    yellow: '#f1f1f1',
     blue: '#FFFFFF',
     green: '#FFFFFF',
     purple: '#FFFFFF',
@@ -54,7 +55,7 @@ function getActualContrast(contrast) {
 }
 
 const initialTheme = localStorage.getItem('theme') || 'dark';
-const initialAccent = localStorage.getItem('accentColor') || 'yellow';
+const initialAccent = localStorage.getItem('accentColor') || 'blue';
 const initialContrast = localStorage.getItem('contrast') || 'system';
 
 applyTheme(initialTheme);

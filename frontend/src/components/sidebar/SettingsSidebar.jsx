@@ -14,8 +14,8 @@ export default function SettingsSidebar({ tab, setTab }) {
         <button
           key={t.id}
           className={`flex items-center gap-2 px-3 py-2 rounded-full mb-2 cursor-pointer transition-colors text-sm font-medium hover:bg-(--bg-elevated) ${tab === t.id
-              ? 'bg-(--bg-elevated) text-(--text-primary)'
-              : 'bg-transparent text-(--text-secondary)'
+            ? 'bg-(--bg-elevated) text-(--text-primary)'
+            : 'bg-transparent text-(--text-secondary)'
             }`}
           onClick={() => setTab(t.id)}
         >

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Tooltip = ({ children, text, position = 'right', disabled = false }) => {
+
   const [isVisible, setIsVisible] = useState(false);
 
   if (disabled) return children;
@@ -21,10 +22,10 @@ const Tooltip = ({ children, text, position = 'right', disabled = false }) => {
   };
 
   const initialVariants = {
-    right: { opacity: 0, x: -10, y: '-50%', scale: 0.5 },
-    left: { opacity: 0, x: 10, y: '-50%', scale: 0.5 },
-    top: { opacity: 0, x: '-50%', y: 10, scale: 0.5 },
-    bottom: { opacity: 0, x: '-50%', y: -10, scale: 0.5 },
+    right: { opacity: 0, x: -10, y: '-50%', scale: 0.8 },
+    left: { opacity: 0, x: 10, y: '-50%', scale: 0.8 },
+    top: { opacity: 0, x: '-50%', y: 10, scale: 0.8 },
+    bottom: { opacity: 0, x: '-50%', y: -10, scale: 0.8 },
   };
 
   const animateVariants = {
@@ -52,7 +53,7 @@ const Tooltip = ({ children, text, position = 'right', disabled = false }) => {
               originY: origins[position] === 'top' ? 0 : (origins[position] === 'bottom' ? 1 : 0.5)
             }}
             transition={{ type: 'spring', damping: 18, stiffness: 400 }}
-            className={`absolute z-100 px-2 py-1 text-[10px] font-bold tracking-wider text-accent-contrast bg-accent shadow-xl whitespace-nowrap pointer-events-none rounded-md ${positions[position]}`}
+            className={`absolute z-100 px-3 py-1.5 text-[11px] font-medium tracking-wider text-accent-contrast bg-accent shadow-xl whitespace-nowrap pointer-events-none rounded-xl ${positions[position]}`}
           >
             {text}
             {/* Arrow */}
