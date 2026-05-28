@@ -72,7 +72,7 @@ export function DeleteConfirmDialog({ open, onClose }) {
                     >
                         <motion.div
                             ref={dialogRef}
-                            className={`${isMobile ? 'w-full rounded-t-3xl' : 'sm:max-w-sm w-full sm:rounded-2xl'} p-8 pb-10 sm:pb-8 shadow-2xl border bg-(--bg-panel) border-(--border-color)`}
+                            className={`${isMobile ? 'w-full rounded-t-3xl' : 'sm:max-w-sm w-full sm:rounded-3xl'} p-8 pb-10 sm:pb-8 shadow-2xl border bg-(--bg-panel) border-(--border-color)`}
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Mobile handle */}
@@ -95,17 +95,17 @@ export function DeleteConfirmDialog({ open, onClose }) {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="Enter your password"
-                                className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)] mb-6"
+                                className="w-full px-4 py-3 rounded-full text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)] mb-6"
                             />
                             <div className="flex justify-center gap-3">
                                 <button
-                                    className="px-6 py-2 rounded-full transition-colors cursor-pointer bg-(--bg-elevated) text-(--text-primary) hover:bg-(--bg-hover)"
+                                    className="px-5 py-2 rounded-full transition-colors cursor-pointer bg-(--bg-elevated) text-(--text-primary) hover:bg-(--bg-hover) text-sm"
                                     onClick={onClose}
                                 >
                                     Cancel
                                 </button>
                                 <button
-                                    className="px-6 py-2 rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer active:scale-95 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
+                                    className="px-5 py-2 rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer active:scale-95 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed text-sm"
                                     disabled={isLoading || !password}
                                     onClick={handleDeleteAccount}
                                 >

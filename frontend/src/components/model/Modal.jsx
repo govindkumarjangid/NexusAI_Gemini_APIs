@@ -70,12 +70,12 @@ export default function Modal({ open, onClose, children }) {
                             initial="hidden"
                             animate="visible"
                             exit="exit"
-                            className="relative w-full sm:max-w-2xl rounded-t-3xl sm:rounded-2xl shadow-2xl border overflow-hidden flex flex-col bg-(--bg-panel) border-(--border-color) text-(--text-primary) max-h-[92dvh]"
+                            className="relative w-full sm:max-w-2xl rounded-t-3xl sm:rounded-3xl shadow-2xl border overflow-hidden flex flex-col bg-(--bg-panel) border-(--border-color) text-(--text-primary) max-h-[92dvh]"
                         >
                             {/* Close button */}
                             <button
                                 onClick={() => onClose()}
-                                className='hidden sm:block absolute top-2 right-2 p-2 rounded-full cursor-pointer hover:bg-(--bg-accent) transition-all duration-300 active:scale-95'>
+                                className='hidden sm:block absolute top-2 right-2 p-2 rounded-full cursor-pointer hover:bg-(--bg-elevated) transition-all duration-300 active:scale-95'>
                                 <X size={18} />
                             </button>
 

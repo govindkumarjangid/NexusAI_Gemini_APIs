@@ -80,7 +80,7 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
                 `z-50 shadow-2xl border overflow-hidden bg-(--bg-panel) border-(--border-color) text-(--text-primary) ${isMobile
                   ? 'fixed bottom-0 left-0 right-0 rounded-t-3xl border-t'
                   : sidebarOpen
-                    ? 'absolute bottom-full left-2 right-2 mb-2 rounded-2xl'
+                    ? 'absolute bottom-full left-2 right-2 mb-2 rounded-3xl'
                     : 'absolute bottom-2 left-full ml-2 w-64 rounded-2xl'
                 }`
               }
@@ -116,7 +116,7 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
               <div className="p-2">
                 <button
                   onClick={() => { setPopupOpen(false); setShowSettings(true); }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all cursor-pointer hover:opacity-80 text-(--text-secondary) hover:bg-(--bg-elevated)"
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-full text-sm transition-all cursor-pointer hover:opacity-80 text-(--text-secondary) hover:bg-(--bg-elevated)"
                 >
                   <Settings size={18} />
                   <span>Preferences</span>
@@ -124,7 +124,7 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
 
                 <button
                   onClick={() => { setPopupOpen(false); handleLogout(); }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all cursor-pointer hover:text-red-400 hover:bg-red-500/10 text-(--text-secondary)"
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-full text-sm transition-all cursor-pointer hover:text-red-400 hover:bg-red-500/10 text-(--text-secondary)"
                 >
                   <LogOut size={18} />
                   <span>Log out</span>
@@ -141,7 +141,7 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
         <button
           ref={buttonRef}
           onClick={() => setPopupOpen(v => !v)}
-          className={`flex items-center rounded-full cursor-pointer transition-all duration-300 text-sm h-11 overflow-hidden text-(--text-secondary) ${sidebarOpen ? 'bg-(--bg-elevated) border border-(--border-color) w-full hover:opacity-85' : 'bg-transparent border border-transparent hover:bg-(--bg-elevated) hover:border-(--border-color) w-11 justify-center'}`}
+          className={`flex items-center rounded-full cursor-pointer transition-all duration-300 text-sm h-11 overflow-hidden text-(--text-secondary) ${sidebarOpen ? 'bg-(--bg-elevated) w-full hover:opacity-85' : 'bg-transparent hover:bg-(--bg-elevated) justify-center'}`}
         >
           {/* Avatar circle */}
           <div className="w-11 h-11 shrink-0 flex items-center justify-center ">
