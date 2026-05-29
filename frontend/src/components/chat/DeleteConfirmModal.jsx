@@ -18,18 +18,18 @@ const DeleteConfirmModal = ({
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={() => setShowDeleteModal(false)}
-                        className={`fixed inset-0 z-40 ${isMobile ? "bg-black/40" : ""}`}
+                        className="fixed inset-0 z-40 bg-black/40"
                     />
 
                     <motion.div
-                        initial={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
-                        animate={isMobile ? { y: 0 } : { opacity: 1, y: 0 }}
-                        exit={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
+                        initial={isMobile ? { y: "100%" } : { opacity: 0, x: "-50%", y: "-50%", scale: 0.98 }}
+                        animate={isMobile ? { y: 0 } : { opacity: 1, x: "-50%", y: "-50%", scale: 1 }}
+                        exit={isMobile ? { y: "100%" } : { opacity: 0, x: "-50%", y: "-50%", scale: 0.98 }}
                         transition={springConfig}
 
                         className={`${isMobile
                             ? "fixed bottom-0 left-0 right-0 rounded-t-3xl border-t"
-                            : "absolute top-16 right-4 w-full max-w-md rounded-xl border shadow-lg"
+                            : "fixed top-[50%] left-[50%] w-full max-w-md rounded-3xl border shadow-lg"
                             } bg-(--bg-surface) border-(--border-color) z-50 overflow-hidden`}
                     >
                         {/* Mobile Handle */}
@@ -41,8 +41,8 @@ const DeleteConfirmModal = ({
 
                         <div className="p-6">
                             <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-xl font-bold text-(--text-primary) flex items-center gap-2">
-                                    <Trash size={24} className="text-red-500" />
+                                <h2 className="text-lg font-bold text-(--text-primary) flex items-center gap-2">
+                                    <Trash size={20} className="text-red-500" />
                                     Delete Chat
                                 </h2>
                             </div>
@@ -64,17 +64,17 @@ const DeleteConfirmModal = ({
                                 </p>
 
 
-                                <div className="flex gap-3 pt-2">
+                                <div className="flex gap-3 pt-2 px-6">
                                     <button
                                         type="button"
                                         onClick={() => setShowDeleteModal(false)}
-                                        className={`flex-1 rounded-full border border-(--border-color) text-(--text-primary) hover:bg-(--bg-accent) transition-all font-semibold cursor-pointer ${isMobile ? 'px-3 py-2 text-sm' : 'px-4 py-3'}`}
+                                        className={`flex-1 rounded-full border border-(--border-color) text-(--text-primary) hover:bg-(--bg-accent) transition-all font-medium cursor-pointer px-3 py-2 text-sm`}
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         onClick={confirmDelete}
-                                        className={`flex-1 rounded-full bg-red-500 text-white hover:bg-red-600 shadow-lg shadow-red-500/20 transition-all font-semibold cursor-pointer ${isMobile ? 'px-3 py-2 text-sm' : 'px-4 py-3'}`}
+                                        className={`flex-1 rounded-full bg-red-500 text-white hover:bg-red-600 shadow-lg shadow-red-500/20 transition-all font-medium cursor-pointer px-3 py-2 text-sm`}
                                     >
                                         Delete Chat
                                     </button>

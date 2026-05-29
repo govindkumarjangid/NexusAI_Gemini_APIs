@@ -252,7 +252,7 @@ const ChatInputArea = ({
                                                     ? { y: "100%", opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }
                                                     : { opacity: 0, y: 10, scale: 0.98, transition: { duration: 0.15, ease: "easeIn" } }
                                                 }
-                                                className="fixed bottom-0 left-0 right-0 sm:absolute sm:bottom-full sm:left-0 mb-0 sm:mb-3 w-full sm:w-43 rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden z-50 p-4 sm:p-2 text-sm font-semibold border-t sm:border bg-(--bg-panel) border-(--border-color) space-y-1"
+                                                className="fixed bottom-0 left-0 right-0 sm:absolute sm:bottom-full sm:left-0 mb-0 sm:mb-3 w-full sm:w-48 rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden z-50 p-4 sm:p-2 text-sm font-semibold border-t sm:border bg-(--bg-panel) border-(--border-color) space-y-1"
                                             >
                                                 {/* Mobile Handle */}
                                                 {
@@ -266,17 +266,17 @@ const ChatInputArea = ({
                                                 <button
                                                     type="button"
                                                     onClick={handleImageClick}
-                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-2.5 text-xs dark:text-gray-200 text-gray-700 dark:hover:bg-(--bg-hover) hover:bg-gray-100 transition-colors text-left rounded-full cursor-pointer"
+                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-2.5 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-(--bg-hover) hover:bg-gray-100 transition-colors text-left rounded-2xl cursor-pointer"
                                                 >
-                                                    <Image size={16} className="dark:text-gray-400 text-gray-500" />
+                                                    <Image size={18} className="dark:text-gray-400 text-gray-500" />
                                                     <span>Upload Image</span>
                                                 </button>
                                                 <button
                                                     type="button"
                                                     onClick={toggleListening}
-                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-2.5 text-xs dark:text-gray-200 text-gray-700 dark:hover:bg-(--bg-hover) hover:bg-gray-100 transition-colors text-left rounded-full cursor-pointer"
+                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-2.5 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-(--bg-hover) hover:bg-gray-100 transition-colors text-left rounded-2xl cursor-pointer"
                                                 >
-                                                    <Mic size={16} className="dark:text-gray-400 text-gray-500" />
+                                                    <Mic size={18} className="dark:text-gray-400 text-gray-500" />
                                                     <span>Voice Input</span>
                                                 </button>
                                                 <button
@@ -285,9 +285,9 @@ const ChatInputArea = ({
                                                         setIsImageMode(true);
                                                         setIsAddMenuOpen(false);
                                                     }}
-                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-2.5 text-xs dark:text-gray-200 text-gray-700 dark:hover:bg-(--bg-hover) hover:bg-gray-100 transition-colors text-left rounded-full cursor-pointer"
+                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-2.5 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-(--bg-hover) hover:bg-gray-100 transition-colors text-left rounded-2xl cursor-pointer"
                                                 >
-                                                    <Sparkles size={16} className="text-purple-400" />
+                                                    <Sparkles size={18} className="text-purple-400" />
                                                     <span>Generate Image</span>
                                                 </button>
                                             </motion.div>

@@ -15,23 +15,24 @@ const ShareModal = ({
         <AnimatePresence>
             {showShareModal && (
                 <>
+                    {/* Background Overlay */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={() => setShowShareModal(false)}
-                        className={`fixed inset-0 z-40 ${isMobile ? "bg-black/40" : ""}`}
+                        className="fixed inset-0 z-50 bg-black/40"
                     />
 
+                    {/* Main Modal Div */}
                     <motion.div
-                        initial={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
-                        animate={isMobile ? { y: 0 } : { opacity: 1, y: 0 }}
-                        exit={isMobile ? { y: "100%" } : { opacity: 0, y: -10 }}
+                        initial={isMobile ? { y: "100%" } : { opacity: 0, x: "-50%", y: "-50%", scale: 0.98 }}
+                        animate={isMobile ? { y: 0 } : { opacity: 1, x: "-50%", y: "-50%", scale: 1 }}
+                        exit={isMobile ? { y: "100%" } : { opacity: 0, x: "-50%", y: "-50%", scale: 0.98 }}
                         transition={springConfig}
-
                         className={`${isMobile
                             ? "fixed bottom-0 left-0 right-0 rounded-t-3xl border-t"
-                            : "absolute top-16 right-4 w-full max-w-md rounded-2xl border shadow-lg"
+                            : "fixed top-[50%] left-[50%] w-full max-w-md rounded-3xl border shadow-lg"
                             } bg-(--bg-surface) border-(--border-color) z-50 overflow-hidden`}
                     >
                         {/* Mobile Handle */}
@@ -44,13 +45,13 @@ const ShareModal = ({
                         <div className={`${isMobile ? "p-4" : "p-6"}`}>
                             <div className="flex items-center justify-between mb-6">
                                 <h2 className="text-xl font-bold text-(--text-primary) flex items-center gap-2 cursor-pointer">
-                                    <Share2 size={24} className="text-(--accent-color)" />
+                                    <Share2 size={20} className="text-(--accent-color)" />
                                     Share Chat
                                 </h2>
                             </div>
 
                             <div className="space-y-6">
-                                <div className="flex items-start gap-4 p-4 rounded-xl bg-(--bg-accent)/50 border border-(--border-color)">
+                                <div className="flex items-start gap-4 p-5 rounded-3xl bg-(--bg-accent)/50 border border-(--border-color)">
                                     <div className="p-2 rounded-full bg-(--accent-color)/10 text-(--accent-color)">
                                         <Globe size={20} />
                                     </div>
@@ -66,7 +67,7 @@ const ShareModal = ({
                                                 />
                                             </button>
                                         </div>
-                                        <p className="text-sm text-(--text-secondary) mt-1">
+                                        <p className="text-xs text-(--text-secondary) mt-1">
                                             Anyone with the link can view this chat without logging in.
                                         </p>
                                     </div>
@@ -83,7 +84,7 @@ const ShareModal = ({
                                             Shareable URL
                                         </label>
                                         <div className="flex items-center gap-2">
-                                            <div className="flex-1 flex items-center gap-2 bg-(--bg-accent) px-3 py-2.5 rounded-xl border border-(--border-color) overflow-hidden group">
+                                            <div className="flex-1 flex items-center gap-2 bg-(--bg-accent) px-3 py-2 rounded-2xl border border-(--border-color) overflow-hidden group">
                                                 <Link2 size={16} className="text-(--text-secondary) shrink-0" />
                                                 <span className="text-sm text-(--text-primary) truncate">
                                                     {`${window.location.origin}/share/${currentChat.shareId}`}
@@ -91,9 +92,9 @@ const ShareModal = ({
                                             </div>
                                             <button
                                                 onClick={copyToClipboard}
-                                                className={`bg-(--accent-color) text-white rounded-xl hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-(--accent-color)/20 cursor-pointer ${isMobile ? 'p-2' : 'p-2.5'}`}
+                                                className={`bg-(--accent-color) text-white rounded-xl hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-(--accent-color)/20 cursor-pointer p-2 ${copied ? 'bg-green-500' : ''}`}
                                             >
-                                                {copied ? <Check size={isMobile ? 18 : 20} /> : <Copy size={isMobile ? 18 : 20} />}
+                                                {copied ? <Check size={18} /> : <Copy size={18} />}
                                             </button>
                                         </div>
                                     </motion.div>

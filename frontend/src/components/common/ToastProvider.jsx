@@ -14,10 +14,14 @@ const ToastProvider = () => {
                     background: '#1E1E21',
                     color: '#e5e7eb',
                     border: '1px solid #333338',
+                    fontSize: '12px',
+                    borderRadius: '12px',
                 } : {
                     background: '#ffffff',
                     color: '#1a1a1a',
                     border: '1px solid #e5e7eb',
+                    fontSize: '12px',
+                    borderRadius: '12px',
                 },
                 success: {
                     iconTheme: {

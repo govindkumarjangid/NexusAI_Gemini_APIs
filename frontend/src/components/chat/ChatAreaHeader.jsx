@@ -135,7 +135,7 @@ const ChatAreaHeader = memo(() => {
                             className="p-2 sm:p-3 dark:hover:bg-gray-800 hover:bg-gray-200 rounded-full transition-all cursor-pointer duration-300 active:scale-95 text-(--text-secondary)"
                             title="Expand Sidebar"
                         >
-                            <SquareChevronRight size={22} />
+                            <SquareChevronRight size={18} />
                         </button>
                     )}
                     <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-linear-to-r from-(--text-primary) via-(--text-primary) to-(--accent-color) flex items-center">
