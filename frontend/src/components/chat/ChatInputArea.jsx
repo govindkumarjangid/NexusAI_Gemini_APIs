@@ -158,7 +158,7 @@ const ChatInputArea = ({
                                     <img
                                         src={imagePreview}
                                         alt="Preview"
-                                        className={`h-24 w-24 object-cover rounded-xl border border-(--border-color) ${isUploading ? 'opacity-50' : ''}`}
+                                        className={`h-24 w-24 object-cover rounded-2xl border border-(--border-color) ${isUploading ? 'opacity-50' : ''}`}
                                     />
                                     {isUploading && (
                                         <div className="absolute inset-0 flex items-center justify-center">
@@ -169,7 +169,7 @@ const ChatInputArea = ({
                                         <button
                                             type="button"
                                             onClick={handleRemoveImage}
-                                            className="absolute -top-2 -right-2 p-1 bg-gray-900/80 text-white rounded-full hover:bg-red-500 transition-colors shadow-lg"
+                                            className="absolute top-1 right-1 p-1 bg-gray-900/80 text-white rounded-full hover:bg-red-500 transition-colors shadow-lg cursor-pointer"
                                         >
                                             <X size={14} />
                                         </button>
@@ -216,6 +216,7 @@ const ChatInputArea = ({
 
                         <div className="flex items-center justify-between mt-1 px-2 pb-1 relative">
                             <div className="relative" ref={menuRef}>
+
                                 <button
                                     type="button"
                                     disabled={isStreaming}
@@ -308,6 +309,7 @@ const ChatInputArea = ({
                                     )}
                                 </button>
                             </div>
+
                         </div>
                     </form>
 

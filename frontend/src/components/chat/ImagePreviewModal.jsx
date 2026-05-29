@@ -33,9 +33,9 @@ const ImagePreviewModal = ({ selectedImage, setSelectedImage, isMobile }) => {
                 >
                     {/* Modal Panel */}
                     <motion.div
-                        initial={isMobile ? { y: "100%" } : { opacity: 0, scale: 0.98, y: 20 }}
+                        initial={isMobile ? { y: "100%" } : { opacity: 0, scale: 0.98 }}
                         animate={{ y: 0, opacity: 1, scale: 1 }}
-                        exit={isMobile ? { y: "100%" } : { opacity: 0, scale: 0.9, y: 20 }}
+                        exit={isMobile ? { y: "100%" } : { opacity: 0, scale: 0.98 }}
                         transition={{ type: "spring", damping: 35, stiffness: 300 }}
                         className={`relative z-1000 ${isMobile
                             ? "w-full rounded-t-3xl bg-(--bg-surface) px-4 pb-safe"
@@ -52,7 +52,7 @@ const ImagePreviewModal = ({ selectedImage, setSelectedImage, isMobile }) => {
 
                         {/* Close Button */}
                         <button
-                            className={`absolute ${isMobile ? 'hidden' : 'top-2 right-2'} p-2.5 bg-accent text-white rounded-full transition-all duration-200 cursor-pointer active:scale-95 shadow-lg z-999999`}
+                            className={`absolute ${isMobile ? 'hidden' : 'top-2 right-2'} p-1.5 bg-accent text-white rounded-full transition-all duration-200 cursor-pointer active:scale-95 shadow-lg z-99`}
                             onClick={() => setSelectedImage(null)}
                         >
                             <X size={isMobile ? 20 : 24} />
@@ -60,11 +60,11 @@ const ImagePreviewModal = ({ selectedImage, setSelectedImage, isMobile }) => {
 
 
                         {/* Image Container */}
-                        <div className={`relative group overflow-hidden rounded-2xl shadow-2xl border border-white/10 w-full flex justify-center`}>
+                        <div className={`relative group overflow-hidden rounded-3xl shadow-2xl border border-white/10 w-full flex justify-center`}>
                             <motion.img
                                 src={selectedImage}
                                 alt="Full size preview"
-                                className={`object-cover ${isMobile ? 'max-h-[60vh] rounded-xl max-w-full' : 'min-w-full max-h-[80vh] h-full'}`}
+                                className={`object-cover ${isMobile ? 'max-h-[60vh] rounded-3xl max-w-full' : 'min-w-full max-h-[80vh] h-full'}`}
                             />
                         </div>
 
@@ -73,24 +73,24 @@ const ImagePreviewModal = ({ selectedImage, setSelectedImage, isMobile }) => {
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
-                            className={`flex items-center gap-3 bg-white/10 backdrop-blur-xl p-2 rounded-2xl border border-white/10 shadow-xl mb-4 ${isMobile ? 'bg-(--bg-accent)/50' : ''}`}
+                            className={`flex items-center gap-3 bg-white/10 backdrop-blur-xl p-2 rounded-full border border-white/10 shadow-xl ${isMobile ? 'bg-(--bg-accent)/50' : ''}`}
                         >
                             <button
                                 onClick={() => handleDownload(selectedImage)}
-                                className="flex items-center gap-2 text-(--text-primary) sm:text-white hover:text-accent transition-colors px-3 py-1.5 cursor-pointer hover:bg-(--accent-color)/20 rounded-xl"
+                                className="flex items-center gap-2 text-(--text-primary) sm:text-white hover:text-accent transition-colors px-3 py-1.5 cursor-pointer hover:bg-(--accent-color)/20 rounded-full"
                                 title="Download Image"
                             >
-                                <Download size={20} />
-                                <span className="text-sm font-semibold">Download</span>
+                                <Download size={18} />
+                                <span className="text-sm font-medium">Download</span>
                             </button>
                             <div className="w-px h-6 bg-white/20" />
                             <button
                                 onClick={() => window.open(selectedImage, '_blank')}
-                                className="flex items-center gap-2 text-(--text-primary) sm:text-white hover:text-accent transition-colors px-3 py-1.5 rounded-xl cursor-pointer hover:bg-(--accent-color)/20"
+                                className="flex items-center gap-2 text-(--text-primary) sm:text-white hover:text-accent transition-colors px-3 py-1.5 rounded-full cursor-pointer hover:bg-(--accent-color)/20"
                                 title="Open Original"
                             >
-                                <ExternalLink size={20} />
-                                <span className="text-sm font-semibold">Original</span>
+                                <ExternalLink size={18} />
+                                <span className="text-sm font-medium">Original</span>
                             </button>
                         </motion.div>
                     </motion.div>

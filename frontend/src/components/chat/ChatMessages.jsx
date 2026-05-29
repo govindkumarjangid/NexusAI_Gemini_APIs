@@ -28,9 +28,8 @@ const ChatMessages = ({ messages, isStreaming }) => {
 
             if (shouldScroll) {
                 const scrollToBottom = (behavior) => {
-                    if (messagesEndRef.current) {
+                    if (messagesEndRef.current)
                         messagesEndRef.current.scrollIntoView({ behavior, block: 'end' });
-                    }
                 };
 
                 if (isChatSwitch || messagesJustAppeared) {

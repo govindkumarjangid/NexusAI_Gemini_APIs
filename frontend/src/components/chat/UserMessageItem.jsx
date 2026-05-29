@@ -24,11 +24,11 @@ const UserMessageItem = memo(({ msg, setSelectedImage, handleCopy, copiedId, idx
 
             <div className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-break-words w-full relative">
                 {(msg.imageUrl || msg.image) && (
-                    <div className="mb-2 w-full overflow-hidden rounded-xl border border-white/20 bg-black/10 p-1 group relative">
+                    <div className="mb-2 w-full overflow-hidden rounded-2xl border border-white/20 bg-black/10 p-1 group relative">
                         <img
                             src={msg.imageUrl || msg.image}
                             alt="User upload"
-                            className="max-h-65 w-full rounded-lg object-cover cursor-pointer hover:brightness-110 transition-all"
+                            className="max-h-65 w-full rounded-2xl object-cover cursor-pointer hover:brightness-110 transition-all"
                             onClick={() => setSelectedImage(msg.imageUrl || msg.image)}
                         />
                     </div>
@@ -66,6 +66,7 @@ const UserMessageItem = memo(({ msg, setSelectedImage, handleCopy, copiedId, idx
                         )}
                     </button>
                 )}
+
             </div>
 
             {/* Copy button on hover */}
