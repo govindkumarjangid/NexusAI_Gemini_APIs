@@ -181,13 +181,13 @@ export default function RenderMessage({ content, isDark = true }) {
           // PARAGRAPH
           p: ({ children }) => (
             <p className="leading-5">
-             🧠 {children}
+              {children}
             </p>
           ),
 
           // LISTS
           ul: ({ children }) => (
-            <ul className="list-['👉'] pl-5">
+            <ul className="pl-5">
               {children}
             </ul>
           ),

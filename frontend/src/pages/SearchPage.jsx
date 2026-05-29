@@ -49,7 +49,6 @@ const SearchPage = () => {
 
   return (
     <AnimatePresence>
-
       {isSearchOpen && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -66,31 +65,30 @@ const SearchPage = () => {
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ type: 'spring', damping: 28, stiffness: 260 }}
-
           className="fixed top-0 right-0 h-full w-full sm:w-112.5 md:w-137.5 border-l z-70 flex flex-col shadow-2xl bg-(--bg-surface) border-(--border-color) text-(--text-primary)"
         >
           {/* Header */}
           <div className="py-4 px-5 flex items-center justify-between pb-1">
-            <h2 className="text-2xl font-semibold text-(--text-primary)">Search</h2>
+            <h2 className="text-xl font-semibold text-(--text-primary)">Search</h2>
             <button
               onClick={() => setIsSearchOpen(false)}
-              className="p-2 cursor-pointer rounded-full transition-colors hover:opacity-80 text-(--text-secondary)"
+              className="cursor-pointer rounded-full transition-colors hover:opacity-80 text-(--text-secondary)"
             >
-              <X size={24} />
+              <X size={20} />
             </button>
           </div>
 
           {/* Search Input */}
           <div className="p-4">
             <div className="relative group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 transition-colors text-(--text-muted)" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 transition-colors text-(--text-muted)" size={18} />
               <input
                 type="text"
                 placeholder="Search for chats"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 autoFocus
-                className="w-full text-[15px] rounded-full pl-12 pr-4 py-3.5 focus:outline-none border transition-colors bg-(--bg-elevated) text-(--text-primary) border-(--border-color)"
+                className="w-full text-sm rounded-full pl-12 pr-4 py-3 focus:outline-none border transition-colors bg-(--bg-elevated) text-(--text-primary) border-(--border-color)"
               />
             </div>
           </div>
@@ -116,14 +114,14 @@ const SearchPage = () => {
                           navigate(`/chat/${chat._id}`);
                         }}
                       >
-                        <span className="sm:text-[15px] text-sm truncate mr-4">{getChatTitle(chat)}</span>
+                        <span className="text-sm truncate mr-4">{getChatTitle(chat)}</span>
                         <span className="sm:text-sm text-xs dark:text-gray-400 text-gray-400 whitespace-nowrap">{formatDateTime(chat.updatedAt)}</span>
                       </div>
                     ))}
                     {hasMoreChats && (
                       <div className="flex justify-center mt-4 mb-2">
                         <button
-                          className="px-5 py-2 text-sm bg-accent text-accent-contrast font-semibold rounded-full transition-all cursor-pointer active:scale-95 hover:opacity-90 shadow-lg flex items-center gap-1"
+                          className="px-4 py-2 text-xs bg-accent text-accent-contrast font-medium rounded-full transition-all cursor-pointer active:scale-95 hover:opacity-90 shadow-lg flex items-center gap-1"
                           onClick={() => setSearchPage((p) => p + 1)}
                         >
                           Load More <ChevronDown size={16} />

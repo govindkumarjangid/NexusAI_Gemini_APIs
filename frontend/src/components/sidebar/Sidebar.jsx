@@ -81,7 +81,7 @@ const Sidebar = () => {
         }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
 
-        className={`h-screen flex flex-col whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl overflow-hidden px-2 rounded-r-2xl' : 'relative overflow-visible z-20'} bg-(--bg-surface) border-(--border-color) text-(--text-primary)`}
+        className={`h-screen flex flex-col whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl overflow-hidden px-2 rounded-r-3xl' : 'relative overflow-visible z-20'} bg-(--bg-surface) border-(--border-color) text-(--text-primary)`}
       >
         {/* Top Header */}
         <div className="h-14 flex items-center justify-between shrink-0">

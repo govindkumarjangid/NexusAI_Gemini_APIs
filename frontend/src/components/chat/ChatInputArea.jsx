@@ -266,7 +266,7 @@ const ChatInputArea = ({
                                                 <button
                                                     type="button"
                                                     onClick={handleImageClick}
-                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-2.5 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-(--bg-hover) hover:bg-gray-100 transition-colors text-left rounded-2xl cursor-pointer"
+                                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-(--bg-hover) hover:bg-gray-100 transition-colors text-left rounded-2xl cursor-pointer"
                                                 >
                                                     <Image size={18} className="dark:text-gray-400 text-gray-500" />
                                                     <span>Upload Image</span>
@@ -274,7 +274,7 @@ const ChatInputArea = ({
                                                 <button
                                                     type="button"
                                                     onClick={toggleListening}
-                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-2.5 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-(--bg-hover) hover:bg-gray-100 transition-colors text-left rounded-2xl cursor-pointer"
+                                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-(--bg-hover) hover:bg-gray-100 transition-colors text-left rounded-2xl cursor-pointer"
                                                 >
                                                     <Mic size={18} className="dark:text-gray-400 text-gray-500" />
                                                     <span>Voice Input</span>
@@ -285,7 +285,7 @@ const ChatInputArea = ({
                                                         setIsImageMode(true);
                                                         setIsAddMenuOpen(false);
                                                     }}
-                                                    className="w-full flex items-center gap-3 px-4 py-3.5 sm:py-2.5 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-(--bg-hover) hover:bg-gray-100 transition-colors text-left rounded-2xl cursor-pointer"
+                                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm dark:text-gray-200 text-gray-700 dark:hover:bg-(--bg-hover) hover:bg-gray-100 transition-colors text-left rounded-2xl cursor-pointer"
                                                 >
                                                     <Sparkles size={18} className="text-purple-400" />
                                                     <span>Generate Image</span>

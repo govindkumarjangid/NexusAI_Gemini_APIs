@@ -67,13 +67,13 @@ const EditTitleModal = ({
                                     <button
                                         type="button"
                                         onClick={() => setShowEditModal(false)}
-                                        className={`flex-1 rounded-full border border-(--border-color) text-(--text-primary) hover:bg-(--bg-accent) transition-all font-medium cursor-pointer px-3 py-2 text-sm`}
+                                        className={`flex-1 rounded-full border border-(--border-color) text-(--text-primary) hover:bg-(--bg-accent) transition-all font-medium cursor-pointer px-3 py-2.5 sm:text-sm text-xs`}
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
-                                        className={`flex-1 rounded-full bg-(--accent-color) text-white hover:brightness-110 shadow-lg shadow-(--accent-color)/20 transition-all font-medium cursor-pointer px-3 py-2 text-sm`}
+                                        className={`flex-1 rounded-full bg-(--accent-color) text-white hover:brightness-110 shadow-lg shadow-(--accent-color)/20 transition-all font-medium cursor-pointer px-3 py-2.5 sm:text-sm text-xs`}
                                     >
                                         Save Changes
                                     </button>

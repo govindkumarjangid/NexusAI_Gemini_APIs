@@ -138,9 +138,9 @@ const ChatAreaHeader = memo(() => {
                             <SquareChevronRight size={18} />
                         </button>
                     )}
-                    <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-linear-to-r from-(--text-primary) via-(--text-primary) to-(--accent-color) flex items-center">
+                    <span className="font-bold sm:text-lg text-md tracking-tight bg-clip-text text-transparent bg-linear-to-r from-(--text-primary) via-(--text-primary) to-(--accent-color) flex items-center">
                         {
-                            isMobile &&  <Logo size={38} className="text-(--accent-color) drop-shadow-sm transition-all duration-200 hover:scale-105 group-hover:hidden" />
+                            isMobile && <Logo size={isMobile ? "32" : "38"} className="text-(--accent-color) drop-shadow-sm transition-all duration-200 hover:scale-105 group-hover:hidden" />
                         }
                         NexusAI
                     </span>
