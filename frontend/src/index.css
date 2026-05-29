@@ -179,3 +179,11 @@ html.dark .gradient-accent-text {
   mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black, transparent);
   -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black, transparent);
 }
+
+.gemini-header {
+  background: linear-gradient(to bottom, var(--bg-base) 20%, transparent) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom: none !important;
+}
+

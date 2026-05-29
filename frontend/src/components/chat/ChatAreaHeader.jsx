@@ -124,11 +124,11 @@ const ChatAreaHeader = memo(() => {
             {/* header  */}
 
             <header
-                className={`h-14 shrink-0 w-full flex items-center justify-between px-3 sm:px-4 sticky top-0 z-10 border-(--border-color) ${sidebarOpen ? "bg-(--bg-surface)" : "bg-(--bg-header)"} text-(--text-primary)`}
+                className={`h-14 shrink-0 w-full flex items-start justify-between px-3 sm:px-4 absolute top-0 left-0 z-10 pointer-events-none text-(--text-primary) py-4 ${isMobile ? 'bg-(--bg-base)' : sidebarOpen ? 'bg-(--bg-surface) backdrop-blur-sm' : 'gemini-header'} transition-colors duration-300`}
             >
 
 
-                <div className="flex items-center gap-1.5 sm:gap-3">
+                <div className="flex items-center gap-1.5 sm:gap-3 pointer-events-auto">
                     {isMobile && !sidebarOpen && (
                         <button
                             onClick={() => setSidebarOpen(true)}
@@ -139,34 +139,29 @@ const ChatAreaHeader = memo(() => {
                         </button>
                     )}
                     <span className="font-bold sm:text-lg text-md tracking-tight bg-clip-text text-transparent bg-linear-to-r from-(--text-primary) via-(--text-primary) to-(--accent-color) flex items-center">
-                        {
-                            isMobile && <Logo size={isMobile ? "32" : "38"} className="text-(--accent-color) drop-shadow-sm transition-all duration-200 hover:scale-105 group-hover:hidden" />
-                        }
                         NexusAI
                     </span>
                 </div>
                 {
                     currentChat ? (
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 pointer-events-auto">
                             <button
                                 onClick={handleShare}
                                 className='flex gap-2 bg-(--bg-accent) px-2 py-1 rounded-md cursor-pointer hover:bg-(--bg-accent-hover) transition-all duration-300 active:scale-95 text-sm'>
                                 <Share2 size={18} />
-                                <span className='hidden sm:block'>Share</span>
                             </button>
                             <button
                                 onClick={handleMore}
                                 className='flex  gap-1 bg-(--bg-accent) px-2 py-1 rounded-md cursor-pointer hover:bg-(--bg-accent-hover) transition-all duration-300 active:scale-95 text-sm' >
                                 <EllipsisVertical size={18} />
-                                <span className='hidden sm:block'>More</span>
                             </button>
                         </div>
                     ) : (
-                        <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-accent text-accent-contrast flex items-center justify-center font-semibold text-sm">
+                        <div className="flex items-center gap-2 pointer-events-auto">
+                            <div className="w-7 h-7 rounded-full bg-accent text-accent-contrast flex items-center justify-center font-semibold text-xs">
                                 {initials}
                             </div>
-                            <span className="hidden sm:flex font-normal text-base max-w-30 truncate text-(--text-secondary)">{user?.name || user?.username || 'User'}</span>
+                            <span className="hidden sm:flex font-normal text-sm max-w-30 truncate text-(--text-secondary)">{user?.name || user?.username || 'User'}</span>
                         </div>
                     )
                 }

@@ -69,7 +69,7 @@ const ChatMessages = ({ messages, isStreaming }) => {
         <div className={`w-full ${messages.length === 0 ? 'flex-1 flex flex-col' : ''}`}>
             <div className={`max-w-4xl mx-auto space-y-6 ${messages.length === 0 ? 'flex-1 flex flex-col justify-end items-start w-full' : ''}`}>
                 {(messages.length === 0) ? (
-                    <div className="flex flex-col items-start select-none pb-4">
+                    <div className="flex flex-col items-start select-none">
                         <div className="text-2xl font-semibold mb-2 text-(--text-secondary)">Hi, {user?.name || user?.username || 'Guest'}</div>
                         <div className="text-3xl font-bold text-(--text-primary)">Where should we start?</div>
                     </div>

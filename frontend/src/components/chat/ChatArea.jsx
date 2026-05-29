@@ -180,13 +180,13 @@ const ChatArea = () => {
   const showLoader = isLoading || isSyncing || isTransitioning;
 
   return (
-    <div className="flex-1 flex flex-col h-dvh w-full max-w-[100vw] overflow-x-hidden bg-(--bg-base) text-(--text-primary)">
+    <div className="flex-1 flex flex-col h-dvh w-full max-w-[100vw] overflow-x-hidden bg-(--bg-base) text-(--text-primary) relative">
 
       {/* Top Navbar */}
       <ChatAreaHeader />
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-3 sm:p-6 flex flex-col relative">
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-3 sm:p-6 sm:pt-24 pt-20 flex flex-col relative">
         {showLoader ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-(--bg-base) z-10">
             <div className="flex flex-col items-center gap-4">

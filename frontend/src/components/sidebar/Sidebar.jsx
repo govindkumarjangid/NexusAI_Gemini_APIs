@@ -33,8 +33,8 @@ const Sidebar = () => {
     return new Date(b.createdAt) - new Date(a.createdAt);
   });
 
-  const paginatedChats = sortedChats.slice(0, 6);
-  const hasMoreRecent = chats.length > 6;
+  const paginatedChats = sortedChats.slice(0, 5);
+  const hasMoreRecent = chats.length > 5;
 
 
   const navigate = useNavigate();
@@ -81,12 +81,12 @@ const Sidebar = () => {
         }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
 
-        className={`h-screen flex flex-col whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl overflow-hidden px-2 rounded-r-3xl' : 'relative overflow-visible z-20'} bg-(--bg-surface) border-(--border-color) text-(--text-primary)`}
+        className={`h-screen flex flex-col whitespace-nowrap ${isMobile ? 'fixed left-0 top-0 z-50 shadow-2xl overflow-hidden px-2 rounded-r-3xl' : 'relative overflow-visible z-30'} bg-(--bg-surface) border-(--border-color) text-(--text-primary)`}
       >
         {/* Top Header */}
-        <div className="h-14 flex items-center justify-between shrink-0">
+        <div className="h-14 flex items-center justify-between shrink-0 px-2">
           {(isMobile || sidebarOpen) && (
-            <div className="w-full flex items-center justify-between shrink-0 relative group px-3">
+            <div className="w-full flex items-center justify-between shrink-0 relative group">
               <NavLink to="/chat" className="flex items-center gap-1">
                 <Logo size={36} className="text-(--accent-color) drop-shadow-sm transition-all duration-200 hover:scale-105" />
                 <h1 className="font-medium text-md dark:text-gray-200 text-gray-800">
@@ -95,7 +95,7 @@ const Sidebar = () => {
               </NavLink>
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="p-0 sm:p-3 dark:hover:bg-gray-800 hover:bg-gray-200 rounded-full transition-all cursor-pointer duration-300 active:scale-95 dark:text-gray-400 text-gray-500 dark:hover:text-gray-200 hover:text-gray-800"
+                className="h-10 w-10 flex items-center justify-center dark:hover:bg-gray-800 hover:bg-gray-200 rounded-full transition-all cursor-pointer duration-300 active:scale-95 dark:text-gray-400 text-gray-500 dark:hover:text-gray-200 hover:text-gray-800"
                 title="Collapse Menu"
               >
                 <SquareChevronLeft size={18} />
@@ -104,11 +104,11 @@ const Sidebar = () => {
           )}
           {!isMobile && !sidebarOpen && (
             <div className="w-full flex items-center justify-center shrink-0 relative group">
-              <Logo size={36} className="text-(--accent-color) drop-shadow-sm transition-all duration-200 hover:scale-105 group-hover:hidden" />
               <Tooltip text="Expand Menu" position="right" disabled={sidebarOpen}>
+                <Logo size={36} className="text-(--accent-color) drop-shadow-sm transition-all duration-200 hover:scale-105 group-hover:hidden" />
                 <button
                   onClick={() => setSidebarOpen(true)}
-                  className="p-0 sm:p-3 hover:bg-transparent rounded-full hidden group-hover:block transition-all cursor-pointer duration-300 active:scale-95 text-gray-500 dark:text-gray-200 hover:text-gray-800"
+                  className="h-9 w-9 hidden group-hover:flex items-center justify-center hover:bg-transparent rounded-full transition-all cursor-pointer duration-300 active:scale-95 text-gray-500 dark:text-gray-200 hover:text-gray-800"
                 >
                   <SquareChevronRight size={18} />
                 </button>
@@ -189,7 +189,7 @@ const Sidebar = () => {
                 >
                   {chatLoading ? (
                     <div className="space-y-2">
-                      {[...Array(6)].map((_, i) => (
+                      {[...Array(5)].map((_, i) => (
                         <div key={i} className="flex-1 px-4 py-4 dark:bg-gray-700/40 bg-gray-300/60 rounded-full animate-pulse" />
                       ))}
                     </div>

@@ -69,10 +69,10 @@ const UserMessageItem = memo(({ msg, setSelectedImage, handleCopy, copiedId, idx
 
             </div>
 
-            {/* Copy button on hover */}
+            {/* Copy button */}
             <button
                 onClick={() => handleCopy(msg.content || msg.text, msg._id || idx)}
-                className="absolute right-full mr-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-white/10 dark:bg-black/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer border border-white/10"
+                className="absolute right-full mr-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-white/10 dark:bg-black/20 backdrop-blur-sm transition-all duration-200 cursor-pointer border border-white/10"
                 title="Copy message"
             >
                 {copiedId === (msg._id || idx) ? (

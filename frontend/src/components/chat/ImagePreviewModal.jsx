@@ -73,7 +73,7 @@ const ImagePreviewModal = ({ selectedImage, setSelectedImage, isMobile }) => {
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
-                            className={`flex items-center gap-3 bg-white/10 backdrop-blur-xl p-2 rounded-full border border-white/10 shadow-xl ${isMobile ? 'bg-(--bg-accent)/50' : ''}`}
+                            className={`flex items-center gap-3 bg-white/10 backdrop-blur-xl p-2 rounded-full border border-white/10 shadow-xl ${isMobile ? 'bg-(--bg-accent)/50 mb-4' : ''}`}
                         >
                             <button
                                 onClick={() => handleDownload(selectedImage)}
