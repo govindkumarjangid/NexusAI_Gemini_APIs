@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { Settings, User } from "lucide-react";
+
 import Modal from "../model/Modal";
 import GeneralSettings from "../account/GeneralSettings";
 import AccountSettings, { DeleteConfirmDialog } from "../account/AccountSettings";
-import { Settings, User } from "lucide-react";
 
 const TABS = [
     { id: "general", label: "General", icon: <Settings size={16} /> },
@@ -26,7 +27,7 @@ export default function SettingsModal({ open, onClose }) {
         <>
             <Modal open={open} onClose={onClose}>
                 <div className="flex justify-center pt-3 pb-1 sm:hidden">
-                    <div className="w-10 h-1 rounded-full opacity-30 bg-(--text-primary)"/>
+                    <div className="w-10 h-1 rounded-full opacity-30 bg-(--text-primary)" />
                 </div>
 
                 <div className="flex flex-col sm:flex-row sm:h-120">

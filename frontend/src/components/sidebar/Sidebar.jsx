@@ -1,4 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Search, SquarePen,
   SquareChevronLeft,
@@ -9,14 +11,12 @@ import {
 
 import useAuthStore from '../../store/useAuthStore.js';
 import useChatStore from '../../store/useChatStore.js';
-import { NavLink, useNavigate } from 'react-router-dom';
-import Logo from '../common/Logo';
 
+import Logo from '../common/Logo';
 import ChatList from '../chat/ChatList';
+import Tooltip from '../common/Tooltip';
 import SidebarBottom from '../sidebar/SidebarBottom';
 import RecentChatsSidebar from '../sidebar/RecentChatsSidebar';
-import { useState, useEffect } from 'react';
-import Tooltip from '../common/Tooltip';
 
 
 const Sidebar = () => {
@@ -126,8 +126,8 @@ const Sidebar = () => {
             <Tooltip key={btn.label} text={btn.label} position="right" disabled={sidebarOpen}>
               <button
                 className={`flex items-center cursor-pointer rounded-full transition-all duration-200 overflow-hidden active:scale-98 h-10 ${sidebarOpen
-                    ? 'bg-(--bg-elevated)'
-                    : 'bg-transparent hover:bg-(--bg-elevated)'
+                  ? 'bg-(--bg-elevated)'
+                  : 'bg-transparent hover:bg-(--bg-elevated)'
                   }`}
                 style={{ color: 'var(--text-primary)' }}
                 onClick={btn.onClick}

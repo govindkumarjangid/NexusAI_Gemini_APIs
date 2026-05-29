@@ -1,9 +1,10 @@
-import { useRef, useState, useEffect, useMemo } from 'react';
-import { LogOut, Settings, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import useAuthStore from '../../store/useAuthStore';
-import SettingsModal from '../model/SettingsModal';
+import { LogOut, Settings, X } from 'lucide-react';
+import { useRef, useState, useEffect, useMemo } from 'react';
+
 import Tooltip from '../common/Tooltip';
+import SettingsModal from '../model/SettingsModal';
+import useAuthStore from '../../store/useAuthStore';
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 640);
@@ -81,7 +82,7 @@ const SidebarBottom = ({ sidebarOpen, handleLogout }) => {
                   ? 'fixed bottom-0 left-0 right-0 rounded-t-3xl border-t'
                   : sidebarOpen
                     ? 'absolute bottom-full left-2 right-2 mb-2 rounded-3xl'
-                    : 'absolute bottom-2 left-full ml-2 w-64 rounded-2xl'
+                    : 'absolute bottom-2 left-full ml-2 w-64 rounded-3xl'
                 }`
               }
             >
