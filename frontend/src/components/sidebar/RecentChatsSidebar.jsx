@@ -23,13 +23,13 @@ const RecentChatsSidebar = ({ open, onClose, chats, onChatClick, setIsSearchOpen
                     className="fixed top-0 right-0 h-full w-120 max-w-full border-l shadow-2xl flex flex-col z-70 bg-(--bg-surface) border-(--border-color) text-(--text-primary)"
                 >
                     <div className="flex items-center justify-between py-4 px-5">
-                        <span className="font-semibold text-2xl text-(--text-primary)">Recent Chats</span>
+                        <span className="font-semibold text-lg text-(--text-primary)">Recent Chats</span>
                         <button
-                            className="p-2 cursor-pointer rounded-full transition-colors hover:opacity-80 text-(--text-secondary)"
+                            className="cursor-pointer rounded-full transition-colors hover:opacity-80 text-(--text-secondary)"
                             onClick={onClose}
                             title="Close"
                         >
-                            <X size={24} />
+                            <X size={20} />
                         </button>
                     </div>
                     <div className="flex-1 overflow-y-auto px-2 py-2 custom-scrollbar">
@@ -39,7 +39,7 @@ const RecentChatsSidebar = ({ open, onClose, chats, onChatClick, setIsSearchOpen
                         {chats.map(chat => {
                             const displayTitle = (() => {
                                 if (chat.title && chat.title !== 'New Chat') return chat.title;
-                                console.log(chat)
+                                // console.log(chat)
                                 if (chat.messages && chat.messages.length > 0) {
                                     const firstMsg = chat.messages.find(m => m && typeof m === 'object');
                                     console.log(firstMsg)
@@ -50,7 +50,7 @@ const RecentChatsSidebar = ({ open, onClose, chats, onChatClick, setIsSearchOpen
                                 }
                                 return 'New Chat';
                             })();
-                            console.log(displayTitle);
+                            // console.log(displayTitle);
                             return (
 
                                 <button
@@ -62,7 +62,7 @@ const RecentChatsSidebar = ({ open, onClose, chats, onChatClick, setIsSearchOpen
                                         <MessageCircle size={18} />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <div className="font-semibold text-[15px] truncate transition-colors">{displayTitle}</div>
+                                        <div className="font-semibold text-[14px] truncate transition-colors">{displayTitle}</div>
                                         {chat.updatedAt && (
                                             <div className="text-xs dark:text-gray-400 text-gray-400 mt-0.5 truncate">{new Date(chat.updatedAt).toLocaleString()}</div>
                                         )}
@@ -72,7 +72,7 @@ const RecentChatsSidebar = ({ open, onClose, chats, onChatClick, setIsSearchOpen
                         })}
                         {hasMore && (
                             <button
-                                className="my-4 py-2 px-5 text-sm rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer w-full max-w-fit mx-auto shadow-lg flex items-center gap-1 justify-center active:scale-95 hover:opacity-90"
+                                className="my-4 py-2 px-4 rounded-full bg-accent text-accent-contrast font-medium transition-all cursor-pointer w-full max-w-fit mx-auto shadow-lg flex items-center gap-1 justify-center active:scale-95 hover:opacity-90 text-xs"
                                 onClick={() => {
                                     setIsSearchOpen(true);
                                     onClose();
