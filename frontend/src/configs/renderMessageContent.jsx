@@ -1,30 +1,23 @@
+import { useState, useMemo } from "react";
+import { Copy, Check } from "lucide-react";
+
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import {
-  vscDarkPlus,
-  oneLight,
-} from "react-syntax-highlighter/dist/esm/styles/prism";
-
 import "katex/dist/katex.min.css";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus, oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-import { useState, useMemo } from "react";
-import { Copy, Check } from "lucide-react";
 
 function CodeBlock({ language, value, isDark }) {
   const [copied, setCopied] = useState(false);
 
   const copyCode = async () => {
     await navigator.clipboard.writeText(value);
-
     setCopied(true);
-
-    setTimeout(() => {
-      setCopied(false);
-    }, 2000);
+    setTimeout(() => { setCopied(false) }, 2000);
   };
 
   return (
@@ -43,9 +36,9 @@ function CodeBlock({ language, value, isDark }) {
       >
         <div className="flex items-center gap-2">
           <div className="flex gap-1.5">
-            <div className="h-3 w-3 rounded-full bg-red-400"></div>
-            <div className="h-3 w-3 rounded-full bg-yellow-400"></div>
-            <div className="h-3 w-3 rounded-full bg-green-400"></div>
+            <div className="h-3 w-3 rounded-full bg-red-400" />
+            <div className="h-3 w-3 rounded-full bg-yellow-400" />
+            <div className="h-3 w-3 rounded-full bg-green-400" />
           </div>
 
           <span

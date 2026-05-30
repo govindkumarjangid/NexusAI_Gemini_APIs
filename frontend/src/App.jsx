@@ -37,12 +37,10 @@ const App = () => {
         <path d="M50 30 C50 45 45 50 30 50 C45 50 50 55 50 70 C50 55 55 50 70 50 C55 50 50 45 50 30 Z" fill="${innerColor}" opacity="0.95" />
       </svg>
     `.trim();
-
     const encodedSvg = btoa(svg);
     const link = document.querySelector("link[rel*='icon']");
-    if (link) {
+    if (link)
       link.href = `data:image/svg+xml;base64,${encodedSvg}`;
-    }
   }, [accentColor, isDark, ACCENT_COLORS]);
 
   useEffect(() => {
