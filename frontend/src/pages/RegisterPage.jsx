@@ -45,7 +45,7 @@ const RegisterPage = () => {
 
       {/* Card */}
       <motion.div
-        className="w-full sm:max-w-md sm:rounded-2xl px-2 sm:px-10 py-7 sm:py-10 relative z-10 border-0 sm:border backdrop-blur-none sm:backdrop-blur-xl bg-transparent sm:bg-[color-mix(in_srgb,var(--bg-surface)_80%,transparent)] border-(--border-color)"
+        className="w-full sm:max-w-md sm:rounded-4xl px-2 sm:px-10 py-7 sm:py-10 relative z-10 border-0 sm:border backdrop-blur-none sm:backdrop-blur-xl bg-transparent sm:bg-[color-mix(in_srgb,var(--bg-surface)_80%,transparent)] border-(--border-color)"
         initial={{ opacity: 0, y: 36, rotateX: 8 }}
         animate={{ opacity: 1, y: 0, rotateX: 0 }}
         transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
@@ -68,7 +68,7 @@ const RegisterPage = () => {
               name="name"
               placeholder="John Doe"
               value={formData.name} onChange={handleChange} autoComplete="name"
-              className="w-full p-4 rounded-full text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)]"
+              className="w-full px-4 py-3 rounded-full text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)]"
             />
           </motion.div>
 
@@ -84,7 +84,7 @@ const RegisterPage = () => {
               name="email"
               placeholder="you@example.com"
               value={formData.email} onChange={handleChange}  autoComplete="email"
-              className="w-full p-4 rounded-full text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)]"
+              className="w-full px-4 py-3 rounded-full text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)]"
             />
           </motion.div>
 
@@ -100,7 +100,7 @@ const RegisterPage = () => {
               name="password"
               placeholder="••••••••"
               value={formData.password} onChange={handleChange} autoComplete="new-password"
-              className="w-full p-4 rounded-full text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)] mb-3"
+              className="w-full px-4 py-3 rounded-full text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)] mb-3"
             />
           </motion.div>
 

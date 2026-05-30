@@ -38,7 +38,7 @@ const TestimonialCard = ({ name, role, text, color, i }) => {
       transition={{ duration: 0.8, delay: i * 0.14, ease: [0.16, 1, 0.3, 1] }}
     >
       <div
-        className="rounded-2xl p-6 border h-full transition-all duration-300 hover:-translate-y-1 bg-(--bg-surface) border-(--border-color) hover:border-(--accent-color) hover:shadow-lg"
+        className="rounded-4xl p-6 border h-full transition-all duration-300 hover:-translate-y-1 bg-(--bg-surface) border-(--border-color) hover:border-(--accent-color) hover:shadow-lg"
       >
         <div className="flex gap-0.5 mb-3 text-[#fbbf24]">
           {[...Array(5)].map((_, j) => <Star key={j} size={13} fill="currentColor" />)}

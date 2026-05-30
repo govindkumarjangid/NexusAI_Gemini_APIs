@@ -42,7 +42,7 @@ const FeatureCard = ({ icon, title, desc, iconBg, iconColor, i }) => {
       whileHover={{ y: -6, scale: 1.01 }}
     >
       <div
-        className="rounded-2xl p-6 sm:p-8 border transition-all duration-300 hover:shadow-lg bg-(--bg-surface) border-(--border-color) hover:border-(--accent-color)"
+        className="rounded-4xl p-6 sm:p-8 border transition-all duration-300 hover:shadow-lg bg-(--bg-surface) border-(--border-color) hover:border-(--accent-color)"
       >
         <div
           className="w-12 h-12 rounded-full flex items-center justify-center mb-5 bg-(--icon-bg) text-(--icon-color)"

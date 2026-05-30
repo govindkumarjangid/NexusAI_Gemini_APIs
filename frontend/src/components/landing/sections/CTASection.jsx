@@ -8,7 +8,7 @@ const CTASection = () => (
   <section className="px-5 sm:px-8 py-16 sm:py-24">
     <Reveal>
       <div
-        className="max-w-3xl mx-auto rounded-3xl px-6 sm:px-12 py-12 sm:py-16 text-center relative overflow-hidden border bg-[color-mix(in_srgb,var(--accent-color)_5%,var(--bg-surface))] border-[color-mix(in_srgb,var(--accent-color)_12%,var(--border-color))]"
+        className="max-w-3xl mx-auto rounded-4xl px-6 sm:px-12 py-12 sm:py-16 text-center relative overflow-hidden border bg-[color-mix(in_srgb,var(--accent-color)_5%,var(--bg-surface))] border-[color-mix(in_srgb,var(--accent-color)_12%,var(--border-color))]"
       >
         {/* Glow blobs */}
         <div
