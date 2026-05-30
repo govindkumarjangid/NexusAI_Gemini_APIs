@@ -1,18 +1,20 @@
+import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import useChatStore from '../store/useChatStore';
-import ChatMessages from '../components/chat/ChatMessages';
 import { Globe, MessageSquare, ArrowRight, Code2, MessageCircle } from 'lucide-react';
-import Spinner from '../components/model/Spinner';
-import { motion } from 'framer-motion';
+
 import Logo from '../components/common/Logo'
+import useChatStore from '../store/useChatStore';
+import Spinner from '../components/model/Spinner';
+import ChatMessages from '../components/chat/ChatMessages';
 
 const SharedChatPage = () => {
+    const [chat, setChat] = useState(null);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+
     const { shareId } = useParams();
     const { getSharedChat } = useChatStore();
-    const [chat, setChat] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchChat = async () => {
@@ -59,6 +61,7 @@ const SharedChatPage = () => {
             </div>
         );
     }
+    // console.log(chat);
 
     return (
         <div className="h-screen flex flex-col bg-(--bg-surface) overflow-hidden relative">
@@ -93,7 +96,7 @@ const SharedChatPage = () => {
                     </Link>
                     <Link
                         to="/register"
-                        className="flex items-center gap-2 px-4 py-1.5 sm:px-5 sm:py-2 bg-(--accent-color) text-white rounded-full text-sm sm:text-base font-semibold hover:brightness-110 transition-all shadow-lg shadow-(--accent-color)/20 group active:scale-99"
+                        className="flex items-center gap-2 px-4 py-2 bg-(--accent-color) text-white rounded-full sm:text-sm text-xs font-medium hover:brightness-110 transition-all shadow-lg shadow-(--accent-color)/20 group active:scale-99"
                     >
                         Try NexusAI
                         <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
@@ -161,7 +164,7 @@ const SharedChatPage = () => {
                         </div>
                         <Link
                             to="/register"
-                            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 sm:px-6 sm:py-3 bg-(--accent-color) text-white rounded-full text-sm sm:text-base font-semibold hover:brightness-110 transition-all shadow-lg shadow-(--accent-color)/20 group active:scale-99"
+                            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-(--accent-color) text-white rounded-full text-sm font-medium hover:brightness-110 transition-all shadow-lg shadow-(--accent-color)/20 group active:scale-99"
                         >
                             Create Your Free Account
                             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
