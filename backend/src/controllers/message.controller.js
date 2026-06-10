@@ -13,13 +13,18 @@ const DEFAULT_ASSISTANT_ERROR_MESSAGE = "Sorry, I couldn't generate a response r
 const getCleanText = (value) => (typeof value === 'string' ? value.trim() : '');
 
 const writeSse = (res, payload) => {
-    res.write(`data: ${JSON.stringify(payload)}\n\n`);
+    if (res.writable && !res.writableEnded) {
+        res.write(`data: ${JSON.stringify(payload)}\n\n`);
+    }
 };
 
 const streamTextToClient = async (res, text) => {
     const lines = text.split('\n');
 
     for (let index = 0; index < lines.length; index++) {
+        if (!res.writable || res.writableEnded) {
+            break;
+        }
         const isLastLine = index === lines.length - 1;
         const textChunk = isLastLine ? lines[index] : `${lines[index]}\n`;
 
@@ -189,24 +194,39 @@ const sendMessage = wrapAsync(async (req, res) => {
         chat.messages.push(assistantMessage._id);
         await chat.save();
 
-        writeSse(res, { done: true, message: assistantMessage });
-        return res.end();
+        if (res.writable && !res.writableEnded) {
+            writeSse(res, { done: true, message: assistantMessage });
+            res.end();
+        }
     } catch (error) {
         console.error("Stream Error:", error);
 
-        const fallbackMessage = new Message({
-            chatId,
-            role: 'assistant',
-            content: DEFAULT_ASSISTANT_ERROR_MESSAGE
-        });
-        await fallbackMessage.save();
+        try {
+            const fallbackMessage = new Message({
+                chatId,
+                role: 'assistant',
+                content: DEFAULT_ASSISTANT_ERROR_MESSAGE
+            });
+            await fallbackMessage.save();
 
-        chat.messages.push(fallbackMessage._id);
-        await chat.save();
+            chat.messages.push(fallbackMessage._id);
+            await chat.save();
 
-        await streamTextToClient(res, DEFAULT_ASSISTANT_ERROR_MESSAGE);
-        writeSse(res, { done: true, message: fallbackMessage, fallback: true });
-        return res.end();
+            if (res.writable && !res.writableEnded) {
+                await streamTextToClient(res, DEFAULT_ASSISTANT_ERROR_MESSAGE);
+                writeSse(res, { done: true, message: fallbackMessage, fallback: true });
+                res.end();
+            }
+        } catch (innerError) {
+            console.error("Error in Stream Error Fallback Handling:", innerError);
+            if (res.writable && !res.writableEnded) {
+                try {
+                    res.end();
+                } catch (e) {
+                    console.error("Failed to force close response:", e.message);
+                }
+            }
+        }
     }
 });
 

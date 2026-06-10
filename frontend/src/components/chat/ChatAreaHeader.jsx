@@ -22,6 +22,8 @@ const ChatAreaHeader = memo(() => {
     const [showShareModal, setShowShareModal] = useState(false);
     const [editedTitle, setEditedTitle] = useState('');
     const [copied, setCopied] = useState(false);
+    const [isSavingTitle, setIsSavingTitle] = useState(false);
+    const [isDeletingChat, setIsDeletingChat] = useState(false);
 
     // useAuthStore granular selection
     const isMobile = useAuthStore(state => state.isMobile);
@@ -90,7 +92,14 @@ const ChatAreaHeader = memo(() => {
     const handleSaveTitle = async (e) => {
         if (e) e.preventDefault();
         if (editedTitle.trim() && (editedTitle !== chatToEdit.title)) {
-            await updateChatTitle(chatToEdit._id, editedTitle.trim());
+            setIsSavingTitle(true);
+            try {
+                await updateChatTitle(chatToEdit._id, editedTitle.trim());
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setIsSavingTitle(false);
+            }
         }
         setShowEditModal(false);
     }
@@ -103,9 +112,16 @@ const ChatAreaHeader = memo(() => {
 
     const confirmDelete = async () => {
         if (chatToDelete) {
-            await deleteChat(chatToDelete._id);
-            if (currentChat?._id === chatToDelete._id) {
-                navigate('/chat');
+            setIsDeletingChat(true);
+            try {
+                await deleteChat(chatToDelete._id);
+                if (currentChat?._id === chatToDelete._id) {
+                    navigate('/chat');
+                }
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setIsDeletingChat(false);
             }
         }
         setShowDeleteModal(false);
@@ -197,6 +213,7 @@ const ChatAreaHeader = memo(() => {
                 editedTitle={editedTitle}
                 setEditedTitle={setEditedTitle}
                 handleSaveTitle={handleSaveTitle}
+                isSaving={isSavingTitle}
             />
 
             <DeleteConfirmModal
@@ -206,6 +223,7 @@ const ChatAreaHeader = memo(() => {
                 springConfig={springConfig}
                 chatToDelete={chatToDelete}
                 confirmDelete={confirmDelete}
+                isDeleting={isDeletingChat}
             />
 
         </>

@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Pencil } from 'lucide-react';
+import { Pencil, Loader } from 'lucide-react';
 
 const EditTitleModal = ({
     showEditModal,
@@ -8,7 +8,8 @@ const EditTitleModal = ({
     springConfig,
     editedTitle,
     setEditedTitle,
-    handleSaveTitle
+    handleSaveTitle,
+    isSaving
 }) => {
     return (
         <AnimatePresence>
@@ -18,7 +19,7 @@ const EditTitleModal = ({
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        onClick={() => setShowEditModal(false)}
+                        onClick={() => !isSaving && setShowEditModal(false)}
                         className='fixed inset-0 z-40 bg-black/40'
                     />
 
@@ -59,7 +60,8 @@ const EditTitleModal = ({
                                         value={editedTitle}
                                         onChange={(e) => setEditedTitle(e.target.value)}
                                         placeholder="Enter chat title..."
-                                        className="w-full px-4 py-3 rounded-full text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)]"
+                                        disabled={isSaving}
+                                        className="w-full px-4 py-3 rounded-full text-sm outline-none transition-all duration-200 border focus:ring-3 bg-(--bg-elevated) border-(--border-color) text-(--text-primary) focus:border-(--accent-color) ring-[color-mix(in_srgb,var(--accent-color)_30%,transparent)] disabled:opacity-50 disabled:cursor-not-allowed"
                                     />
                                 </div>
 
@@ -67,15 +69,24 @@ const EditTitleModal = ({
                                     <button
                                         type="button"
                                         onClick={() => setShowEditModal(false)}
-                                        className={`flex-1 rounded-full border border-(--border-color) text-(--text-primary) hover:bg-(--bg-accent) transition-all font-medium cursor-pointer px-3 py-2.5 sm:text-sm text-xs`}
+                                        disabled={isSaving}
+                                        className={`flex-1 rounded-full border border-(--border-color) text-(--text-primary) hover:bg-(--bg-accent) transition-all font-medium cursor-pointer px-3 py-2.5 sm:text-sm text-xs disabled:opacity-50 disabled:cursor-not-allowed`}
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
-                                        className={`flex-1 rounded-full bg-(--accent-color) text-white hover:brightness-110 shadow-lg shadow-(--accent-color)/20 transition-all font-medium cursor-pointer px-3 py-2.5 sm:text-sm text-xs`}
+                                        disabled={isSaving || !editedTitle.trim()}
+                                        className={`flex-1 rounded-full bg-(--accent-color) text-white hover:brightness-110 shadow-lg shadow-(--accent-color)/20 transition-all font-medium cursor-pointer px-3 py-2.5 sm:text-sm text-xs flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed`}
                                     >
-                                        Save Changes
+                                        {isSaving ? (
+                                            <>
+                                                <Loader size={16} className="animate-spin shrink-0" />
+                                                Saving...
+                                            </>
+                                        ) : (
+                                            'Save Changes'
+                                        )}
                                     </button>
                                 </div>
                             </form>

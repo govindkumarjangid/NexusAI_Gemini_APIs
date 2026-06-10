@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trash } from 'lucide-react';
+import { Trash, Loader } from 'lucide-react';
 
 const DeleteConfirmModal = ({
     showDeleteModal,
@@ -7,7 +7,8 @@ const DeleteConfirmModal = ({
     isMobile,
     springConfig,
     chatToDelete,
-    confirmDelete
+    confirmDelete,
+    isDeleting
 }) => {
     return (
         <AnimatePresence>
@@ -17,7 +18,7 @@ const DeleteConfirmModal = ({
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        onClick={() => setShowDeleteModal(false)}
+                        onClick={() => !isDeleting && setShowDeleteModal(false)}
                         className="fixed inset-0 z-40 bg-black/40"
                     />
 
@@ -68,15 +69,24 @@ const DeleteConfirmModal = ({
                                     <button
                                         type="button"
                                         onClick={() => setShowDeleteModal(false)}
-                                        className={`flex-1 rounded-full border border-(--border-color) text-(--text-primary) hover:bg-(--bg-accent) transition-all font-medium cursor-pointer px-3 py-2 text-sm`}
+                                        disabled={isDeleting}
+                                        className={`flex-1 rounded-full border border-(--border-color) text-(--text-primary) hover:bg-(--bg-accent) transition-all font-medium cursor-pointer px-3 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed`}
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         onClick={confirmDelete}
-                                        className={`flex-1 rounded-full bg-red-500 text-white hover:bg-red-600 shadow-lg shadow-red-500/20 transition-all font-medium cursor-pointer px-3 py-2 text-sm`}
+                                        disabled={isDeleting}
+                                        className={`flex-1 rounded-full bg-red-500 text-white hover:bg-red-600 shadow-lg shadow-red-500/20 transition-all font-medium cursor-pointer px-3 py-2 text-sm flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed`}
                                     >
-                                        Delete Chat
+                                        {isDeleting ? (
+                                            <>
+                                                <Loader size={16} className="animate-spin shrink-0" />
+                                                Deleting...
+                                            </>
+                                        ) : (
+                                            'Delete Chat'
+                                        )}
                                     </button>
                                 </div>
                             </div>
