@@ -202,7 +202,11 @@ const sendMessage = wrapAsync(async (req, res) => {
             res.end();
         }
     } catch (error) {
-        console.error("Stream Error:", error);
+        if (error.status) {
+            console.error(`Stream Error (${error.status}): ${error.message}`);
+        } else {
+            console.error("Stream Error:", error);
+        }
 
         try {
             const fallbackMessage = new Message({
@@ -311,8 +315,12 @@ const generateImage = wrapAsync(async (req, res) => {
 
         res.status(200).json({ success: true, imageUrl });
     } catch (error) {
-        console.error("Image Gen Error:", error);
-        res.status(500).json({ success: false, message: error.message || 'Failed to generate image' });
+        if (error.status) {
+            console.error(`Image Gen Error (${error.status}): ${error.message}`);
+        } else {
+            console.error("Image Gen Error:", error);
+        }
+        res.status(error.status || 500).json({ success: false, message: error.message || 'Failed to generate image' });
     }
 });
 

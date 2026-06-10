@@ -137,7 +137,7 @@ export default function RenderMessage({ content, isDark = true }) {
           // HEADINGS
           h1: ({ children }) => (
             <h1
-              className={`md:text-4xl text-3xl font-bold ${isDark ? "text-white" : "text-gray-900"
+              className={`md:text-3xl text-2xl font-bold ${isDark ? "text-white" : "text-gray-900"
                 }`}
             >
               {children}
@@ -146,7 +146,7 @@ export default function RenderMessage({ content, isDark = true }) {
 
           h2: ({ children }) => (
             <h2
-              className={` md:text-3xl text-2xl font-bold ${isDark ? "text-white" : "text-gray-900"
+              className={` md:text-2xl text-xl font-bold ${isDark ? "text-white" : "text-gray-900"
                 }`}
             >
               {children}
@@ -155,7 +155,7 @@ export default function RenderMessage({ content, isDark = true }) {
 
           h3: ({ children }) => (
             <h3
-              className={` md:text-2xl text-xl font-semibold ${isDark ? "text-white" : "text-gray-900"
+              className={` md:text-xl text-lg font-semibold ${isDark ? "text-white" : "text-gray-900"
                 }`}
             >
               {children}
