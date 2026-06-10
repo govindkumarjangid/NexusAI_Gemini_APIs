@@ -1,6 +1,7 @@
 import axiosInstance from '../configs/axiosInstance.js';
 import { create } from 'zustand';
 import { toast } from 'react-hot-toast';
+import useAuthStore from './useAuthStore.js';
 
 const STREAM_API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1').replace(/\/+$/, '');
 const DEFAULT_ASSISTANT_ERROR_MESSAGE = "Sorry, I couldn't generate a response right now. Please try again in a moment.";
@@ -13,6 +14,7 @@ const useMessageStore = create((set) => ({
     set({ isLoading: true, error: null });
     try {
       const token = localStorage.getItem('token');
+      const language = useAuthStore.getState().language || 'auto';
 
       const response = await fetch(`${STREAM_API_BASE_URL}/messages/send/${chatId}`, {
         method: 'POST',
@@ -21,7 +23,7 @@ const useMessageStore = create((set) => ({
           'Content-Type': 'application/json',
           'Authorization': token ? `Bearer ${token}` : ''
         },
-        body: JSON.stringify({ content, imageUrl })
+        body: JSON.stringify({ content, imageUrl, language })
       });
 
       if (!response.ok) {
@@ -84,6 +86,7 @@ const useMessageStore = create((set) => ({
     try {
       set({ isLoading: true, error: null });
       const token = localStorage.getItem('token');
+      const language = useAuthStore.getState().language || 'auto';
 
       const response = await fetch(`${STREAM_API_BASE_URL}/messages/send/${chatId}`, {
         method: 'POST',
@@ -92,7 +95,7 @@ const useMessageStore = create((set) => ({
           'Content-Type': 'application/json',
           'Authorization': token ? `Bearer ${token}` : ''
         },
-        body: JSON.stringify({ content, imageUrl })
+        body: JSON.stringify({ content, imageUrl, language })
       });
 
       if (!response.ok) {

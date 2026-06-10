@@ -15,8 +15,7 @@ const ACCENT_COLORS = [
 
 export default function GeneralSettings() {
 
-  const { theme, accentColor, contrast, setTheme, setAccentColor, setContrast } = useAuthStore();
-  const [language, setLanguage] = useState("auto");
+  const { theme, accentColor, contrast, language, setTheme, setAccentColor, setContrast, setLanguage } = useAuthStore();
 
   return (
     <AnimatePresence>
@@ -87,6 +86,12 @@ export default function GeneralSettings() {
             <option value="auto">Auto-detect</option>
             <option value="en">English</option>
             <option value="hi">Hindi</option>
+            <option value="hinglish">Hinglish</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+            <option value="zh">Chinese</option>
+            <option value="ja">Japanese</option>
           </select>
         </div>
       </motion.div>

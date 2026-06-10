@@ -10,21 +10,33 @@ const TEXT_MODEL = "gemini-3.5-flash";
 const IMAGE_ONLY_PROMPT = "Please respond to the uploaded image.";
 const DEFAULT_ASSISTANT_ERROR_MESSAGE = "Sorry, I couldn't generate a response right now. Please try again in a moment.";
 
+const getLanguageName = (code) => {
+    const languages = {
+        en: 'English',
+        hi: 'Hindi',
+        hinglish: 'Hinglish (Hindi written in Latin script / English letters, mix of Hindi and English words. E.g. "Tum kaise ho? Aaj ka kya plan hai?")',
+        es: 'Spanish',
+        fr: 'French',
+        de: 'German',
+        zh: 'Chinese',
+        ja: 'Japanese'
+    };
+    return languages[code] || null;
+};
+
 const getCleanText = (value) => (typeof value === 'string' ? value.trim() : '');
 
 const writeSse = (res, payload) => {
-    if (res.writable && !res.writableEnded) {
+    if (res.writable && !res.writableEnded)
         res.write(`data: ${JSON.stringify(payload)}\n\n`);
-    }
 };
 
 const streamTextToClient = async (res, text) => {
     const lines = text.split('\n');
 
     for (let index = 0; index < lines.length; index++) {
-        if (!res.writable || res.writableEnded) {
-            break;
-        }
+        if (!res.writable || res.writableEnded)   break;
+
         const isLastLine = index === lines.length - 1;
         const textChunk = isLastLine ? lines[index] : `${lines[index]}\n`;
 
@@ -117,7 +129,8 @@ const uploadImage = wrapAsync(async (req, res) => {
 // send message in a chat and get streaming response from Gemini
 const sendMessage = wrapAsync(async (req, res) => {
     const { chatId } = req.params;
-    const { content, imageUrl } = req.body;
+    const { content, imageUrl, language } = req.body;
+
     const textContent = getCleanText(content);
 
     if (!textContent && !imageUrl)
@@ -134,7 +147,6 @@ const sendMessage = wrapAsync(async (req, res) => {
 
     chat.messages.push(newMessage._id);
 
-    // Auto-update title if it's still "New Chat"
     if (chat.title === 'New Chat') {
         if (textContent)
             chat.title = textContent.substring(0, 40) + (textContent.length > 40 ? '...' : '');
@@ -153,10 +165,18 @@ const sendMessage = wrapAsync(async (req, res) => {
     let fullAssistantResponse = "";
 
     try {
+        const langName = getLanguageName(language);
+        let systemInstruction = "You are NexusAI, an advanced and friendly AI assistant. Always format your responses properly using clean markdown (such as bold text, headings, bulleted/numbered lists, blockquotes, tables, or code blocks where appropriate). Do not output long, dense paragraphs. Integrate context-relevant emojis and visual symbols (e.g., ✨, 💡, 🚀, 📌, ✔️, ➡️) throughout the response to organize points, emphasize key ideas, and make the content visually engaging, easy to scan, and read.";
+
+        if (langName)
+            systemInstruction += ` You MUST respond ONLY in ${langName}. Regardless of the language the user uses in the prompt, write your response in ${langName}.`;
+
+
         const model = genAI.getGenerativeModel({
             model: TEXT_MODEL,
-            systemInstruction: "You are NexusAI, an advanced and friendly AI assistant. Always format your responses properly using clean markdown (such as bold text, headings, bulleted/numbered lists, blockquotes, tables, or code blocks where appropriate). Do not output long, dense paragraphs. Integrate context-relevant emojis and visual symbols (e.g., ✨, 💡, 🚀, 📌, ✔️, ➡️) throughout the response to organize points, emphasize key ideas, and make the content visually engaging, easy to scan, and read."
+            systemInstruction
         });
+
         const historyMessages = await Message.find({
             chatId,
             _id: { $ne: newMessage._id }
@@ -202,11 +222,11 @@ const sendMessage = wrapAsync(async (req, res) => {
             res.end();
         }
     } catch (error) {
-        if (error.status) {
+        if (error.status)
             console.error(`Stream Error (${error.status}): ${error.message}`);
-        } else {
+        else
             console.error("Stream Error:", error);
-        }
+
 
         try {
             const fallbackMessage = new Message({

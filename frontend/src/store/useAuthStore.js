@@ -89,6 +89,7 @@ const useAuthStore = create((set, get) => ({
     accentColor: initialAccent,
     contrast: initialContrast,
     actualContrast: getActualContrast(initialContrast),
+    language: localStorage.getItem('language') || 'auto',
 
     getInitials: () => {
         const user = get().user;
@@ -115,6 +116,11 @@ const useAuthStore = create((set, get) => ({
         localStorage.setItem('contrast', contrast);
         applyContrast(contrast);
         set({ contrast, actualContrast: getActualContrast(contrast) });
+    },
+
+    setLanguage: (lang) => {
+        localStorage.setItem('language', lang);
+        set({ language: lang });
     },
 
     ACCENT_COLORS,
