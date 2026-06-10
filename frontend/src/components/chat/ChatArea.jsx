@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Loader } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import ChatAreaHeader from './ChatAreaHeader';
 import ChatMessages from '../chat/ChatMessages';
 import ChatInputArea from './ChatInputArea';
@@ -187,15 +188,25 @@ const ChatArea = () => {
 
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto custom-scrollbar p-3 sm:p-6 sm:pt-24 pt-20 flex flex-col relative">
-        {showLoader ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-(--bg-base) z-10">
-            <div className="flex flex-col items-center gap-4">
-              <Loader className="w-12 h-12 text-accent animate-spin" />
-              <p className="text-sm font-medium text-muted animate-pulse">Syncing conversation...</p>
-            </div>
-          </div>
-        ) : null}
-        <ChatMessages messages={messages} isStreaming={isStreaming} />
+        <AnimatePresence mode="wait">
+          {showLoader ? (
+            <motion.div
+              key="loader"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
+              className="absolute inset-0 flex flex-col items-center justify-center bg-(--bg-base) z-10"
+            >
+              <div className="flex flex-col items-center gap-4">
+                <Loader className="w-12 h-12 text-accent animate-spin" />
+                <p className="text-sm font-medium text-muted animate-pulse">Syncing conversation...</p>
+              </div>
+            </motion.div>
+          ) : (
+            <ChatMessages key={chatId || 'new'} messages={messages} isStreaming={isStreaming} />
+          )}
+        </AnimatePresence>
       </div>
 
 

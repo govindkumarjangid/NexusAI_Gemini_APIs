@@ -153,7 +153,10 @@ const sendMessage = wrapAsync(async (req, res) => {
     let fullAssistantResponse = "";
 
     try {
-        const model = genAI.getGenerativeModel({ model: TEXT_MODEL });
+        const model = genAI.getGenerativeModel({
+            model: TEXT_MODEL,
+            systemInstruction: "You are NexusAI, an advanced and friendly AI assistant. Always format your responses properly using clean markdown (such as bold text, headings, bulleted/numbered lists, blockquotes, tables, or code blocks where appropriate). Do not output long, dense paragraphs. Integrate context-relevant emojis and visual symbols (e.g., ✨, 💡, 🚀, 📌, ✔️, ➡️) throughout the response to organize points, emphasize key ideas, and make the content visually engaging, easy to scan, and read."
+        });
         const historyMessages = await Message.find({
             chatId,
             _id: { $ne: newMessage._id }

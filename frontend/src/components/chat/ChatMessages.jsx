@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import useAuthStore from '../../store/useAuthStore';
 import useChatStore from '../../store/useChatStore';
 import Spinner from '../model/Spinner';
@@ -66,7 +67,13 @@ const ChatMessages = ({ messages, isStreaming }) => {
     };
 
     return (
-        <div className={`w-full ${messages.length === 0 ? 'flex-1 flex flex-col' : ''}`}>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className={`w-full ${messages.length === 0 ? 'flex-1 flex flex-col' : ''}`}
+        >
             <div className={`max-w-4xl mx-auto space-y-6 ${messages.length === 0 ? 'flex-1 flex flex-col justify-end items-start w-full' : ''}`}>
                 {(messages.length === 0) ? (
                     <div className="flex flex-col items-start select-none">
@@ -125,7 +132,7 @@ const ChatMessages = ({ messages, isStreaming }) => {
             />
 
 
-        </div>
+        </motion.div>
     );
 };
 

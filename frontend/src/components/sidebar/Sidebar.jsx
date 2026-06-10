@@ -25,16 +25,23 @@ const Sidebar = () => {
   const { chats, getChatsByUser, createChat, deleteChat, setCurrentChat, currentChat, isLoading: chatLoading } = useChatStore();
 
   const [recentSidebarOpen, setRecentSidebarOpen] = useState(false);
+  const [visibleRecentCount, setVisibleRecentCount] = useState(5);
+  const [isMoreLoading, setIsMoreLoading] = useState(false);
 
-  // Sort chats: pinned first, then by date
-  const sortedChats = [...chats].sort((a, b) => {
-    if (a.isPinned && !b.isPinned) return -1;
-    if (!a.isPinned && b.isPinned) return 1;
-    return new Date(b.createdAt) - new Date(a.createdAt);
-  });
+  // Separate and sort chats
+  const pinnedChats = chats.filter(c => c.isPinned).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const recentChats = chats.filter(c => !c.isPinned).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  const paginatedChats = sortedChats.slice(0, 5);
-  const hasMoreRecent = chats.length > 5;
+  const paginatedRecentChats = recentChats.slice(0, visibleRecentCount);
+  const hasMoreRecent = recentChats.length > visibleRecentCount;
+
+  const handleLoadMore = () => {
+    setIsMoreLoading(true);
+    setTimeout(() => {
+      setVisibleRecentCount(prev => prev + 5);
+      setIsMoreLoading(false);
+    }, 800);
+  };
 
 
   const navigate = useNavigate();
@@ -165,6 +172,53 @@ const Sidebar = () => {
 
         {/* Chats List */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-3 py-2 space-y-6 custom-scrollbar">
+          {/* Pinned Chats Section */}
+          {pinnedChats.length > 0 && (
+            <div>
+              <AnimatePresence>
+                {sidebarOpen && (
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="text-xs font-semibold dark:text-gray-500 text-gray-400 mb-2 px-2"
+                  >
+                    Pinned Chats
+                  </motion.p>
+                )}
+              </AnimatePresence>
+
+              <AnimatePresence>
+                {sidebarOpen && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="space-y-1"
+                  >
+                    {chatLoading ? (
+                      <div className="space-y-2">
+                        {[...Array(2)].map((_, i) => (
+                          <div key={i} className="flex-1 px-4 py-4 dark:bg-gray-700/40 bg-gray-300/60 rounded-full animate-pulse" />
+                        ))}
+                      </div>
+                    ) : (
+                      <ChatList
+                        chats={pinnedChats}
+                        currentChat={currentChat}
+                        setCurrentChat={setCurrentChat}
+                        navigate={navigate}
+                        deleteChat={deleteChat}
+                        getChatsByUser={getChatsByUser}
+                      />
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+
+          {/* Recent Chats Section */}
           <div>
             <AnimatePresence>
               {sidebarOpen && (
@@ -174,7 +228,7 @@ const Sidebar = () => {
                   exit={{ opacity: 0 }}
                   className="text-xs font-semibold dark:text-gray-500 text-gray-400 mb-2 px-2"
                 >
-                  Recent
+                  Recent Chats
                 </motion.p>
               )}
             </AnimatePresence>
@@ -195,7 +249,7 @@ const Sidebar = () => {
                     </div>
                   ) : (
                     <ChatList
-                      chats={paginatedChats}
+                      chats={paginatedRecentChats}
                       currentChat={currentChat}
                       setCurrentChat={setCurrentChat}
                       navigate={navigate}
@@ -203,10 +257,20 @@ const Sidebar = () => {
                       getChatsByUser={getChatsByUser}
                     />
                   )}
-                  {hasMoreRecent && (
+                  {isMoreLoading && (
+                    <div className="space-y-2 mt-2 px-1 animate-pulse">
+                      {[...Array(3)].map((_, i) => (
+                        <div key={i} className="flex items-center gap-3 px-4 py-2.5 rounded-full bg-gray-300/30 dark:bg-gray-700/30 w-full">
+                          <div className="w-4 h-4 rounded-full bg-gray-400/40 dark:bg-gray-600/40 shrink-0" />
+                          <div className="h-3.5 bg-gray-400/40 dark:bg-gray-600/40 rounded-full w-2/3" />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {hasMoreRecent && !isMoreLoading && (
                     <button
                       className="my-4 py-2 px-4 text-xs rounded-full bg-accent text-accent-contrast font-semibold transition-all cursor-pointer w-full max-w-fit mx-auto shadow-lg flex items-center gap-2 justify-center active:scale-98 hover:opacity-90"
-                      onClick={() => setIsSearchOpen(true)}
+                      onClick={handleLoadMore}
                     >
                       All Chats
                       <EllipsisVertical size={16} className="opacity-80" />
@@ -225,7 +289,7 @@ const Sidebar = () => {
       <RecentChatsSidebar
         open={recentSidebarOpen}
         onClose={() => setRecentSidebarOpen(false)}
-        chats={paginatedChats}
+        chats={paginatedRecentChats}
         onChatClick={handleRecentChatClick}
         setIsSearchOpen={setIsSearchOpen}
         hasMore={hasMoreRecent}
