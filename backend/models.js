@@ -1,10 +1,11 @@
-
-const API_KEY = process.env.GEMINI_API_KEY;
+import dotenv from 'dotenv';
+dotenv.config();
 
 async function getModels() {
     try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`);
         const data = await response.json();
+        console.log(data)
 
         console.log("=== Available Models ===");
         data.models.forEach(model => {
